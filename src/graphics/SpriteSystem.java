@@ -1,24 +1,30 @@
 package graphics;
 
 import core.AbstractSystem;
-import grid.GridLocationComponent;
+import movement.PositionComponent;
+import movement.RotationComponent;
 
 public class SpriteSystem extends AbstractSystem {
 
-    private GridLocationComponent glc;
-    private SpriteComponent sc;
+    private PositionComponent position;
+    private RotationComponent rotation;
+    private SpriteComponent sprite;
 
-    public SpriteSystem(GridLocationComponent glc, SpriteComponent sc) {
-        this.glc = glc;
-        this.sc = sc;
+    public SpriteSystem(PositionComponent position, RotationComponent rotation, SpriteComponent sprite) {
+        this.position = position;
+        this.rotation = rotation;
+        this.sprite = sprite;
+    }
+
+    public SpriteSystem(PositionComponent position, SpriteComponent sprite) {
+        this(position, new RotationComponent(), sprite);
     }
 
     @Override
     public void update() {
-        if (sc.visible) {
-            Graphics2D.drawSprite(sc.getTexture(), glc.pos, sc.scale, glc.rot, sc.color);
+        if (sprite.visible) {
+            Graphics2D.drawSprite(sprite.getTexture(), position.pos, sprite.scale, rotation.rot, sprite.color);
         }
-        sc.imageIndex += sc.imageSpeed;
+        sprite.imageIndex += sprite.imageSpeed;
     }
-
 }

@@ -14,7 +14,7 @@ public class TurnStartEvent extends Event {
 
     @Override
     public void call() {
-        new ViewMoveAnimation(creature.getComponent(GridLocationComponent.class).pos).start();
+        new ViewMoveAnimation(creature.getComponent(GridLocationComponent.class).center()).start();
         super.call();
     }
 }

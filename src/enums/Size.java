@@ -2,7 +2,7 @@ package enums;
 
 public enum Size {
 
-    TINY(1), SMALL(1), MEDIUM(2), LARGE(2), HUGE(3), GARGANTUAN(4);
+    TINY(1), SMALL(1), MEDIUM(1), LARGE(2), HUGE(3), GARGANTUAN(4);
 
     public final int squares;
 

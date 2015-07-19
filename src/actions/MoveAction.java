@@ -5,7 +5,6 @@ import core.Main;
 import creature.Creature;
 import grid.GridComponent;
 import grid.GridLocationComponent;
-import grid.Tile;
 import grid.World;
 import gui.UIAction;
 import gui.UIText;
@@ -21,8 +20,9 @@ public class MoveAction extends Action {
 
     @Override
     protected void act() {
-        creature.spc.speedUsed += square.square.distanceTo(Tile.tileAt(creature.getComponent(GridLocationComponent.class).pos));
-        new MoveAnimation(creature, square.square.x, square.square.y).start();
+        creature.spc.speedUsed += square.square.distanceTo(creature.glc.lowerLeft);
+        creature.glc.moveToSquare(square.square.center());
+        new MoveAnimation(creature, square.square.center()).start();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class MoveAction extends Action {
             GridComponent gc = Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class);
             for (int i = 0; i < gc.width; i++) {
                 for (int j = 0; j < gc.height; j++) {
-                    if (gc.tileGrid[i][j].distanceTo(Tile.tileAt(creature.getComponent(GridLocationComponent.class).pos)) <= creature.spc.landSpeed - creature.spc.speedUsed) {
+                    if (gc.tileGrid[i][j].distanceTo(creature.getComponent(GridLocationComponent.class).lowerLeft) <= creature.spc.landSpeed - creature.spc.speedUsed) {
                         square.options.add(gc.tileGrid[i][j]);
                     }
                 }

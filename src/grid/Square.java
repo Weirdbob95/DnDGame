@@ -1,20 +1,20 @@
 package grid;
 
-import core.Main;
+import creature.Creature;
 import graphics.data.Texture;
 import graphics.loading.SpriteContainer;
 import util.Vec2;
 
-public class Tile {
+public class Square {
 
     public static final int SIZE = 64;
     public int x;
     public int y;
     public boolean isWall;
     public Texture tex;
-    public int zone;
+    public Creature creature;
 
-    public Tile(int x, int y, boolean isWall) {
+    public Square(int x, int y, boolean isWall) {
         this.x = x;
         this.y = y;
         this.isWall = isWall;
@@ -25,14 +25,14 @@ public class Tile {
         }
     }
 
-    public Tile(int x, int y, String sprite) {
+    public Square(int x, int y, String sprite) {
         this.x = x;
         this.y = y;
         this.isWall = true;
         tex = SpriteContainer.loadSprite(sprite);
     }
 
-    public Tile(int x, int y, Texture sprite, boolean wall) {
+    public Square(int x, int y, Texture sprite, boolean wall) {
         this.x = x;
         this.y = y;
         this.isWall = wall;
@@ -40,10 +40,10 @@ public class Tile {
     }
 
     public Vec2 center() {
-        return positionAt(x, y);
+        return new Vec2(x * SIZE + SIZE / 2, y * SIZE + SIZE / 2);
     }
 
-    public int distanceTo(Tile other) {
+    public int distanceTo(Square other) {
         int dx = Math.abs(x - other.x);
         int dy = Math.abs(y - other.y);
         int diag = Math.min(dx, dy);
@@ -63,14 +63,13 @@ public class Tile {
         return new Vec2(x * SIZE + SIZE, y * SIZE);
     }
 
-    public static Vec2 positionAt(int x, int y) {
-        return new Vec2((x + .5) * SIZE, (y + .5) * SIZE);
-    }
-
-    public static Tile tileAt(Vec2 pos) {
-        return Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(pos);
-    }
-
+//    public static Vec2 positionAt(int x, int y) {
+//        return new Vec2((x + .5) * SIZE, (y + .5) * SIZE);
+//    }
+//
+//    public static Square tileAt(Vec2 pos) {
+//        return Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(pos);
+//    }
     public Vec2 UL() {
         return new Vec2(x * SIZE, y * SIZE + SIZE);
     }

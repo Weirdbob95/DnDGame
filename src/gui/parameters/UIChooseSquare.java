@@ -2,15 +2,16 @@ package gui.parameters;
 
 import core.Main;
 import core.MouseInput;
-import grid.Tile;
+import grid.Square;
+import grid.World;
 import gui.PlayerUIComponent;
 import gui.UIAction;
 import java.util.ArrayList;
 
 public class UIChooseSquare extends UIParameter {
 
-    public Tile square;
-    public ArrayList<Tile> options;
+    public Square square;
+    public ArrayList<Square> options;
 
     public UIChooseSquare(UIAction parent) {
         super(parent, "Choose a square");
@@ -19,13 +20,13 @@ public class UIChooseSquare extends UIParameter {
 
     @Override
     public void choose() {
-        square = Tile.tileAt(MouseInput.mouse());
+        square = World.grid.tileAt(MouseInput.mouse());
     }
 
     @Override
     public void draw() {
         if (selected) {
-            Tile t = Tile.tileAt(MouseInput.mouse());
+            Square t = World.grid.tileAt(MouseInput.mouse());
             if (t != null) {
                 Main.gameManager.getComponent(PlayerUIComponent.class).coloredTiles.add(t);
             }

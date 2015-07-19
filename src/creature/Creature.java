@@ -12,12 +12,15 @@ import enums.Size;
 import graphics.SpriteComponent;
 import graphics.SpriteSystem;
 import grid.GridLocationComponent;
+import grid.Square;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import movement.PositionComponent;
+import movement.RotationComponent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -28,20 +31,18 @@ public class Creature extends AbstractEntity {
     public AbilityScoreComponent asc;
     public ActionManagerComponent amc;
     public ArmorComponent ac;
+    public CreatureComponent cc;
     public CreatureDescriptionComponent cdc;
+    public GridLocationComponent glc;
     public HealthComponent hc;
     public LanguageComponent lc;
     public ProficienciesComponent pc;
     public ResistancesComponent rc;
     public SpeedComponent spc;
 
-    public Creature(int x, int y) {
+    public Creature(Square square) {
         new CreatureListener(this);
         //Components
-        GridLocationComponent glc = add(new GridLocationComponent(x, y));
-        SpriteComponent sc = add(new SpriteComponent("red"));
-        add(new CreatureComponent(this, new ManualController(this), (int) (Math.random() * 20), true));
-
         asc = add(new AbilityScoreComponent());
         amc = add(new ActionManagerComponent(this));
         ac = add(new ArmorComponent(this));
@@ -51,8 +52,14 @@ public class Creature extends AbstractEntity {
         pc = add(new ProficienciesComponent());
         rc = add(new ResistancesComponent());
         spc = add(new SpeedComponent());
+
+        cc = add(new CreatureComponent(this, new ManualController(this), (int) (Math.random() * 20), true));
+        glc = add(new GridLocationComponent(square, cdc));
+        PositionComponent pc = add(new PositionComponent(square.center()));
+        RotationComponent rc = add(new RotationComponent());
+        SpriteComponent sc = add(new SpriteComponent("red"));
         //Systems
-        add(new SpriteSystem(glc, sc));
+        add(new SpriteSystem(pc, rc, sc));
     }
 
     private static DocumentBuilderFactory dbf;
@@ -67,7 +74,7 @@ public class Creature extends AbstractEntity {
         } catch (ParserConfigurationException | SAXException | IOException e) {
             e.printStackTrace();
         }
-        loadCreature("Lion", 0, 0);
+        //loadCreature("Lion", World.grid.tileGrid[0][0]);
     }
 
     private static Node findMonsterNode(String name) {
@@ -96,8 +103,8 @@ public class Creature extends AbstractEntity {
         return null;
     }
 
-    public static Creature loadCreature(String name, int x, int y) {
-        Creature c = new Creature(x, y);
+    public static Creature loadCreature(String name, Square square) {
+        Creature c = new Creature(square);
         Node creatureNode = findMonsterNode(name);
         if (creatureNode == null) {
             return c;

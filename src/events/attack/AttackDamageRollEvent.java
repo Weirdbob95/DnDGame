@@ -3,17 +3,16 @@ package events.attack;
 import amounts.Value;
 import events.Event;
 
-public class AttackDamageEvent extends Event {
+public class AttackDamageRollEvent extends Event {
 
-    public AttackPacket a;
+    public AttackEvent a;
 
-    public AttackDamageEvent(AttackPacket a) {
+    public AttackDamageRollEvent(AttackEvent a) {
         this.a = a;
         if (a.isWeapon) {
             addDamage("Weapon", a.weapon.damage);
             a.damage.set("Ability Score", a.attacker.asc.mod(a.abilityScore));
         }
-        call();
     }
 
     public void addDamage(String name, Value d) {

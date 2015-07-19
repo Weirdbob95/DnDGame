@@ -2,7 +2,7 @@ package gui;
 
 import core.AbstractSystem;
 import graphics.Graphics2D;
-import grid.Tile;
+import grid.Square;
 import util.Color4d;
 import util.Vec2;
 
@@ -21,8 +21,8 @@ public class PlayerOverlaySystem extends AbstractSystem {
 
     @Override
     public void update() {
-        for (Tile t : puic.coloredTiles) {
-            Graphics2D.fillRect(t.LL(), new Vec2(1, 1).multiply(Tile.SIZE), Color4d.GREEN.setA(.5));
+        for (Square t : puic.coloredTiles) {
+            Graphics2D.fillRect(t.LL(), new Vec2(1, 1).multiply(Square.SIZE), Color4d.GREEN.setA(.5));
         }
         puic.coloredTiles.clear();
     }

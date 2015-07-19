@@ -6,12 +6,15 @@ import rounds.RoundSystem;
 
 public class World extends AbstractEntity {
 
+    public static GridComponent grid;
+
     public World() {
         //Components
         InitiativeOrderComponent ioc = add(new InitiativeOrderComponent());
-        GridComponent gc = add(new GridComponent("lvl"));
+        grid = add(new GridComponent());
+        grid.load("lvl");
         //Systems
         add(new RoundSystem(ioc));
-        add(new WorldRenderSystem(gc));
+        add(new WorldRenderSystem(grid));
     }
 }

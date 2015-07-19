@@ -11,6 +11,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import queries.Query;
+import queries.SquareQuery;
 
 public class ManualController implements CreatureController {
 
@@ -87,4 +89,10 @@ public class ManualController implements CreatureController {
         return false;
     }
 
+    @Override
+    public void handleQuery(Query query) {
+        if (query instanceof SquareQuery) {
+
+        }
+    }
 }

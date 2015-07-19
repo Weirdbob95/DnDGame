@@ -4,6 +4,9 @@ import static actions.Action.Type.ACTION;
 import amounts.Value;
 import creature.Creature;
 import enums.DamageType;
+import events.attack.AttackEvent;
+import queries.Query;
+import queries.SquareQuery;
 
 public class MonsterAttackAction extends Action {
 
@@ -25,7 +28,7 @@ public class MonsterAttackAction extends Action {
 
     @Override
     public void act() {
-//        new AttackPacket(creature, creature.target, null, null);
+        new AttackEvent(creature, Query.ask(creature, new SquareQuery("Choose a square to move to.", this, range, true)).response.creature, null, null).call();
     }
 
     @Override
