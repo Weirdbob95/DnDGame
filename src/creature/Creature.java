@@ -25,6 +25,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import util.Vec2;
 
 public class Creature extends AbstractEntity {
 
@@ -54,12 +55,13 @@ public class Creature extends AbstractEntity {
         spc = add(new SpeedComponent());
 
         cc = add(new CreatureComponent(this, new ManualController(this), (int) (Math.random() * 20), true));
-        glc = add(new GridLocationComponent(square, cdc));
+        glc = add(new GridLocationComponent(square, this));
         PositionComponent pc = add(new PositionComponent(square.center()));
         RotationComponent rc = add(new RotationComponent());
         SpriteComponent sc = add(new SpriteComponent("red"));
         //Systems
         add(new SpriteSystem(pc, rc, sc));
+        add(new HealthbarSystem(pc, hc, cdc));
     }
 
     private static DocumentBuilderFactory dbf;
@@ -122,6 +124,8 @@ public class Creature extends AbstractEntity {
                             break;
                         case "size":
                             c.cdc.size = Size.parse(text);
+                            c.getComponent(SpriteComponent.class).scale = new Vec2(1, 1).multiply(c.cdc.size.squares);
+                            c.glc.moveToSquare(c.glc.lowerLeft.center(), false);
                             break;
                         case "type":
                             c.cdc.type = CreatureType.valueOf(text.substring(0, text.indexOf(",")).toUpperCase());
@@ -180,6 +184,18 @@ public class Creature extends AbstractEntity {
                             maa.isRanged = firstBits[0].equals("Ranged");
                             maa.isWeapon = firstBits[firstBits.length - 1].equals("Weapon");
                             maa.damageType = DamageType.valueOf(desc.substring(parenPos, desc.indexOf(" ", parenPos)).toUpperCase());
+
+                            if (!maa.isRanged) {
+                                int reachPos = desc.indexOf("reach ");
+                                maa.range = Integer.valueOf(desc.substring(reachPos + 6, desc.indexOf(" ", reachPos + 6)));
+                            } else {
+                                int rangePos = desc.indexOf("range ");
+                                String[] ranges = desc.substring(rangePos + 6, desc.indexOf(" ", rangePos + 6)).split("/");
+                                maa.range = Integer.valueOf(ranges[0]);
+                                if (ranges.length > 1) {
+                                    maa.rangeLong = Integer.valueOf(ranges[1]);
+                                }
+                            }
 
                             c.amc.actions.add(maa);
                             break;

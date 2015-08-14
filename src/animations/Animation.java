@@ -1,14 +1,28 @@
 package animations;
 
-import core.Main;
-import grid.World;
-import rounds.RoundSystem;
+import core.AbstractSystem;
 
-public abstract class Animation {
+public abstract class Animation extends AbstractSystem {
 
-    public void start() {
-        Main.gameManager.elc.getEntity(World.class).getSystem(RoundSystem.class).anim = this;
+    public static Animation current;
+
+    public Animation() {
+        current = this;
     }
 
-    public abstract boolean update();
+    public synchronized void start() {
+        //System.out.println("Start");
+        try {
+            wait();
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public synchronized void finish() {
+        //System.out.println("Finish");
+        notify();
+        destroy();
+        current = null;
+    }
 }

@@ -8,10 +8,10 @@ public class FontContainer {
 
     private static HashMap<String, GLFont> fontMap = new HashMap();
 
-    static {
+    public static void init() {
         add("Default", "Times New Roman", Font.PLAIN, 24);
         add("Small", "Calibri", Font.PLAIN, 16);
-        add("Medium", "Cambria", Font.PLAIN, 24);
+        add("Medium", "Cambria", Font.PLAIN, 20);
     }
 
     public static void add(String gameName, String name, int style, int size) {

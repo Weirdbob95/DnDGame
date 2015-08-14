@@ -12,16 +12,15 @@ public class ViewMoveAnimation extends Animation {
     }
 
     @Override
-    public boolean update() {
+    public void update() {
         Vec2 diff = goal.subtract(Main.gameManager.rmc.viewPos);
         if (diff.lengthSquared() < 1) {
             Main.gameManager.rmc.viewPos = goal;
-            return true;
+            finish();
         } else if (diff.lengthSquared() < 10) {
             Main.gameManager.rmc.viewPos = Main.gameManager.rmc.viewPos.add(diff.setLength(1));
         } else {
             Main.gameManager.rmc.viewPos = Main.gameManager.rmc.viewPos.add(diff.multiply(.1));
         }
-        return false;
     }
 }

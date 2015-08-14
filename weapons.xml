@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weaponlist>
+    <weapon>
+        <name>club</name>
+        <type>simple melee</type>
+        <cost>1 sp></cost>
+        <damage>1d4</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>2</weight>
+        <property>light</property>
+    </weapon>
+</weaponlist>

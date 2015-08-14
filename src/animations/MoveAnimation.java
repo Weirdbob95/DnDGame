@@ -19,12 +19,12 @@ public class MoveAnimation extends Animation {
     }
 
     @Override
-    public boolean update() {
+    public void update() {
         if (goal.subtract(pc.pos).lengthSquared() < speed.lengthSquared()) {
             pc.pos = goal;
-            return true;
+            finish();
+        } else {
+            pc.pos = pc.pos.add(speed);
         }
-        pc.pos = pc.pos.add(speed);
-        return false;
     }
 }

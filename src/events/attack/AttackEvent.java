@@ -1,5 +1,6 @@
 package events.attack;
 
+import actions.MonsterAttackAction;
 import amounts.Die;
 import amounts.Stat;
 import creature.Creature;
@@ -7,6 +8,7 @@ import enums.AbilityScore;
 import events.Event;
 import events.TakeDamageEvent;
 import items.Weapon;
+import util.Log;
 
 public class AttackEvent extends Event {
 
@@ -21,6 +23,7 @@ public class AttackEvent extends Event {
     public boolean disadvantage;
     public boolean isCritical;
     public int roll;
+    public boolean isMonsterAttack;
 
     public AttackEvent(Creature attacker, Creature target, Weapon weapon, AbilityScore abilityScore) {
         this.attacker = attacker;
@@ -30,6 +33,15 @@ public class AttackEvent extends Event {
         this.abilityScore = abilityScore;
         toHit = new Stat();
         damage = new Stat();
+    }
+
+    public AttackEvent(MonsterAttackAction maa, Creature target) {
+        this.attacker = maa.creature;
+        this.target = target;
+        isWeapon = maa.isWeapon;
+        toHit = new Stat(maa.toHit);
+        damage = new Stat("Base", maa.damage);
+        isMonsterAttack = true;
     }
 
     @Override
@@ -42,6 +54,7 @@ public class AttackEvent extends Event {
         toHit.roll();
         //Check the attack roll results
         new AttackResultEvent(this).call();
+        Log.print("Rolled a " + roll + " + " + toHit.get() + " against an AC of " + target.ac.AC.get());
         //See if you hit
         if (!isCritical && (roll == 1 || roll + toHit.get() < target.ac.AC.get())) {
             return;

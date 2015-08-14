@@ -1,5 +1,6 @@
 package grid;
 
+import core.Main;
 import creature.Creature;
 import graphics.data.Texture;
 import graphics.loading.SpriteContainer;
@@ -67,9 +68,10 @@ public class Square {
 //        return new Vec2((x + .5) * SIZE, (y + .5) * SIZE);
 //    }
 //
-//    public static Square tileAt(Vec2 pos) {
-//        return Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(pos);
-//    }
+    public static Square tileAt(Vec2 pos) {
+        return Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(pos);
+    }
+
     public Vec2 UL() {
         return new Vec2(x * SIZE, y * SIZE + SIZE);
     }

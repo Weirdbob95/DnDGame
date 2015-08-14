@@ -1,7 +1,6 @@
 package actions;
 
 import creature.Creature;
-import gui.UIAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,9 +37,6 @@ public abstract class Action implements Comparable {
         return true;
     }
 
-    public void setUIParameters(UIAction uia) {
-    }
-
     @Override
     public String toString() {
         return getClass().getSimpleName().replaceAll("Action", "");
@@ -50,9 +46,5 @@ public abstract class Action implements Comparable {
         creature.amc.available.remove(getType());
 //        new UseActionEvent(this);
         act();
-    }
-
-    public boolean validUIParameters() {
-        return true;
     }
 }

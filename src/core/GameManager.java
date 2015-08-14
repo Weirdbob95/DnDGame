@@ -2,10 +2,10 @@ package core;
 
 import graphics.RenderManagerComponent2D;
 import graphics.RenderManagerSystem2D;
-import gui.GUISystem;
-import gui.PlayerOverlaySystem;
-import gui.PlayerUIComponent;
-import gui.PlayerUISystem;
+import graphics.GUISystem;
+import overlay.OverlaySystem;
+import ui.PlayerUIComponent;
+import ui.UISystem;
 
 public class GameManager extends AbstractEntity {
 
@@ -23,7 +23,7 @@ public class GameManager extends AbstractEntity {
 
         add(new GUISystem());
         PlayerUIComponent puic = add(new PlayerUIComponent());
-        add(new PlayerOverlaySystem(puic));
-        add(new PlayerUISystem(puic));
+        add(new OverlaySystem(puic));
+        add(new UISystem(puic));
     }
 }

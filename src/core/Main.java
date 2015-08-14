@@ -1,5 +1,6 @@
 package core;
 
+import graphics.loading.FontContainer;
 import grid.World;
 import java.io.File;
 import java.io.IOException;
@@ -9,11 +10,14 @@ import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import rounds.RoundController;
+import util.Log;
 
 public abstract class Main {
 
     public static void main(String[] args) throws IOException {
         System.setProperty("org.lwjgl.librarypath", new File("natives").getAbsolutePath());
+        Log.init();
         try {
             init();
             run();
@@ -21,6 +25,7 @@ public abstract class Main {
             ex.printStackTrace();
         } finally {
             destroy();
+            Log.close();
         }
         System.exit(0);
     }
@@ -46,8 +51,10 @@ public abstract class Main {
         gameManager = new GameManager();
         Keyboard.create();
         Mouse.create();
+        FontContainer.init();
 
         new World();
+        new RoundController().start();
     }
 
     public static void run() {

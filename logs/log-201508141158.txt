@@ -1,0 +1,35 @@
+TurnStartEvent
+TurnStartEvent
+TurnStartEvent
+TurnStartEvent
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 9 + 5 against an AC of 12
+AttackDamageRollEvent
+AttackDamageResultEvent
+TakeDamageEvent
+TurnStartEvent
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 3 + 5 against an AC of 12
+TurnStartEvent
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 13 + 5 against an AC of 12
+AttackDamageRollEvent
+AttackDamageResultEvent
+TakeDamageEvent
+TurnStartEvent
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 18 + 5 against an AC of 12
+AttackDamageRollEvent
+AttackDamageResultEvent
+TakeDamageEvent
+TurnStartEvent
+TurnStartEvent
+TurnStartEvent

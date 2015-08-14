@@ -5,6 +5,7 @@ import amounts.Value;
 import creature.Creature;
 import enums.DamageType;
 import events.attack.AttackEvent;
+import grid.Square;
 import queries.Query;
 import queries.SquareQuery;
 
@@ -28,7 +29,10 @@ public class MonsterAttackAction extends Action {
 
     @Override
     public void act() {
-        new AttackEvent(creature, Query.ask(creature, new SquareQuery("Choose a square to move to.", this, range, true)).response.creature, null, null).call();
+        Square toAttack = Query.ask(creature, new SquareQuery("Choose a creature to attack", creature.glc.occupied, range, true)).response;
+        if (toAttack != null && toAttack.creature != null) {
+            new AttackEvent(this, toAttack.creature).call();
+        }
     }
 
     @Override

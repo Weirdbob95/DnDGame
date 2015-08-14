@@ -29,8 +29,6 @@ public class ActionManagerComponent extends AbstractComponent implements EventLi
 //        actions.add(new AttackAction(creature));
         actions.add(new Dodge(creature));
         actions.add(new MoveAction(creature));
-
-        actions.add(new EndTurnAction(creature));
     }
 
     public ArrayList<Action> allowedActions() {

@@ -2,9 +2,7 @@ package creature;
 
 import controllers.CreatureController;
 import core.AbstractComponent;
-import core.Main;
-import grid.World;
-import rounds.InitiativeOrderComponent;
+import rounds.InitiativeOrder;
 
 public class CreatureComponent extends AbstractComponent {
 
@@ -18,6 +16,6 @@ public class CreatureComponent extends AbstractComponent {
         this.controller = controller;
         this.initiative = initiative;
         this.canAct = canAct;
-        Main.gameManager.elc.getEntity(World.class).getComponent(InitiativeOrderComponent.class).add(this);
+        InitiativeOrder.io.add(this);
     }
 }

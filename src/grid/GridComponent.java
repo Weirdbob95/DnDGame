@@ -24,20 +24,6 @@ public class GridComponent extends AbstractComponent {
     private static String path = "levels/";
     private static String type = ".png";
 
-    private Square createTile(int x, int y, int color) {
-        switch (color) {
-            case 0xFF000000: //0 0 0
-                return new Square(x, y, true);
-            case 0xFFFF0000: //255 0 0
-                Square s = new Square(x, y, false);
-                //new Player(s);
-                Creature.loadCreature("Lion", s);
-                return s;
-            default:
-                return new Square(x, y, false);
-        }
-    }
-
     public void load(String fileName) {
         this.fileName = fileName;
         //Load image
@@ -53,7 +39,13 @@ public class GridComponent extends AbstractComponent {
         tileGrid = new Square[width][height];
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                tileGrid[x][y] = createTile(x, y, image.getRGB(x, height - y - 1));
+                tileGrid[x][y] = loadTile(x, y, image.getRGB(x, height - y - 1));
+            }
+        }
+        //Load creatures
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                loadCreature(tileGrid[x][y], image.getRGB(x, height - y - 1));
             }
         }
         //List
@@ -88,11 +80,28 @@ public class GridComponent extends AbstractComponent {
         glEndList();
     }
 
-    public Square tileAt(Vec2 pos) {
-        if (pos.x >= 0 && pos.y >= 0 && pos.x < width * Square.SIZE && pos.y < height * Square.SIZE) {
-            return tileGrid[(int) pos.x / Square.SIZE][(int) pos.y / Square.SIZE];
+    private void loadCreature(Square s, int color) {
+        if (color == 0xFFFF0000) { //Red
+            Creature.loadCreature("Lion", s);
+        }
+    }
+
+    private Square loadTile(int x, int y, int color) {
+        if (color == 0xFF000000) { //Black
+            return new Square(x, y, true);
+        }
+        return new Square(x, y, false);
+    }
+
+    public Square tileAt(int x, int y) {
+        if (x >= 0 && y >= 0 && x < width && y < height) {
+            return tileGrid[x][y];
         }
         return null;
+    }
+
+    public Square tileAt(Vec2 pos) {
+        return tileAt((int) pos.x / Square.SIZE, (int) pos.y / Square.SIZE);
     }
 
     public boolean wallAt(Vec2 pos) {
