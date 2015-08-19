@@ -7,6 +7,7 @@ import static enums.AbilityScore.DEX;
 public class ArmorComponent extends AbstractComponent {
 
     public Stat AC;
+    public String armor;
 
     public ArmorComponent(Creature c) {
         AC = new Stat(10);

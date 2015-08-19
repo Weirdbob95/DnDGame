@@ -1,3 +1,0 @@
-events.TurnStartEvent@3d302260
-events.TurnStartEvent@35968ce
-events.attack.AttackEvent@72c56ea1

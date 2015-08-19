@@ -9,7 +9,7 @@ public class FontContainer {
     private static HashMap<String, GLFont> fontMap = new HashMap();
 
     public static void init() {
-        add("Default", "Times New Roman", Font.PLAIN, 24);
+        add("Default", "Cambria", Font.PLAIN, 22);
         add("Small", "Calibri", Font.PLAIN, 16);
         add("Medium", "Cambria", Font.PLAIN, 20);
     }

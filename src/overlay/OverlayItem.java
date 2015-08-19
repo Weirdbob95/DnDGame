@@ -1,16 +1,16 @@
 package overlay;
 
-import core.Main;
+import core.Core;
 import ui.PlayerUIComponent;
 
 public abstract class OverlayItem {
 
     public OverlayItem() {
-        Main.gameManager.getComponent(PlayerUIComponent.class).overlayItems.add(this);
+        Core.gameManager.getComponent(PlayerUIComponent.class).overlayItems.add(this);
     }
 
     public void destroy() {
-        Main.gameManager.getComponent(PlayerUIComponent.class).overlayItems.remove(this);
+        Core.gameManager.getComponent(PlayerUIComponent.class).overlayItems.remove(this);
     }
 
     public abstract void draw();

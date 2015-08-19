@@ -1,9 +1,10 @@
 package queries;
 
-import core.Main;
+import core.Core;
 import core.MouseInput;
 import creature.Creature;
 import grid.GridComponent;
+import grid.GridUtils;
 import grid.Square;
 import grid.World;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ public class PathQuery extends Query {
     private boolean isOpen(Square s) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < width; j++) {
-                Square test = Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(s.x + i, s.y + j);
+                Square test = Core.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(s.x + i, s.y + j);
                 if (test == null) {
                     return false;
                 }
@@ -83,25 +84,21 @@ public class PathQuery extends Query {
 
     private ArrayList<Square> options() {
         ArrayList<Square> r = new ArrayList();
-        for (Square[] sa : Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileGrid) {
-            for (Square s : sa) {
-                /*
-                 if (s.distanceTo(path.get(path.size() - 1)) == 5) {
-                 if (isOpen(s)) {
-                 r.add(s);
-                 }
-                 }
-                 */
-                if ((path.isEmpty() && s.distanceTo(start) == 5) || (!path.isEmpty() && s.distanceTo(path.get(path.size() - 1)) == 5)) {
-                    if (isOpen(s)) {
-                        path.add(s);
-                        if (distance() <= range) {
-                            r.add(s);
-                        }
-                        path.remove(path.size() - 1);
+        for (Square s : GridUtils.all()) {
+            Square end = start;
+            if (!path.isEmpty()) {
+                end = path.get(path.size() - 1);
+            }
+            if (GridUtils.distance(s, end) == 5) {
+                if (isOpen(s)) {
+                    path.add(s);
+                    if (distance() <= range) {
+                        r.add(s);
                     }
+                    path.remove(path.size() - 1);
                 }
             }
+
         }
         return r;
     }
@@ -128,7 +125,7 @@ public class PathQuery extends Query {
             new OverlayLine(prev.LL().add(offset), now.LL().add(offset), new Color4d(1, 1, 0), 2);
         }
         for (Square s : options()) {
-            new OverlayCircle(s.LL().add(offset), new Vec2(Square.SIZE / 4, Square.SIZE / 4), Color4d.GREEN) {
+            new OverlayCircle(s.LL().add(offset), new Vec2(Square.SIZE / 4, Square.SIZE / 4), Color4d.GREEN, true) {
                 @Override
                 public void onMouseOver() {
                     if (MouseInput.isDown(0)) {
@@ -139,7 +136,7 @@ public class PathQuery extends Query {
             };
         }
         if (!path.isEmpty()) {
-            new OverlayCircle(path.get(path.size() - 1).LL().add(offset), new Vec2(Square.SIZE / 4, Square.SIZE / 4), new Color4d(1, 1, 0)) {
+            new OverlayCircle(path.get(path.size() - 1).LL().add(offset), new Vec2(Square.SIZE / 4, Square.SIZE / 4), new Color4d(1, 1, 0), true) {
                 @Override
                 public void onMouseOver() {
                     if (MouseInput.isDown(1)) {

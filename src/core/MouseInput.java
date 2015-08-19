@@ -68,7 +68,7 @@ public abstract class MouseInput {
             time.put(i, time.get(i) + 1);
         }
 
-        RenderManagerComponent2D rmc = Main.gameManager.rmc;
+        RenderManagerComponent2D rmc = Core.gameManager.rmc;
         double w = Display.getWidth();
         double h = Display.getHeight();
         double ar = rmc.aspectRatio();

@@ -21,12 +21,14 @@ public class GridLocationComponent extends AbstractComponent {
         cdc = creature.cdc;
         int size = cdc.size.squares;
         occupied = new ArrayList();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                Square s = World.grid.tileGrid[lowerLeft.x + i][lowerLeft.y + j];
-                if (s != null) {
-                    occupied.add(s);
-                    s.creature = creature;
+        if (lowerLeft != null) {
+            for (int i = 0; i < size; i++) {
+                for (int j = 0; j < size; j++) {
+                    Square s = World.grid.tileGrid[lowerLeft.x + i][lowerLeft.y + j];
+                    if (s != null) {
+                        occupied.add(s);
+                        s.creature = creature;
+                    }
                 }
             }
         }

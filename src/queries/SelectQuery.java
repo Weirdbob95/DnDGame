@@ -1,12 +1,13 @@
 package queries;
 
+import java.util.Arrays;
+import java.util.List;
 import ui.UIButton;
 import ui.UIChooseButton;
 import ui.UIText;
-import java.util.Arrays;
-import java.util.List;
+import util.Selectable;
 
-public class SelectQuery<E> extends Query {
+public class SelectQuery<E extends Selectable> extends Query {
 
     public String desc;
     public List<E> options;
@@ -26,8 +27,9 @@ public class SelectQuery<E> extends Query {
     public void createUI() {
         new UIText(puic.root, desc);
         for (final E option : options) {
-            UIButton optionButton = new UIButton(puic.root, option.toString());
-            new UIText(optionButton, option.toString());
+            UIButton optionButton = new UIButton(puic.root, option.getName());
+            new UIText(optionButton, option.getName(), "Medium");
+            new UIText(optionButton, option.getDescription(), "Small");
             new UIChooseButton(optionButton, "Choose", this) {
                 @Override
                 public void act() {

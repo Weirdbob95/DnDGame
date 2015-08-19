@@ -1,6 +1,6 @@
 package grid;
 
-import core.Main;
+import core.Core;
 import creature.Creature;
 import graphics.data.Texture;
 import graphics.loading.SpriteContainer;
@@ -44,18 +44,6 @@ public class Square {
         return new Vec2(x * SIZE + SIZE / 2, y * SIZE + SIZE / 2);
     }
 
-    public int distanceTo(Square other) {
-        int dx = Math.abs(x - other.x);
-        int dy = Math.abs(y - other.y);
-        int diag = Math.min(dx, dy);
-        int straight = Math.max(dx, dy) - diag;
-        if (diag % 2 == 0) {
-            return diag / 2 * 15 + straight * 5;
-        } else {
-            return diag / 2 * 15 + 5 + straight * 5;
-        }
-    }
-
     public Vec2 LL() {
         return new Vec2(x * SIZE, y * SIZE);
     }
@@ -69,7 +57,7 @@ public class Square {
 //    }
 //
     public static Square tileAt(Vec2 pos) {
-        return Main.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(pos);
+        return Core.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(pos);
     }
 
     public Vec2 UL() {

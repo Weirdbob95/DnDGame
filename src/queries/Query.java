@@ -1,7 +1,7 @@
 package queries;
 
 import controllers.ManualController;
-import core.Main;
+import core.Core;
 import creature.Creature;
 import creature.CreatureComponent;
 import ui.PlayerUIComponent;
@@ -14,7 +14,7 @@ public abstract class Query {
 
     public void addToUI(ManualController toNotify) {
         this.toNotify = toNotify;
-        puic = Main.gameManager.getComponent(PlayerUIComponent.class);
+        puic = Core.gameManager.getComponent(PlayerUIComponent.class);
         puic.root = new UIItem(null) {
             @Override
             public void draw() {

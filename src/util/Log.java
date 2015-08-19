@@ -10,20 +10,29 @@ import java.util.logging.Logger;
 
 public abstract class Log {
 
-    public static boolean PRINT_TEXT = true;
-    public static boolean PRINT_ERRORS = true;
+    public static final boolean FORCE_SAVE = false;
+    public static final boolean PRINT_TEXT = true;
+    public static final boolean PRINT_ERRORS = true;
 
-    private static PrintWriter writer;
+    public static boolean save;
+    public static String toWrite = "";
 
     public static void close() {
-        writer.close();
-    }
-
-    public static void init() {
         try {
-            writer = new PrintWriter("logs/log-" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".txt", "UTF-8");
+            PrintWriter writer = new PrintWriter("logs/latest.txt", "UTF-8");
+            writer.print(toWrite);
+            writer.close();
         } catch (FileNotFoundException | UnsupportedEncodingException ex) {
             Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (FORCE_SAVE || save) {
+            try {
+                PrintWriter writer = new PrintWriter("logs/log-" + new SimpleDateFormat("yyyyMMddHHmm").format(new Date()) + ".txt", "UTF-8");
+                writer.print(toWrite);
+                writer.close();
+            } catch (FileNotFoundException | UnsupportedEncodingException ex) {
+                Logger.getLogger(Log.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -31,13 +40,14 @@ public abstract class Log {
         if (PRINT_TEXT) {
             System.out.println(o);
         }
-        writer.println(o);
+        toWrite += o.toString() + "\n";
     }
 
     public static void error(Object o) {
         if (PRINT_ERRORS) {
             System.out.println(o);
         }
-        writer.println(o);
+        save = true;
+        toWrite += o.toString() + "\n";
     }
 }

@@ -18,5 +18,8 @@ public class TakeDamageEvent extends Event {
     public void call() {
         super.call();
         creature.hc.currentHealth.edit("Damage", -damage);
+        if (creature.hc.currentHealth.get() < 0) {
+            creature.hc.currentHealth.edit("Damage", -creature.hc.currentHealth.get());
+        }
     }
 }

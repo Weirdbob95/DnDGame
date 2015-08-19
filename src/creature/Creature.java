@@ -40,6 +40,7 @@ public class Creature extends AbstractEntity {
     public ProficienciesComponent pc;
     public ResistancesComponent rc;
     public SpeedComponent spc;
+    public WieldingComponent wc;
 
     public Creature(Square square) {
         new CreatureListener(this);
@@ -53,15 +54,19 @@ public class Creature extends AbstractEntity {
         pc = add(new ProficienciesComponent());
         rc = add(new ResistancesComponent());
         spc = add(new SpeedComponent());
+        wc = add(new WieldingComponent(0));
 
         cc = add(new CreatureComponent(this, new ManualController(this), (int) (Math.random() * 20), true));
         glc = add(new GridLocationComponent(square, this));
-        PositionComponent pc = add(new PositionComponent(square.center()));
-        RotationComponent rc = add(new RotationComponent());
-        SpriteComponent sc = add(new SpriteComponent("red"));
-        //Systems
-        add(new SpriteSystem(pc, rc, sc));
-        add(new HealthbarSystem(pc, hc, cdc));
+
+        if (square != null) {
+            PositionComponent pc = add(new PositionComponent(square.center()));
+            RotationComponent rc = add(new RotationComponent());
+            SpriteComponent sc = add(new SpriteComponent("red"));
+            //Systems
+            add(new SpriteSystem(pc, rc, sc));
+            add(new HealthbarSystem(pc, hc, cdc));
+        }
     }
 
     private static DocumentBuilderFactory dbf;

@@ -1,7 +1,7 @@
 package controllers;
 
 import actions.Action;
-import core.Main;
+import core.Core;
 import creature.Creature;
 import ui.PlayerUIComponent;
 import queries.ActionQuery;
@@ -14,7 +14,7 @@ public class ManualController implements CreatureController {
 
     public ManualController(Creature creature) {
         this.creature = creature;
-        puic = Main.gameManager.getComponent(PlayerUIComponent.class);
+        puic = Core.gameManager.getComponent(PlayerUIComponent.class);
     }
 
 //    public boolean go() {

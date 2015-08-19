@@ -9,6 +9,6 @@ public abstract class AbstractComponent {
     }
 
     protected void destroy() {
-        Main.gameManager.elc.remove(this);
+        Core.gameManager.elc.remove(this);
     }
 }

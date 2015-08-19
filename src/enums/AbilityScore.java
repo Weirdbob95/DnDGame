@@ -9,7 +9,7 @@ public enum AbilityScore {
     WIS("Wisdom"),
     CHA("Charisma");
 
-    private String name;
+    private final String name;
 
     private AbilityScore(String name) {
         this.name = name;

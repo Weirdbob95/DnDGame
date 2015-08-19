@@ -1,6 +1,6 @@
 package ui;
 
-import core.Main;
+import core.Core;
 
 public class UIBackButton extends UIButton {
 
@@ -10,6 +10,6 @@ public class UIBackButton extends UIButton {
 
     @Override
     public void onClick() {
-        Main.gameManager.getComponent(PlayerUIComponent.class).root = parent.parent;
+        Core.gameManager.getComponent(PlayerUIComponent.class).root = parent.parent;
     }
 }

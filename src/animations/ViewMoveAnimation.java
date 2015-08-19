@@ -1,6 +1,6 @@
 package animations;
 
-import core.Main;
+import core.Core;
 import util.Vec2;
 
 public class ViewMoveAnimation extends Animation {
@@ -13,14 +13,14 @@ public class ViewMoveAnimation extends Animation {
 
     @Override
     public void update() {
-        Vec2 diff = goal.subtract(Main.gameManager.rmc.viewPos);
+        Vec2 diff = goal.subtract(Core.gameManager.rmc.viewPos);
         if (diff.lengthSquared() < 1) {
-            Main.gameManager.rmc.viewPos = goal;
+            Core.gameManager.rmc.viewPos = goal;
             finish();
         } else if (diff.lengthSquared() < 10) {
-            Main.gameManager.rmc.viewPos = Main.gameManager.rmc.viewPos.add(diff.setLength(1));
+            Core.gameManager.rmc.viewPos = Core.gameManager.rmc.viewPos.add(diff.setLength(1));
         } else {
-            Main.gameManager.rmc.viewPos = Main.gameManager.rmc.viewPos.add(diff.multiply(.1));
+            Core.gameManager.rmc.viewPos = Core.gameManager.rmc.viewPos.add(diff.multiply(.1));
         }
     }
 }
