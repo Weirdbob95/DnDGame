@@ -8,7 +8,11 @@ import enums.AbilityScore;
 import events.Event;
 import events.TakeDamageEvent;
 import items.Weapon;
+import java.util.ArrayList;
+import queries.Query;
+import queries.SelectQuery;
 import util.Log;
+import util.SelectableImpl;
 
 public class AttackEvent extends Event {
 
@@ -17,6 +21,7 @@ public class AttackEvent extends Event {
     public boolean isWeapon;
     public Weapon weapon;
     public AbilityScore abilityScore;
+    public ArrayList<AbilityScore> allowedAbilityScores;
     public Stat toHit;
     public Stat damage;
     public boolean advantage;
@@ -25,12 +30,18 @@ public class AttackEvent extends Event {
     public int roll;
     public boolean isMonsterAttack;
 
-    public AttackEvent(Creature attacker, Creature target, Weapon weapon, AbilityScore abilityScore) {
+    public AttackEvent(Creature attacker, Creature target, Weapon weapon) {
         this.attacker = attacker;
         this.target = target;
         isWeapon = true;
         this.weapon = weapon;
-        this.abilityScore = abilityScore;
+        allowedAbilityScores = new ArrayList();
+        if (!weapon.isRanged || weapon.thrown || weapon.finesse) {
+            allowedAbilityScores.add(AbilityScore.STR);
+        }
+        if ((weapon.isRanged && !weapon.thrown) || weapon.finesse) {
+            allowedAbilityScores.add(AbilityScore.DEX);
+        }
         toHit = new Stat();
         damage = new Stat();
     }
@@ -47,6 +58,11 @@ public class AttackEvent extends Event {
     @Override
     public void call() {
         super.call();
+        ArrayList<SelectableImpl> options = new ArrayList();
+        for (AbilityScore as : allowedAbilityScores) {
+            options.add(new SelectableImpl(as.longName(), "Value: " + attacker.asc.get(as)));
+        }
+        abilityScore = AbilityScore.valueOfLongName(Query.ask(attacker, new SelectQuery("Choose an ability score to attack with", options)).response.getName());
         //Get the attack roll info
         new AttackRollEvent(this).call();
         //Roll the dice

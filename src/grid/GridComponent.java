@@ -1,7 +1,6 @@
 package grid;
 
 import core.AbstractComponent;
-import creature.Creature;
 import graphics.Graphics2D;
 import static graphics.Graphics2D.drawSpriteFast;
 import graphics.data.Texture;
@@ -11,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import static org.lwjgl.opengl.GL11.*;
+import player.Player;
 import static util.Color4d.WHITE;
 import util.Vec2;
 
@@ -82,7 +82,8 @@ public class GridComponent extends AbstractComponent {
 
     private void loadCreature(Square s, int color) {
         if (color == 0xFFFF0000) { //Red
-            Creature.loadCreature("Lion", s);
+            //Creature.loadCreature("Lion", s);
+            Player.loadPlayer("bob.ser", s);
         }
     }
 

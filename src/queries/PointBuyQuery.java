@@ -52,7 +52,10 @@ public class PointBuyQuery extends Query {
     }
 
     @Override
-    public void createUI() {
+    public boolean createUI() {
+        if (points == 0) {
+            return false;
+        }
         new UIText(puic.root, "Spend points to improve your ability scores");
         uiPoints = new UIText(puic.root, "");
         uiList = new UIPointBuy[ABILITY_SCORE_COUNT];
@@ -61,6 +64,7 @@ public class PointBuyQuery extends Query {
         }
         new UIChooseButton(puic.root, "Finish", this);
         updateUI();
+        return true;
     }
 
     public void updateUI() {

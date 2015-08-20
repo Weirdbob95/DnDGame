@@ -1,13 +1,21 @@
 package races;
 
-import creature.Creature;
-import player.SaveItem;
+import java.io.Serializable;
+import player.Player;
 
-public abstract class Race implements SaveItem {
+public abstract class Race implements Serializable {
 
-    public Creature creature;
+    public Player player;
 
-    public Race(Creature creature) {
-        this.creature = creature;
+    public void addTo(Player player) {
+        this.player = player;
+        player.asc.editAll(getAbilityScores());
+        player.spc.landSpeed.set(getSpeed());
+    }
+
+    public abstract int[] getAbilityScores();
+
+    public int getSpeed() {
+        return 30;
     }
 }

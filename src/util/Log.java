@@ -46,6 +46,9 @@ public abstract class Log {
     public static void error(Object o) {
         if (PRINT_ERRORS) {
             System.out.println(o);
+            if (o instanceof Throwable) {
+                ((Throwable) o).printStackTrace();
+            }
         }
         save = true;
         toWrite += o.toString() + "\n";

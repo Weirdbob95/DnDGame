@@ -13,9 +13,9 @@ public class MoveAction extends Action {
     @Override
     protected void act() {
         PathQuery path = Query.ask(creature, new PathQuery("Choose which square to move to",
-                creature.glc.lowerLeft, creature.spc.landSpeed - creature.spc.speedUsed, creature.cdc.size.squares, false, creature));
+                creature.glc.lowerLeft, (int) Math.round(creature.spc.landSpeed.get() * creature.spc.speedPercRemaining), creature.cdc.size.squares, false, creature));
         if (!path.path.isEmpty()) {
-            creature.spc.speedUsed += path.distance();
+            creature.spc.speedPercRemaining -= (double) path.distance() / creature.spc.landSpeed.get();
             creature.glc.moveAlongPath(path.path);
         }
     }
@@ -26,7 +26,7 @@ public class MoveAction extends Action {
     }
 
     @Override
-    public String description() {
+    public String getDescription() {
         return "Move to a square.";
     }
 
@@ -36,7 +36,7 @@ public class MoveAction extends Action {
     }
 
     @Override
-    public boolean isAvaliable() {
-        return creature.spc.landSpeed > creature.spc.speedUsed;
+    public boolean isAvailable() {
+        return creature.spc.speedPercRemaining > 0;
     }
 }

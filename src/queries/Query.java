@@ -12,7 +12,7 @@ public abstract class Query {
     public PlayerUIComponent puic;
     public ManualController toNotify;
 
-    public void addToUI(ManualController toNotify) {
+    public boolean addToUI(ManualController toNotify) {
         this.toNotify = toNotify;
         puic = Core.gameManager.getComponent(PlayerUIComponent.class);
         puic.root = new UIItem(null) {
@@ -24,7 +24,7 @@ public abstract class Query {
             public void onClick() {
             }
         };
-        createUI();
+        return createUI();
     }
 
     public static <Q extends Query> Q ask(Creature creature, Q query) {
@@ -32,7 +32,7 @@ public abstract class Query {
         return query;
     }
 
-    public abstract void createUI();
+    public abstract boolean createUI();
 
     public void removeFromUI() {
         puic.root = null;

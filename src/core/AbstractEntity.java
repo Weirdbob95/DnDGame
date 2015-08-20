@@ -1,9 +1,10 @@
 package core;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class AbstractEntity {
+public abstract class AbstractEntity implements Serializable {
 
     ArrayList<AbstractComponent> componentList;
     ArrayList<AbstractSystem> systemList;

@@ -1,6 +1,8 @@
 package amounts;
 
-public interface Amount {
+import java.io.Serializable;
+
+public interface Amount extends Serializable {
 
     public Value asValue();
 

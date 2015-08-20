@@ -33,11 +33,7 @@ public class SquareQuery extends Query {
     }
 
     @Override
-    public void createUI() {
-        //Vec2 offset = new Vec2(Square.SIZE * range / 5., Square.SIZE * range / 5.);
-        //for (int i = Square.tileAt(source.subtract(offset)).x; i <= Square.tileAt(source.add(offset)).x; i++) {
-        //    for (int j = Square.tileAt(source.subtract(offset)).y; j <= Square.tileAt(source.add(offset)).y; j++) {
-        //        Square s = Main.gameManager.getComponent(GridComponent.class).tileAt(i, j);
+    public boolean createUI() {
         for (Square s : GridUtils.all()) {
             if (GridUtils.minDistance(s, sources) <= range) {
                 final SquareQuery thus = this;
@@ -58,11 +54,10 @@ public class SquareQuery extends Query {
                         color = new Color4d(1, .5, 0, .5);
                     }
                 });
-                //}
-                break;
             }
         }
         new UIText(puic.root, desc);
         new UIChooseButton(puic.root, "Cancel", this);
+        return true;
     }
 }

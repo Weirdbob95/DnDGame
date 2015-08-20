@@ -41,7 +41,7 @@ public class MonsterAttackAction extends Action {
     }
 
     @Override
-    public String description() {
+    public String getDescription() {
         return "The monster attacks its target.";
     }
 

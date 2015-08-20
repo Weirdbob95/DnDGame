@@ -2,14 +2,13 @@ package player;
 
 import classes.PlayerClass;
 import core.AbstractComponent;
-import creature.Creature;
 import java.util.ArrayList;
 import util.Log;
 
 public class ClassComponent extends AbstractComponent {
 
-    public ArrayList<PlayerClass> classes = new ArrayList();
     public Player player;
+    public ArrayList<PlayerClass> classes = new ArrayList();
 
     public ClassComponent(Player player) {
         this.player = player;
@@ -24,10 +23,19 @@ public class ClassComponent extends AbstractComponent {
                     return;
                 }
             }
-            PlayerClass pc = (PlayerClass) c.getConstructor(Creature.class).newInstance(player);
+            PlayerClass pc = (PlayerClass) c.getConstructor(Player.class).newInstance(player);
+            classes.add(pc);
             pc.levelTo(1);
         } catch (Exception ex) {
             Log.error(ex);
         }
+    }
+
+    public int level() {
+        int r = 0;
+        for (PlayerClass pc : classes) {
+            r += pc.level;
+        }
+        return r;
     }
 }

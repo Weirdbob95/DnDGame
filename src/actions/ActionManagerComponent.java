@@ -5,7 +5,6 @@ import static actions.Action.Type.*;
 import core.AbstractComponent;
 import creature.Creature;
 import events.Event;
-import events.EventHandler;
 import events.EventListener;
 import events.TurnStartEvent;
 import java.util.ArrayList;
@@ -18,7 +17,7 @@ public class ActionManagerComponent extends AbstractComponent implements EventLi
 
     public ActionManagerComponent(Creature creature) {
         this.creature = creature;
-        EventHandler.addListener(this);
+        addToCreature(creature);
 
         available = new ArrayList();
         available.add(ACTION);
@@ -26,15 +25,16 @@ public class ActionManagerComponent extends AbstractComponent implements EventLi
         available.add(REACTION);
         actions = new ArrayList();
 
-//        actions.add(new AttackAction(creature));
+        actions.add(new AttackAction(creature));
         actions.add(new Dodge(creature));
         actions.add(new MoveAction(creature));
+        actions.add(new Dash(creature));
     }
 
     public ArrayList<Action> allowedActions() {
         ArrayList<Action> r = new ArrayList();
         for (Action a : actions) {
-            if (a.isAvaliable()) {
+            if (a.isAvailable()) {
                 if (a.getType() == null || available.contains(a.getType())) {
                     r.add(a);
                 }
@@ -48,10 +48,10 @@ public class ActionManagerComponent extends AbstractComponent implements EventLi
         return new Class[]{TurnStartEvent.class};
     }
 
-    public Action getAction(Class<? extends Action> c) {
+    public <A extends Action> A getAction(Class<A> c) {
         for (Action a : actions) {
             if (c.isInstance(a)) {
-                return a;
+                return (A) a;
             }
         }
         return null;
@@ -65,10 +65,5 @@ public class ActionManagerComponent extends AbstractComponent implements EventLi
             available.add(BONUS_ACTION);
             available.add(REACTION);
         }
-    }
-
-    @Override
-    public double priority() {
-        return 0;
     }
 }

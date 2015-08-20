@@ -35,7 +35,7 @@ public class FightingStylesComponent extends AbstractComponent {
         fightingStyles.add(style);
         switch (style) {
             case Archery:
-                new AbstractEventListener() {
+                new AbstractEventListener(creature) {
                     @Override
                     public Class<? extends Event>[] callOn() {
                         return new Class[]{AttackRollEvent.class};
@@ -56,7 +56,7 @@ public class FightingStylesComponent extends AbstractComponent {
                 }, new Value(1)));
                 break;
             case Dueling:
-                new AbstractEventListener() {
+                new AbstractEventListener(creature) {
                     @Override
                     public Class<? extends Event>[] callOn() {
                         return new Class[]{AttackDamageRollEvent.class};
@@ -74,7 +74,7 @@ public class FightingStylesComponent extends AbstractComponent {
                 };
                 break;
             case Great_Weapon_Fighting:
-                new AbstractEventListener() {
+                new AbstractEventListener(creature) {
                     @Override
                     public Class<? extends Event>[] callOn() {
                         return new Class[]{AttackDamageResultEvent.class};
@@ -96,7 +96,7 @@ public class FightingStylesComponent extends AbstractComponent {
                 };
                 break;
             case Protection:
-                new AbstractEventListener() {
+                new AbstractEventListener(creature) {
                     @Override
                     public Class<? extends Event>[] callOn() {
                         return new Class[]{AttackRollEvent.class};

@@ -11,7 +11,6 @@ public abstract class Animation extends AbstractSystem {
     }
 
     public synchronized void start() {
-        //System.out.println("Start");
         try {
             wait();
         } catch (InterruptedException ex) {
@@ -20,7 +19,6 @@ public abstract class Animation extends AbstractSystem {
     }
 
     public synchronized void finish() {
-        //System.out.println("Finish");
         notify();
         destroy();
         current = null;

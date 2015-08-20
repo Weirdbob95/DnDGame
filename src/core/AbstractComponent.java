@@ -1,12 +1,8 @@
 package core;
 
-public abstract class AbstractComponent {
+import java.io.Serializable;
 
-    public AbstractComponent() {
-//        if (!(this instanceof EntityListComponent)) {
-//            Main.gameManager.elc.add(this);
-//        }
-    }
+public abstract class AbstractComponent implements Serializable {
 
     protected void destroy() {
         Core.gameManager.elc.remove(this);

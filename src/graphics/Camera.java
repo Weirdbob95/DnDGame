@@ -4,6 +4,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import static org.lwjgl.opengl.GL11.*;
+import util.Log;
 import util.Vec2;
 
 public abstract class Camera {
@@ -62,13 +63,13 @@ public abstract class Camera {
                 targetDisplayMode = new DisplayMode(width, height);
             }
             if (targetDisplayMode == null) {
-                System.out.println("Failed to find value mode: " + width + "x" + height + " fs=" + fullscreen);
+                Log.print("Failed to find value mode: " + width + "x" + height + " fs=" + fullscreen);
                 return;
             }
             Display.setDisplayMode(targetDisplayMode);
             Display.setFullscreen(fullscreen);
         } catch (LWJGLException e) {
-            System.out.println("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen + e);
+            Log.print("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen + e);
         }
     }
 

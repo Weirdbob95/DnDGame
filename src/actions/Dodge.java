@@ -3,7 +3,6 @@ package actions;
 import static actions.Action.Type.ACTION;
 import creature.Creature;
 import events.Event;
-import events.EventHandler;
 import events.EventListener;
 import events.TurnStartEvent;
 import events.attack.AttackRollEvent;
@@ -14,7 +13,7 @@ public class Dodge extends Action implements EventListener {
 
     public Dodge(Creature creature) {
         super(creature);
-        EventHandler.addListener(this);
+        addToCreature(creature);
     }
 
     @Override
@@ -33,7 +32,7 @@ public class Dodge extends Action implements EventListener {
     }
 
     @Override
-    public String description() {
+    public String getDescription() {
         return "When you take the Dodge action, you focus entirely on avoiding attacks. Until the start of your next turn, any attack roll made against you has disadvantage if you can see the attacker, and you make Dexterity saving throws with advantage. You lose this benefit if you are incapacitated or if your speed drops to 0.";
     }
 

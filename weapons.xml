@@ -1,12 +1,432 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <weaponlist>
     <weapon>
-        <name>club</name>
+        <name>Club</name>
         <type>simple melee</type>
-        <cost>1 sp></cost>
+        <cost>1 sp</cost>
         <damage>1d4</damage>
         <damagetype>bludgeoning</damagetype>
         <weight>2</weight>
         <property>light</property>
+    </weapon>
+    <weapon>
+        <name>Dagger</name>
+        <type>simple melee</type>
+        <cost>2 gp</cost>
+        <damage>1d4</damage>
+        <damagetype>piercing</damagetype>
+        <weight>1</weight>
+        <property>light</property>
+        <property>finesse</property>
+        <property>
+            thrown
+            <short>20</short>
+            <long>60</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Greatclub</name>
+        <type>simple melee</type>
+        <cost>2 sp</cost>
+        <damage>1d8</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>10</weight>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Handaxe</name>
+        <type>simple melee</type>
+        <cost>5 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>slashing</damagetype>
+        <weight>2</weight>
+        <property>light</property>
+        <property>
+            thrown
+            <short>20</short>
+            <long>60</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Javelin</name>
+        <type>simple melee</type>
+        <cost>5 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>piercing</damagetype>
+        <weight>2</weight>
+        <property>light</property>
+        <property>
+            thrown
+            <short>30</short>
+            <long>120</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Light hammer</name>
+        <type>simple melee</type>
+        <cost>2 gp</cost>
+        <damage>1d4</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>2</weight>
+        <property>
+            thrown
+            <short>20</short>
+            <long>60</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Mace</name>
+        <type>simple melee</type>
+        <cost>5 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>4</weight>
+    </weapon>
+    <weapon>
+        <name>Quarterstaff</name>
+        <type>simple melee</type>
+        <cost>2 sp</cost>
+        <damage>1d6</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>4</weight>
+        <property>versatile (1d8)</property>
+    </weapon>
+    <weapon>
+        <name>Sickle</name>
+        <type>simple melee</type>
+        <cost>1 sp</cost>
+        <damage>1d4</damage>
+        <damagetype>slashing</damagetype>
+        <weight>2</weight>
+        <property>light</property>
+    </weapon>
+    <weapon>
+        <name>Spear</name>
+        <type>simple melee</type>
+        <cost>1 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>piercing</damagetype>
+        <weight>3</weight>
+        <property>versatile (1d8)</property>
+        <property>
+            thrown
+            <short>20</short>
+            <long>60</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Unarmed Strike</name>
+        <type>simple melee</type>
+        <cost>0></cost>
+        <damage>1</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>0</weight>
+    </weapon>
+    <weapon>
+        <name>Crossbow, light</name>
+        <type>simple ranged</type>
+        <cost>25 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>piercing</damagetype>
+        <weight>5</weight>
+        <property>loading</property>
+        <property>
+            ammunition
+            <short>80</short>
+            <long>320</long>
+        </property>
+        <property>two-handed	</property>
+    </weapon>
+    <weapon>
+        <name>Dart</name>
+        <type>simple ranged</type>
+        <cost>5 cp</cost>
+        <damage>1d4</damage>
+        <damagetype>piercing</damagetype>
+        <weight>.25</weight>
+        <property>finesse</property>
+        <property>
+            ammunition
+            <short>20</short>
+            <long>60</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Shortbow</name>
+        <type>simple ranged</type>
+        <cost>25 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>2</weight>
+        <property>two-handed</property>
+        <property>
+            ammunition
+            <short>80</short>
+            <long>320</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Sling</name>
+        <type>simple ranged</type>
+        <cost>1 sp</cost>
+        <damage>1d4</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>0</weight>
+        <property>
+            ammunition
+            <short>30</short>
+            <long>120</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Battleaxe</name>
+        <type>martial melee</type>
+        <cost>10 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>slashing</damagetype>
+        <weight>2</weight>
+        <property>versatile (1d10)</property>
+    </weapon>
+    <weapon>
+        <name>Flail</name>
+        <type>martial melee</type>
+        <cost>10gp></cost>
+        <damage>1d8</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>2</weight>
+    </weapon>
+    <weapon>
+        <name>Glaive</name>
+        <type>martial melee</type>
+        <cost>20gp></cost>
+        <damage>1d10</damage>
+        <damagetype>slashing</damagetype>
+        <weight>6</weight>
+        <property>heavy</property>
+        <property>reach</property>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Greataxe</name>
+        <type>martial melee</type>
+        <cost>30gp></cost>
+        <damage>1d12</damage>
+        <damagetype>slashing</damagetype>
+        <weight>7</weight>
+        <property>heavy</property>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Greatsword</name>
+        <type>martial melee</type>
+        <cost>50gp></cost>
+        <damage>1d6</damage>
+        <damagetype>slashing</damagetype>
+        <weight>6</weight>
+        <property>heavy</property>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Halberd</name>
+        <type>martial melee</type>
+        <cost>20gp></cost>
+        <damage>1d10</damage>
+        <damagetype>slashing</damagetype>
+        <weight>6</weight>
+        <property>heavy</property>
+        <property>reach</property>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Lance</name>
+        <type>martial melee</type>
+        <cost>10gp></cost>
+        <damage>1d12</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>6</weight>
+        <property>reach</property>
+        <property>special</property>
+    </weapon>
+    <weapon>
+        <name>Longsword</name>
+        <type>martial melee</type>
+        <cost>15 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>slashing</damagetype>
+        <weight>3</weight>
+        <property>versatile (1d10)</property>
+    </weapon>
+    <weapon>
+        <name>Maul</name>
+        <type>martial melee</type>
+        <cost>10 gp</cost>
+        <damage>2d6</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>10</weight>
+        <property>heavy</property>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Morningstar</name>
+        <type>martial melee</type>
+        <cost>15 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>piercing</damagetype>
+        <weight>4</weight>
+    </weapon>
+    <weapon>
+        <name>Pike</name>
+        <type>martial melee</type>
+        <cost>5 gp</cost>
+        <damage>1d10</damage>
+        <damagetype>piercing</damagetype>
+        <weight>18</weight>
+        <property>heavy</property>
+        <property>reach</property>
+        <property>two-handed</property>
+    </weapon>
+    <weapon>
+        <name>Rapier</name>
+        <type>martial melee</type>
+        <cost>25 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>piercing</damagetype>
+        <weight>2</weight>
+        <property>Finesse</property>
+    </weapon>
+    <weapon>
+        <name>Scimitar</name>
+        <type>martial melee</type>
+        <cost>25 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>slashing</damagetype>
+        <weight>3</weight>
+        <property>light</property>
+        <property>finesse</property>
+    </weapon>
+    <weapon>
+        <name>Shortsword</name>
+        <type>martial melee</type>
+        <cost>10 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>piercing</damagetype>
+        <weight>2</weight>
+        <property>light</property>
+        <property>finesse</property>
+    </weapon>
+    <weapon>
+        <name>Trident</name>
+        <type>martial melee</type>
+        <cost>5 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>piercing</damagetype>
+        <weight>4</weight>
+        <property>versatile (1d8)</property>
+        <property>
+            thrown
+            <short>20</short>
+            <long>60</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>War pick</name>
+        <type>martial melee</type>
+        <cost>5gp></cost>
+        <damage>1d8</damage>
+        <damagetype>piercing</damagetype>
+        <weight>2</weight>
+    </weapon>
+    <weapon>
+        <name>Warhammer</name>
+        <type>martial melee</type>
+        <cost>15 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>bludgeoning</damagetype>
+        <weight>2</weight>
+        <property>versatile (1d10)</property>
+    </weapon>
+    <weapon>
+        <name>Whip</name>
+        <type>martial melee</type>
+        <cost>2 gp</cost>
+        <damage>1d4</damage>
+        <damagetype>slashing</damagetype>
+        <weight>3</weight>
+        <property>Finesse</property>
+        <property>reach</property>
+    </weapon>
+    <weapon>
+        <name>Blowgun</name>
+        <type>martial ranged</type>
+        <cost>10 gp</cost>
+        <damage>1</damage>
+        <damagetype>piercing</damagetype>
+        <weight>1</weight>
+        <property>loading</property>
+        <property>
+            ammunition
+            <short>25</short>
+            <long>100</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Crossbow, hand</name>
+        <type>martial ranged</type>
+        <cost>75 gp</cost>
+        <damage>1d6</damage>
+        <damagetype>piercing </damagetype>
+        <weight>3</weight>
+        <property>light</property>
+        <property>loading</property>
+        <property>
+            ammunition
+            <short>30</short>
+            <long>120</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Crossbow, heavy</name>
+        <type>martial ranged</type>
+        <cost>50 gp</cost>
+        <damage>1d10</damage>
+        <damagetype>piercing</damagetype>
+        <weight>18</weight>
+        <property>heavy</property>
+        <property>loading</property>
+        <property>two-handed</property>
+        <property>
+            thrown
+            <short>100</short>
+            <long>400</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Longbow</name>
+        <type>martial ranged </type>
+        <cost>50 gp</cost>
+        <damage>1d8</damage>
+        <damagetype>piercing</damagetype>
+        <weight>2</weight>
+        <property>heavy</property>
+        <property>two-handed</property>
+        <property>
+            ammunition
+            <short>150</short>
+            <long>600</long>
+        </property>
+    </weapon>
+    <weapon>
+        <name>Net</name>
+        <type>simple melee</type>
+        <cost>1 gp</cost>
+        <damage>0</damage>
+        <damagetype> </damagetype>
+        <weight>3</weight>
+        <property>Special</property>
+        <property>
+            thrown
+            <short>5</short>
+            <long>15</long>
+        </property>
     </weapon>
 </weaponlist>

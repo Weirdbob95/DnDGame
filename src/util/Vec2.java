@@ -1,8 +1,9 @@
 package util;
 
+import java.io.Serializable;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Vec2 {
+public class Vec2 implements Serializable {
 
     public final double x;
     public final double y;

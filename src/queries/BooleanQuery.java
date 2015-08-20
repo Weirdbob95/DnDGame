@@ -13,7 +13,7 @@ public class BooleanQuery extends Query {
     }
 
     @Override
-    public void createUI() {
+    public boolean createUI() {
         new UIText(puic.root, desc);
         new UIChooseButton(puic.root, "Yes", this) {
             @Override
@@ -22,5 +22,6 @@ public class BooleanQuery extends Query {
             }
         };
         new UIChooseButton(puic.root, "No", this);
+        return true;
     }
 }

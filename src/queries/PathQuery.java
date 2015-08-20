@@ -36,10 +36,14 @@ public class PathQuery extends Query {
     }
 
     @Override
-    public void createUI() {
+    public boolean createUI() {
+        if (range == 0) {
+            return false;
+        }
         path = new ArrayList();
         //circles = new ArrayList();
         updateUI();
+        return true;
     }
 
     public int distance() {

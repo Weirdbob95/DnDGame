@@ -1,10 +1,17 @@
 package player;
 
 import creature.Creature;
+import creature.HealthbarSystem;
+import events.EventHandler;
+import events.EventListener;
+import graphics.SpriteComponent;
+import graphics.SpriteSystem;
 import grid.Square;
-import java.util.ArrayList;
-import java.util.HashMap;
-import util.Log;
+import items.Weapon;
+import movement.PositionComponent;
+import movement.RotationComponent;
+import rounds.InitiativeOrder;
+import util.SerializationUtils;
 
 public class Player extends Creature {
 
@@ -19,30 +26,21 @@ public class Player extends Creature {
 
         add(new FightingStylesComponent(this));
         wc.setHands(2);
+
+        wc.held[0] = Weapon.loadWeapon("Longsword"); //Fix pls
     }
 
     public static Player loadPlayer(String name, Square square) {
-        Player p = new Player(square);
-        HashMap<String, HashMap<String, String>> map = SaveUtils.loadFile(name);
-
-        for (String s : map.keySet()) {
-            try {
-                SaveItem i = (SaveItem) Class.forName(s).getConstructor(Creature.class).newInstance(p);
-                i.fromText(map.get(s));
-            } catch (Exception ex) {
-                Log.error(ex);
-            }
+        Player p = (Player) SerializationUtils.load(name);
+        p.glc.moveToSquare(square.center(), false);
+        InitiativeOrder.io.add(p.cc);
+        SpriteComponent sc = p.getComponent(SpriteComponent.class);
+        sc.setSprite(sc.name);
+        p.add(new SpriteSystem(p.getComponent(PositionComponent.class), p.getComponent(RotationComponent.class), sc));
+        p.add(new HealthbarSystem(p.getComponent(PositionComponent.class), p.hc, p.cdc));
+        for (EventListener el : p.elc.listenerList) {
+            EventHandler.addListener(el);
         }
-
         return p;
-    }
-
-    public void save(String name) {
-        ArrayList<SaveItem> toSave = new ArrayList();
-
-        toSave.addAll(clc.classes);
-        toSave.add(rac.race);
-
-        SaveUtils.saveFile(name, toSave);
     }
 }

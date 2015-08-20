@@ -44,6 +44,9 @@ public class SpriteComponent extends AbstractComponent {
 
     public void setSprite(String name, int x, int y) {
         this.name = name;
-        textureArray = SpriteContainer.loadSprite(name, x, y);
+        try {
+            textureArray = SpriteContainer.loadSprite(name, x, y);
+        } catch (Exception ex) {
+        }
     }
 }

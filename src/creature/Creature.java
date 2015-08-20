@@ -15,6 +15,7 @@ import grid.GridLocationComponent;
 import grid.Square;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Arrays;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,15 +26,17 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import util.Log;
 import util.Vec2;
 
-public class Creature extends AbstractEntity {
+public class Creature extends AbstractEntity implements Serializable {
 
     public AbilityScoreComponent asc;
     public ActionManagerComponent amc;
     public ArmorComponent ac;
     public CreatureComponent cc;
     public CreatureDescriptionComponent cdc;
+    public EventListenersComponent elc;
     public GridLocationComponent glc;
     public HealthComponent hc;
     public LanguageComponent lc;
@@ -43,8 +46,8 @@ public class Creature extends AbstractEntity {
     public WieldingComponent wc;
 
     public Creature(Square square) {
-        new CreatureListener(this);
         //Components
+        elc = add(new EventListenersComponent());
         asc = add(new AbilityScoreComponent());
         amc = add(new ActionManagerComponent(this));
         ac = add(new ArmorComponent(this));
@@ -53,19 +56,21 @@ public class Creature extends AbstractEntity {
         lc = add(new LanguageComponent());
         pc = add(new ProficienciesComponent());
         rc = add(new ResistancesComponent());
-        spc = add(new SpeedComponent());
+        spc = add(new SpeedComponent(this));
         wc = add(new WieldingComponent(0));
 
         cc = add(new CreatureComponent(this, new ManualController(this), (int) (Math.random() * 20), true));
         glc = add(new GridLocationComponent(square, this));
 
+        RotationComponent rc = add(new RotationComponent());
+        SpriteComponent sc = add(new SpriteComponent("red"));
         if (square != null) {
             PositionComponent pc = add(new PositionComponent(square.center()));
-            RotationComponent rc = add(new RotationComponent());
-            SpriteComponent sc = add(new SpriteComponent("red"));
             //Systems
             add(new SpriteSystem(pc, rc, sc));
             add(new HealthbarSystem(pc, hc, cdc));
+        } else {
+            PositionComponent pc = add(new PositionComponent());
         }
     }
 
@@ -79,9 +84,8 @@ public class Creature extends AbstractEntity {
             db = dbf.newDocumentBuilder();
             doc = db.parse(new File("monsters.xml"));
         } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
+            Log.error(e);
         }
-        //loadCreature("Lion", World.grid.tileGrid[0][0]);
     }
 
     private static Node findMonsterNode(String name) {
@@ -122,7 +126,6 @@ public class Creature extends AbstractEntity {
             if (n.getNodeType() == Node.ELEMENT_NODE) {
                 if (n.getFirstChild() != null) {
                     String text = n.getFirstChild().getNodeValue();
-                    //System.out.println(text);
                     switch (n.getNodeName()) {
                         case "name":
                             c.cdc.name = text;
@@ -146,7 +149,7 @@ public class Creature extends AbstractEntity {
                             c.hc.maxHealth.set(Integer.parseInt(text.substring(0, text.indexOf(" "))));
                             break;
                         case "speed":
-                            c.spc.landSpeed = Integer.parseInt(text.substring(0, text.indexOf(" ")));
+                            c.spc.landSpeed.set(Integer.parseInt(text.substring(0, text.indexOf(" "))));
                             break;
                         case "str":
                             c.asc.set(STR, Integer.parseInt(text));

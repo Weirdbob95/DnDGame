@@ -1,5 +1,6 @@
 package graphics.loading;
 
+import graphics.data.Texture;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.color.ColorSpace;
@@ -12,14 +13,10 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
-
 import javax.imageio.ImageIO;
-
 import org.lwjgl.BufferUtils;
-
-import graphics.data.Texture;
-
 import static org.lwjgl.opengl.GL11.*;
+import util.Log;
 
 /**
  * A utility class to load textures for OpenGL. This source is based on a
@@ -198,8 +195,8 @@ public abstract class TextureLoader {
         try {
             image = ImageIO.read(new File(ref));
         } catch (IOException ex) {
-            ex.printStackTrace();
-            System.out.println(ref);
+            Log.error("Unable to find resource " + ref);
+            Log.error(ex);
         }
         ArrayList<BufferedImage> imageArray = new ArrayList<BufferedImage>();
         for (int j = 0; j < y; j++) {

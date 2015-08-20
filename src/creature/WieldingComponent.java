@@ -1,15 +1,18 @@
 package creature;
 
 import core.AbstractComponent;
+import items.Weapon;
 import java.util.ArrayList;
 
 public class WieldingComponent extends AbstractComponent {
 
     public Object[] held;
     public int hands;
+    public Weapon unarmedStrike;
 
     public WieldingComponent(int hands) {
         setHands(hands);
+        unarmedStrike = Weapon.loadWeapon("Unarmed Strike");
     }
 
     public int countHands(Object o) {

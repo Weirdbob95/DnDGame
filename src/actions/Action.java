@@ -1,10 +1,13 @@
 package actions;
 
 import creature.Creature;
+import events.UseActionEvent;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import util.Selectable;
 
-public abstract class Action implements Comparable {
+public abstract class Action implements Comparable, Selectable, Serializable {
 
     public enum Type {
 
@@ -29,22 +32,20 @@ public abstract class Action implements Comparable {
 
     public abstract String[] defaultTabs();
 
-    public abstract String description();
+    @Override
+    public String getName() {
+        return getClass().getSimpleName().replaceAll("_", " ").replaceAll("Action", "");
+    }
 
     public abstract Type getType();
 
-    public boolean isAvaliable() {
+    public boolean isAvailable() {
         return true;
-    }
-
-    @Override
-    public String toString() {
-        return getClass().getSimpleName().replaceAll("Action", "");
     }
 
     public void use() {
         creature.amc.available.remove(getType());
-//        new UseActionEvent(this);
         act();
+        new UseActionEvent(this).call();
     }
 }

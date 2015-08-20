@@ -1,7 +1,6 @@
 package player;
 
 import core.Core;
-import creature.Creature;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -14,8 +13,9 @@ import races.Race;
 import util.Log;
 import util.Selectable;
 import util.SelectableImpl;
+import util.SerializationUtils;
 
-public class CharacterCreator {
+public abstract class CharacterCreator {
 
     public static void main(String[] args) throws IOException {
         try {
@@ -34,7 +34,8 @@ public class CharacterCreator {
                             raceChoices.add(new SelectableImpl(s.split(" / ")));
                         }
                         String chosenRace = Query.ask(p, new SelectQuery("Choose your character's race", raceChoices)).response.getName();
-                        p.rac.race = (Race) Class.forName("races." + chosenRace).getConstructor(Creature.class).newInstance(p);
+                        p.rac.race = (Race) Class.forName("races." + chosenRace).newInstance();
+                        p.rac.race.addTo(p);
 
                         //Choose class
                         List<String> classList = Files.readAllLines(Paths.get("classes.txt"));
@@ -48,8 +49,15 @@ public class CharacterCreator {
                         //Point buy
                         p.asc.setAll(Query.ask(p, new PointBuyQuery(27, p.asc.getAll(), new int[]{20, 20, 20, 20, 20, 20})).response);
 
+                        p.clc.classes.get(0).levelTo(6);
+
+                        SerializationUtils.save("bob.ser", p);
+
+                        System.exit(0);
+
                     } catch (Exception ex) {
                         Log.error(ex);
+                        ex.printStackTrace();
                     }
                 }
             }.start();

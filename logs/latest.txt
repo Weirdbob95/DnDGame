@@ -1,1 +1,9 @@
-null
+TurnStartEvent
+5
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 17 + 7 against an AC of 9
+AttackDamageRollEvent
+AttackDamageResultEvent
+TakeDamageEvent

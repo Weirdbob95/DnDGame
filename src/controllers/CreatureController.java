@@ -1,8 +1,9 @@
 package controllers;
 
+import java.io.Serializable;
 import queries.Query;
 
-public interface CreatureController {
+public interface CreatureController extends Serializable {
 
     public void handleQuery(Query query);
 

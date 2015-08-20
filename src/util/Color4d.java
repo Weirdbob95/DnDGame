@@ -1,10 +1,11 @@
 package util;
 
+import java.io.Serializable;
 import java.nio.FloatBuffer;
 import org.lwjgl.opengl.GL11;
 import static util.Util.floatBuffer;
 
-public class Color4d {
+public class Color4d implements Serializable {
 
     public final static Color4d WHITE = new Color4d(1, 1, 1, 1);
     public final static Color4d BLACK = new Color4d(0, 0, 0, 1);
