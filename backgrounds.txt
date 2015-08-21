@@ -1,0 +1,13 @@
+Acolyte / You have spent your life in the service of a temple to a specific god or pantheon of gods.
+Charlatan / You have always had a way with people; you know what makes them tick.
+Criminal / You are an experienced criminal with a history of breaking the law.
+Entertainer / You thrive in front of an audience. You know how to entrance them, entertain them, and even inspire them.
+Folk Hero / You come from a humble social rank, but you are destined for so much more.
+Guild Artisan / You are a member of an artisan's guild, skilled in a particular field and closely associated with other artisans.
+Hermit / You lived in seclusion - either in a sheltered community such as a monastery, or entirely alone - for a formative part of your life.
+Noble / You understand wealth, power, and privelege.
+Outlander / You grew up in the wilds, far from civilization and the comforts of town and technology.
+Sage / You spent years learning the lore of the multiverse.
+Sailor / You sailed on a seagoing vessel for years.
+Soldier / War has been your life for as long as you care to remember.
+Urchin / You grew up on the streets alone, orphaned, and poor.

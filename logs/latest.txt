@@ -1,46 +1,6 @@
 TurnStartEvent
-Used action: Move
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 2 + 11 against an AC of 12
-AttackDamageRollEvent
-AttackDamageResultEvent
-Dealt 6 damage
-TakeDamageEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 2 + 11 against an AC of 12
-AttackDamageRollEvent
-AttackDamageResultEvent
-Dealt 12 damage
-TakeDamageEvent
-Used action: Move
-Used action: Attack
-Used action: Action Surge
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 6 + 11 against an AC of 12
-AttackDamageRollEvent
-AttackDamageResultEvent
-Dealt 6 damage
-TakeDamageEvent
-Used action: Attack
+Used action: Dash
 TurnStartEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 9 + 5 against an AC of 15
-Used action: Bite
-Used action: Move
 TurnStartEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 15 + 11 against an AC of 12
-AttackDamageRollEvent
-AttackDamageResultEvent
-Dealt 9 damage
-TakeDamageEvent
+Used action: Dash
+Used action: Move

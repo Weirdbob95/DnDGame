@@ -2,7 +2,6 @@ package player;
 
 import creature.Creature;
 import creature.HealthbarSystem;
-import creature.ProficienciesComponent;
 import events.EventHandler;
 import events.EventListener;
 import graphics.SpriteComponent;
@@ -16,6 +15,7 @@ import util.SerializationUtils;
 
 public class Player extends Creature {
 
+    public BackgroundComponent bc;
     public ClassComponent clc;
     public FightingStylesComponent fsc;
     public ProficienciesComponent pc;
@@ -24,10 +24,11 @@ public class Player extends Creature {
     public Player(Square square) {
         super(square);
 
+        bc = add(new BackgroundComponent(this));
         clc = add(new ClassComponent(this));
         fsc = add(new FightingStylesComponent(this));
         pc = add(new ProficienciesComponent(this));
-        rac = add(new RaceComponent());
+        rac = add(new RaceComponent(this));
 
         wc.setHands(2);
 

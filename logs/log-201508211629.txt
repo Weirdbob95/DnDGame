@@ -1,0 +1,2 @@
+java.nio.charset.MalformedInputException: Input length = 1
+java.lang.NullPointerException

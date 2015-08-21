@@ -1,4 +1,4 @@
-package creature;
+package player;
 
 import amounts.Amount;
 import amounts.Value;
@@ -6,8 +6,11 @@ import core.AbstractComponent;
 import enums.AbilityScore;
 import enums.Skill;
 import items.Weapon;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
-import player.Player;
+import queries.Query;
+import queries.SelectQuery;
 
 public class ProficienciesComponent extends AbstractComponent {
 
@@ -34,5 +37,12 @@ public class ProficienciesComponent extends AbstractComponent {
 
     public ProficienciesComponent(Player player) {
         this.player = player;
+    }
+
+    public void chooseSkill(Skill[] skills) {
+        ArrayList<Skill> skillList = new ArrayList(Arrays.asList(skills));
+        skillList.removeAll(skillProfs);
+        Skill skill = Query.ask(player, new SelectQuery<Skill>("Choose a skill", skillList)).response;
+        skillProfs.add(skill);
     }
 }
