@@ -14,7 +14,7 @@ import util.SelectableImpl;
 
 public class AttackAction extends Action {
 
-    public int attacks = 1;
+    public int extraAttacks = 1;
 
     public AttackAction(Creature creature) {
         super(creature);
@@ -23,7 +23,7 @@ public class AttackAction extends Action {
     @Override
     protected void act() {
         singleAttack();
-        for (int i = 1; i < attacks;) {
+        for (int i = 0; i < extraAttacks;) {
             ArrayList<Selectable> choices = new ArrayList();
             choices.add(new SelectableImpl("Extra Attack", "Make another attack (as part of the Attack Action)"));
             if (creature.amc.getAction(MoveAction.class).isAvailable()) {
@@ -55,6 +55,12 @@ public class AttackAction extends Action {
     @Override
     public Type getType() {
         return ACTION;
+    }
+
+    public void setExtraAttacks(int extraAttacks) {
+        if (extraAttacks > this.extraAttacks) {
+            this.extraAttacks = extraAttacks;
+        }
     }
 
     private void singleAttack() {

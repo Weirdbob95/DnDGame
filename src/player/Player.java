@@ -2,6 +2,7 @@ package player;
 
 import creature.Creature;
 import creature.HealthbarSystem;
+import creature.ProficienciesComponent;
 import events.EventHandler;
 import events.EventListener;
 import graphics.SpriteComponent;
@@ -16,17 +17,21 @@ import util.SerializationUtils;
 public class Player extends Creature {
 
     public ClassComponent clc;
+    public FightingStylesComponent fsc;
+    public ProficienciesComponent pc;
     public RaceComponent rac;
 
     public Player(Square square) {
         super(square);
 
         clc = add(new ClassComponent(this));
+        fsc = add(new FightingStylesComponent(this));
+        pc = add(new ProficienciesComponent(this));
         rac = add(new RaceComponent());
 
-        add(new FightingStylesComponent(this));
         wc.setHands(2);
 
+        getComponent(SpriteComponent.class).name = "blue";
         wc.held[0] = Weapon.loadWeapon("Longsword"); //Fix pls
     }
 

@@ -1,5 +1,6 @@
 package creature;
 
+import amounts.Amount;
 import amounts.Value;
 import core.AbstractComponent;
 import enums.AbilityScore;
@@ -7,17 +8,17 @@ import java.util.HashMap;
 
 public class AbilityScoreComponent extends AbstractComponent {
 
-    private HashMap<AbilityScore, Integer> abilityScoreMap;
+    private HashMap<AbilityScore, Value> abilityScoreMap;
 
     public AbilityScoreComponent() {
         abilityScoreMap = new HashMap();
         for (AbilityScore as : AbilityScore.values()) {
-            abilityScoreMap.put(as, 8);
+            abilityScoreMap.put(as, new Value(8));
         }
     }
 
     public void edit(AbilityScore type, int amt) {
-        set(type, get(type).get() + amt);
+        abilityScoreMap.get(type).flat += amt;
     }
 
     public void editAll(int[] values) {
@@ -26,8 +27,8 @@ public class AbilityScoreComponent extends AbstractComponent {
         }
     }
 
-    public Value get(AbilityScore type) {
-        return new Value(abilityScoreMap.get(type));
+    public Amount get(AbilityScore type) {
+        return abilityScoreMap.get(type);
     }
 
     public int[] getAll() {
@@ -38,12 +39,35 @@ public class AbilityScoreComponent extends AbstractComponent {
         return r;
     }
 
-    public Value mod(AbilityScore type) {
-        return new Value(abilityScoreMap.get(type) / 2 - 5);
+    public Amount mod(AbilityScore type) {
+        final AbilityScoreComponent thus = this;
+        return new Amount() {
+            public AbilityScore type;
+
+            @Override
+            public Value asValue() {
+                return new Value(get());
+            }
+
+            @Override
+            public int get() {
+                return thus.get(type).get() / 2 - 5;
+            }
+
+            @Override
+            public int roll() {
+                return thus.get(type).roll() / 2 - 5;
+            }
+
+            public Amount setType(AbilityScore type) {
+                this.type = type;
+                return this;
+            }
+        }.setType(type);
     }
 
     public void set(AbilityScore type, int amt) {
-        abilityScoreMap.put(type, amt);
+        abilityScoreMap.get(type).flat = amt;
     }
 
     public void setAll(int[] values) {

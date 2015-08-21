@@ -1,6 +1,7 @@
 package grid;
 
 import core.AbstractComponent;
+import creature.Creature;
 import graphics.Graphics2D;
 import static graphics.Graphics2D.drawSpriteFast;
 import graphics.data.Texture;
@@ -81,9 +82,13 @@ public class GridComponent extends AbstractComponent {
     }
 
     private void loadCreature(Square s, int color) {
-        if (color == 0xFFFF0000) { //Red
-            //Creature.loadCreature("Lion", s);
-            Player.loadPlayer("bob.ser", s);
+        switch (color) {
+            case 0xFFFF0000: //Red
+                Creature.loadCreature("Lion", s);
+                break;
+            case 0xFF0000FF: //Blue
+                Player.loadPlayer("bob.ser", s);
+                break;
         }
     }
 

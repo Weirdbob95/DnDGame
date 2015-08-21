@@ -3,6 +3,7 @@ package amounts;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.TreeMap;
 
 public class Value implements Amount {
 
@@ -82,10 +83,30 @@ public class Value implements Amount {
 
     @Override
     public String toString() {
-        String r = "[" + flat;
+        /*
+         String r = "[" + flat;
+         for (Die d : dice) {
+         r += ", d" + d.sides;
+         }
+         return r + "]";
+         */
+        TreeMap<Integer, Integer> dieMap = new TreeMap();
         for (Die d : dice) {
-            r += ", d" + d.sides;
+            if (!dieMap.containsKey(d.sides)) {
+                dieMap.put(d.sides, 1);
+            } else {
+                dieMap.put(d.sides, dieMap.get(d.sides) + 1);
+            }
         }
-        return r + "]";
+        String r = "";
+        for (Integer i : dieMap.descendingKeySet()) {
+            r += dieMap.get(i) + "d" + i + " + ";
+        }
+        if (flat == 0 && !dieMap.isEmpty()) {
+            r = r.substring(0, r.length() - 3);
+        } else {
+            r += flat;
+        }
+        return r;
     }
 }

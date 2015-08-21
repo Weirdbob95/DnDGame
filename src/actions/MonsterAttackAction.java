@@ -46,12 +46,12 @@ public class MonsterAttackAction extends Action {
     }
 
     @Override
-    public Type getType() {
-        return ACTION;
+    public String getName() {
+        return name;
     }
 
     @Override
-    public String toString() {
-        return name;
+    public Type getType() {
+        return ACTION;
     }
 }

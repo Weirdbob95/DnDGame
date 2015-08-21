@@ -1,54 +1,45 @@
 package amounts;
 
-import java.util.concurrent.Callable;
-
 public class ConditionalAmount implements Amount {
 
-    public Callable<Boolean> condition;
+    public Condition condition;
     public Amount a1;
     public Amount a2;
 
-    public ConditionalAmount(Callable<Boolean> condition, Amount a1, Amount a2) {
+    public ConditionalAmount(Condition condition, Amount a1, Amount a2) {
         this.condition = condition;
         this.a1 = a1;
         this.a2 = a2;
     }
 
-    public ConditionalAmount(Callable<Boolean> condition, Amount a1) {
+    public ConditionalAmount(Condition condition, Amount a1) {
         this(condition, a1, new Value());
     }
 
     @Override
     public Value asValue() {
-        try {
-            if (condition.call()) {
-                return a1.asValue();
-            }
-        } catch (Exception ex) {
+        if (condition.check()) {
+            return a1.asValue();
+        } else {
+            return a2.asValue();
         }
-        return a2.asValue();
     }
 
     @Override
     public int get() {
-        try {
-            if (condition.call()) {
-                return a1.get();
-            }
-        } catch (Exception ex) {
+        if (condition.check()) {
+            return a1.get();
+        } else {
+            return a2.get();
         }
-        return a2.get();
     }
 
     @Override
     public int roll() {
-        try {
-            if (condition.call()) {
-                return a1.roll();
-            }
-        } catch (Exception ex) {
+        if (condition.check()) {
+            return a1.roll();
+        } else {
+            return a2.roll();
         }
-        return a2.roll();
     }
-
 }

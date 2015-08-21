@@ -58,11 +58,13 @@ public class AttackEvent extends Event {
     @Override
     public void call() {
         super.call();
-        ArrayList<SelectableImpl> options = new ArrayList();
-        for (AbilityScore as : allowedAbilityScores) {
-            options.add(new SelectableImpl(as.longName(), "Value: " + attacker.asc.get(as)));
+        if (!isMonsterAttack) {
+            ArrayList<SelectableImpl> options = new ArrayList();
+            for (AbilityScore as : allowedAbilityScores) {
+                options.add(new SelectableImpl(as.longName(), "Value: " + attacker.asc.get(as)));
+            }
+            abilityScore = AbilityScore.valueOfLongName(Query.ask(attacker, new SelectQuery("Choose an ability score to attack with", options)).response.getName());
         }
-        abilityScore = AbilityScore.valueOfLongName(Query.ask(attacker, new SelectQuery("Choose an ability score to attack with", options)).response.getName());
         //Get the attack roll info
         new AttackRollEvent(this).call();
         //Roll the dice
@@ -81,6 +83,7 @@ public class AttackEvent extends Event {
         damage.roll();
         //Check the damage roll results
         new AttackDamageResultEvent(this).call();
+        Log.print("Dealt " + damage.get() + " damage");
         //Deal damage
         new TakeDamageEvent(target, damage.get(), this).call();
     }

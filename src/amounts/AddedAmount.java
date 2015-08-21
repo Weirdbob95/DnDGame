@@ -2,27 +2,36 @@ package amounts;
 
 public class AddedAmount implements Amount {
 
-    public Amount amount;
-    public Amount add;
+    public Amount[] amounts;
 
-    public AddedAmount(Amount amount, Amount add) {
-        this.amount = amount;
-        this.add = add;
+    public AddedAmount(Amount... amounts) {
+        this.amounts = amounts;
     }
 
     @Override
     public Value asValue() {
-        return amount.asValue().add(add.asValue());
+        Value r = new Value();
+        for (Amount a : amounts) {
+            r = r.add(a.asValue());
+        }
+        return r;
     }
 
     @Override
     public int get() {
-        return amount.get() + add.get();
+        int r = 0;
+        for (Amount a : amounts) {
+            r += a.get();
+        }
+        return r;
     }
 
     @Override
     public int roll() {
-        return amount.roll() + add.roll();
+        int r = 0;
+        for (Amount a : amounts) {
+            r += a.roll();
+        }
+        return r;
     }
-
 }
