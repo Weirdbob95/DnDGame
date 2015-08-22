@@ -36,6 +36,10 @@ public class Elf extends Race {
     public void addTo(Player player) {
         subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
         super.addTo(player);
+        switch (subrace) {
+            case High_Elf:
+                player.lc.chooseLanguage();
+        }
     }
 
     @Override
@@ -57,5 +61,10 @@ public class Elf extends Race {
             return 35;
         }
         return 30;
+    }
+
+    @Override
+    public String[] languages() {
+        return new String[]{"Common", "Elvish"};
     }
 }

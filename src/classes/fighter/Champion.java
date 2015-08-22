@@ -1,6 +1,7 @@
-package classes;
+package classes.fighter;
 
 import amounts.MultipliedAmount;
+import classes.Archetype;
 import static enums.AbilityScore.CON;
 import enums.FightingStyle;
 import events.AbilityCheckEvent;

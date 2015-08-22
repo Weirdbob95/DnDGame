@@ -1,5 +1,6 @@
 package races;
 
+import enums.Size;
 import java.io.Serializable;
 import player.Player;
 
@@ -17,5 +18,11 @@ public abstract class Race implements Serializable {
 
     public int getSpeed() {
         return 30;
+    }
+
+    public abstract String[] languages();
+
+    public Size size() {
+        return Size.MEDIUM;
     }
 }

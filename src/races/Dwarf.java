@@ -35,6 +35,13 @@ public class Dwarf extends Race {
     public void addTo(Player player) {
         subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
         super.addTo(player);
+        switch (subrace) {
+            case Hill_Dwarf:
+                player.hc.maxHealth.set("Dwarven Toughness", () -> player.clc.level());
+                break;
+            case Mountain_Dwarf:
+                break;
+        }
     }
 
     @Override
@@ -51,5 +58,10 @@ public class Dwarf extends Race {
     @Override
     public int getSpeed() {
         return 25;
+    }
+
+    @Override
+    public String[] languages() {
+        return new String[]{"Common", "Dwarvish"};
     }
 }

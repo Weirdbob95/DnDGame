@@ -1,10 +1,11 @@
-package classes;
+package classes.fighter;
 
 import actions.Action;
 import static actions.Action.Type.ACTION;
 import static actions.Action.Type.BONUS_ACTION;
 import actions.AttackAction;
 import amounts.Die;
+import classes.PlayerClass;
 import creature.Creature;
 import enums.AbilityScore;
 import static enums.AbilityScore.CON;

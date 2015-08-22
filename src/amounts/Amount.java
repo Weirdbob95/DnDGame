@@ -2,11 +2,16 @@ package amounts;
 
 import java.io.Serializable;
 
+@FunctionalInterface
 public interface Amount extends Serializable {
 
-    public Value asValue();
+    public default Value asValue() {
+        return new Value(get());
+    }
 
     public int get();
 
-    public int roll();
+    public default int roll() {
+        return get();
+    }
 }

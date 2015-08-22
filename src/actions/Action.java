@@ -45,7 +45,7 @@ public abstract class Action implements Comparable, Selectable, Serializable {
 
     public void use() {
         creature.amc.available.remove(getType());
-        act();
         new UseActionEvent(this).call();
+        act();
     }
 }

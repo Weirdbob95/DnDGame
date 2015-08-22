@@ -24,7 +24,6 @@ public class PathQuery extends Query {
     public boolean penetratesWalls;
     public Creature creature;
     public ArrayList<Square> path;
-    //public ArrayList<OverlayCircle> circles;
 
     public PathQuery(String desc, Square start, int range, int width, boolean penetratesWalls, Creature creature) {
         this.desc = desc;
@@ -41,7 +40,6 @@ public class PathQuery extends Query {
             return false;
         }
         path = new ArrayList();
-        //circles = new ArrayList();
         updateUI();
         return true;
     }

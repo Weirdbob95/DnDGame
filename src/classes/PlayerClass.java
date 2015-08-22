@@ -33,7 +33,7 @@ public abstract class PlayerClass implements Serializable {
         try {
             String chosen = Query.ask(player, new SelectQuery("Choose your character's archetype",
                     Selectable.load(getClass().getSimpleName().toLowerCase() + "_archetypes.txt"))).response.getName();
-            archetype = (Archetype) Class.forName("classes." + chosen).getConstructor(getClass()).newInstance(this);
+            archetype = (Archetype) Class.forName("classes." + getClass().getSimpleName().toLowerCase() + "." + chosen.replace(" ", "_")).getConstructor(getClass()).newInstance(this);
         } catch (Exception ex) {
             Log.print(ex);
         }

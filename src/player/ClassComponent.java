@@ -16,7 +16,7 @@ public class ClassComponent extends AbstractComponent {
 
     public void addLevel(String name) {
         try {
-            Class c = Class.forName("classes." + name);
+            Class c = Class.forName("classes." + name.toLowerCase() + "." + name);
             for (PlayerClass pc : classes) {
                 if (c.isInstance(pc)) {
                     pc.levelTo(pc.level + 1);

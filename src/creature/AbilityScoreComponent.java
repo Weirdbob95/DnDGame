@@ -40,30 +40,7 @@ public class AbilityScoreComponent extends AbstractComponent {
     }
 
     public Amount mod(AbilityScore type) {
-        final AbilityScoreComponent thus = this;
-        return new Amount() {
-            public AbilityScore type;
-
-            @Override
-            public Value asValue() {
-                return new Value(get());
-            }
-
-            @Override
-            public int get() {
-                return thus.get(type).get() / 2 - 5;
-            }
-
-            @Override
-            public int roll() {
-                return thus.get(type).roll() / 2 - 5;
-            }
-
-            public Amount setType(AbilityScore type) {
-                this.type = type;
-                return this;
-            }
-        }.setType(type);
+        return () -> get(type).get() / 2 - 5;
     }
 
     public void set(AbilityScore type, int amt) {

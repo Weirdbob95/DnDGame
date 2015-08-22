@@ -1,5 +1,12 @@
 package races;
 
+import amounts.Die;
+import enums.Size;
+import events.AbilityCheckResultEvent;
+import events.AbstractEventListener;
+import events.Event;
+import events.SavingThrowResultEvent;
+import events.attack.AttackResultEvent;
 import player.Player;
 import queries.Query;
 import queries.SelectQuery;
@@ -35,6 +42,32 @@ public class Halfling extends Race {
     public void addTo(Player player) {
         subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
         super.addTo(player);
+        new AbstractEventListener(player) {
+            @Override
+            public Class<? extends Event>[] callOn() {
+                return new Class[]{AttackResultEvent.class, AbilityCheckResultEvent.class, SavingThrowResultEvent.class};
+            }
+
+            @Override
+            public void onEvent(Event e) {
+                if (e instanceof AttackResultEvent) {
+                    AttackResultEvent are = (AttackResultEvent) e;
+                    if (are.a.attacker == player && are.a.roll == 1) {
+                        are.a.roll = new Die(20).roll;
+                    }
+                } else if (e instanceof AbilityCheckResultEvent) {
+                    AbilityCheckResultEvent acre = (AbilityCheckResultEvent) e;
+                    if (acre.ace.creature == player && acre.ace.roll == 1) {
+                        acre.ace.roll = new Die(20).roll;
+                    }
+                } else if (e instanceof SavingThrowResultEvent) {
+                    SavingThrowResultEvent stre = (SavingThrowResultEvent) e;
+                    if (stre.ste.creature == player && stre.ste.roll == 1) {
+                        stre.ste.roll = new Die(20).roll;
+                    }
+                }
+            }
+        };
     }
 
     @Override
@@ -51,5 +84,15 @@ public class Halfling extends Race {
     @Override
     public int getSpeed() {
         return 25;
+    }
+
+    @Override
+    public String[] languages() {
+        return new String[]{"Common", "Halfling"};
+    }
+
+    @Override
+    public Size size() {
+        return Size.SMALL;
     }
 }
