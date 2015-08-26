@@ -9,6 +9,7 @@ import static enums.AbilityScore.*;
 import enums.CreatureType;
 import enums.DamageType;
 import enums.Size;
+import events.AbilityCheckEvent;
 import graphics.SpriteComponent;
 import graphics.SpriteSystem;
 import grid.GridLocationComponent;
@@ -57,7 +58,7 @@ public class Creature extends AbstractEntity implements Serializable {
         spc = add(new SpeedComponent(this));
         wc = add(new WieldingComponent(0));
 
-        cc = add(new CreatureComponent(this, new ManualController(this), (int) (Math.random() * 20), true));
+        cc = add(new CreatureComponent(this, new ManualController(this), new AbilityCheckEvent(this, DEX, null).get(), true));
         glc = add(new GridLocationComponent(square, this));
 
         RotationComponent rc = add(new RotationComponent());

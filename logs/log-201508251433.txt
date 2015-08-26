@@ -1,0 +1,1 @@
+java.lang.ClassCastException: cannot assign instance of java.lang.invoke.SerializedLambda to field player.ProficienciesComponent.prof of type amounts.Amount in instance of player.ProficienciesComponent

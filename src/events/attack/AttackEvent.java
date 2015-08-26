@@ -75,6 +75,7 @@ public class AttackEvent extends Event {
         Log.print("Rolled a " + roll + " + " + toHit.get() + " against an AC of " + target.ac.AC.get());
         //See if you hit
         if (!isCritical && (roll == 1 || roll + toHit.get() < target.ac.AC.get())) {
+            new AttackFinishEvent(this, false).call();
             return;
         }
         //Get the damage roll info
@@ -86,5 +87,6 @@ public class AttackEvent extends Event {
         Log.print("Dealt " + damage.get() + " damage");
         //Deal damage
         new TakeDamageEvent(target, damage.get(), this).call();
+        new AttackFinishEvent(this, true).call();
     }
 }

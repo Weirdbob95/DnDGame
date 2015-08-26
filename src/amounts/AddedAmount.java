@@ -1,37 +1,28 @@
 package amounts;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class AddedAmount implements Amount {
 
-    public Amount[] amounts;
+    public List<Amount> amounts;
 
     public AddedAmount(Amount... amounts) {
-        this.amounts = amounts;
+        this.amounts = Arrays.asList(amounts);
     }
 
     @Override
     public Value asValue() {
-        Value r = new Value();
-        for (Amount a : amounts) {
-            r = r.add(a.asValue());
-        }
-        return r;
+        return amounts.stream().map(Amount::asValue).reduce(new Value(), (a, b) -> a.add(b));
     }
 
     @Override
     public int get() {
-        int r = 0;
-        for (Amount a : amounts) {
-            r += a.get();
-        }
-        return r;
+        return amounts.stream().mapToInt(Amount::get).sum();
     }
 
     @Override
     public int roll() {
-        int r = 0;
-        for (Amount a : amounts) {
-            r += a.roll();
-        }
-        return r;
+        return amounts.stream().mapToInt(Amount::roll).sum();
     }
 }

@@ -39,7 +39,7 @@ public abstract class CharacterCreator {
                         //Point buy
                         p.asc.setAll(Query.ask(p, new PointBuyQuery(27, p.asc.getAll(), new int[]{20, 20, 20, 20, 20, 20})).response);
 
-                        p.clc.classes.get(0).levelTo(20);
+                        p.clc.classes.get(0).levelTo(7);
 
                         SerializationUtils.save("bob.ser", p);
 

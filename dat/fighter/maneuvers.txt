@@ -1,0 +1,7 @@
+Commander's Strike / You can forgo one of your attacks and use a bonus action to direct one of your companions to strike.
+Disarming Attack / You attempt to disarm your target, forcing it to drop one item of your choice that it's holding.
+Distracting Strike / You distract your target, giving the next attack roll against your target advantage
+Evasive Footwork / When you move, you can expend one superiority die, rolling the die and adding the number rolled to your AC.
+Feinting Attack / You use a bonus action to feint, giving you advantage on your next attack roll against a creature.
+Goading Attack / You attempt to goad your target into attacking you, giving them disadvantage on attack rolls against targets other than you.
+Lunging Attack / You increase one of your attacks' reach by 5 feet.

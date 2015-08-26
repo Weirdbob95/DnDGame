@@ -35,7 +35,7 @@ public class SquareQuery extends Query {
     @Override
     public boolean createUI() {
         for (Square s : GridUtils.all()) {
-            if (GridUtils.minDistance(s, sources) <= range) {
+            if (range < 0 || GridUtils.minDistance(s, sources) <= range) {
                 final SquareQuery thus = this;
                 puic.overlayItems.add(new OverlaySquare(s, Color4d.GREEN.setA(.5)) {
                     @Override

@@ -1,0 +1,16 @@
+Common / Common is spoken by most creatures in D&D.
+Dwarvish / Dwarvish is full of hard consonants and guttural sounds.
+Elvish / Elvish is fluid, with subtle intonations and intricate grammar.
+Giant / Giant is spoken by Ogres and Giants.
+Gnomish / The Gnomish language is renowned for its technical treatises and its catalogues of knowledge.
+Goblin / Goblin is spoken by Goblinoids.
+Halfling / Halfing is a secretive language with a strong oral tradition.
+Orc / Orc is a harsh, grating language with hard consonants.
+Abyssal / Abyssal is spoken by demons.
+Celestial / Celestial is spoken by celestials.
+Draconic / Draconic is thought to be one of the oldest languages and is often used in the study of magic.
+Deep Speech / Deep Speech is spoken by mind flayers and beholders.
+Infernal / Infernal is spoken by devils.
+Primordial / Primordial is spoken by elementals.
+Sylvan / Sylvan is spoken by fey creatures.
+Undercommon / Undercommon is spoken by traders in the underdark.

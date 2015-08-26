@@ -18,28 +18,16 @@ public class ConditionalAmount implements Amount {
 
     @Override
     public Value asValue() {
-        if (condition.check()) {
-            return a1.asValue();
-        } else {
-            return a2.asValue();
-        }
+        return condition.check() ? a1.asValue() : a2.asValue();
     }
 
     @Override
     public int get() {
-        if (condition.check()) {
-            return a1.get();
-        } else {
-            return a2.get();
-        }
+        return condition.check() ? a1.get() : a2.get();
     }
 
     @Override
     public int roll() {
-        if (condition.check()) {
-            return a1.roll();
-        } else {
-            return a2.roll();
-        }
+        return condition.check() ? a1.roll() : a2.roll();
     }
 }

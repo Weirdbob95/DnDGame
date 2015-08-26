@@ -2,6 +2,7 @@ package races;
 
 import enums.Size;
 import java.io.Serializable;
+import java.util.Arrays;
 import player.Player;
 
 public abstract class Race implements Serializable {
@@ -12,6 +13,7 @@ public abstract class Race implements Serializable {
         this.player = player;
         player.asc.editAll(getAbilityScores());
         player.spc.landSpeed.set(getSpeed());
+        player.lc.languages.addAll(Arrays.asList(languages()));
     }
 
     public abstract int[] getAbilityScores();

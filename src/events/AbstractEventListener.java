@@ -5,12 +5,16 @@ import java.io.Serializable;
 
 public abstract class AbstractEventListener implements EventListener, Serializable {
 
-    public AbstractEventListener() {
+    private final Creature creature;
+
+    public AbstractEventListener(Creature creature) {
+        this.creature = creature;
         EventHandler.addListener(this);
+        creature.elc.listenerList.add(this);
     }
 
-    public AbstractEventListener(Creature c) {
+    public void remove() {
         EventHandler.addListener(this);
-        c.elc.listenerList.add(this);
+        creature.elc.listenerList.remove(this);
     }
 }

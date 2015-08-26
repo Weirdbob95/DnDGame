@@ -3,7 +3,6 @@ package events;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.PriorityQueue;
-import util.Util;
 
 public abstract class EventHandler {
 
@@ -12,14 +11,18 @@ public abstract class EventHandler {
     public static void addListener(EventListener el) {
         for (Class<? extends Event> c : el.callOn()) {
             if (!listenerMap.containsKey(c)) {
-                listenerMap.put(c, new PriorityQueue(1, new Comparator() {
-                    @Override
-                    public int compare(Object t, Object t1) {
-                        return Util.sign(((EventListener) t).priority() - ((EventListener) t1).priority());
-                    }
-                }));
+                listenerMap.put(c, new PriorityQueue(Comparator.comparingDouble(EventListener::priority)));
             }
             listenerMap.get(c).add(el);
+        }
+    }
+
+    public static void removeListener(EventListener el) {
+        for (Class<? extends Event> c : el.callOn()) {
+            listenerMap.get(c).remove(el);
+            if (listenerMap.get(c).isEmpty()) {
+                listenerMap.remove(c);
+            }
         }
     }
 }

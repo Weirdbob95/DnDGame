@@ -35,4 +35,8 @@ public class AbilityCheckEvent extends Event {
         bonus.roll();
         new AbilityCheckResultEvent(this).call();
     }
+
+    public int get() {
+        return roll + bonus.get();
+    }
 }

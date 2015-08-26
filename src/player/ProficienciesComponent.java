@@ -17,7 +17,12 @@ public class ProficienciesComponent extends AbstractComponent {
     public HashSet<Weapon> weaponProfs = new HashSet();
     public HashSet<AbilityScore> savingThrowProfs = new HashSet();
     public Player player;
-    public Amount prof = () -> (player.clc.level() + 7) / 4;
+    public Amount prof = new Amount() {
+        @Override
+        public int get() {
+            return (player.clc.level() + 7) / 4;
+        }
+    };
 
     public ProficienciesComponent(Player player) {
         this.player = player;
