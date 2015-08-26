@@ -3,6 +3,7 @@ package classes;
 import enums.AbilityScore;
 import enums.CastingType;
 import enums.Skill;
+import events.EventListenerContainer;
 import java.io.Serializable;
 import java.util.Arrays;
 import player.Player;
@@ -13,13 +14,14 @@ import queries.SelectQuery;
 import util.Log;
 import util.Selectable;
 
-public abstract class PlayerClass implements Serializable {
+public abstract class PlayerClass extends EventListenerContainer implements Serializable {
 
     public Player player;
     public int level;
     public Archetype archetype;
 
     public PlayerClass(Player player) {
+        super(player);
         this.player = player;
     }
 

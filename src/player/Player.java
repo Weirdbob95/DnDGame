@@ -3,7 +3,6 @@ package player;
 import creature.Creature;
 import creature.HealthbarSystem;
 import events.EventHandler;
-import events.EventListener;
 import graphics.SpriteComponent;
 import graphics.SpriteSystem;
 import grid.Square;
@@ -44,9 +43,7 @@ public class Player extends Creature {
         sc.setSprite(sc.name);
         p.add(new SpriteSystem(p.getComponent(PositionComponent.class), p.getComponent(RotationComponent.class), sc));
         p.add(new HealthbarSystem(p.getComponent(PositionComponent.class), p.hc, p.cdc));
-        for (EventListener el : p.elc.listenerList) {
-            EventHandler.addListener(el);
-        }
+        p.elc.listenerMap.keySet().stream().forEach(el -> EventHandler.addListener(el, p.elc.listenerMap.get(el)));
         return p;
     }
 }

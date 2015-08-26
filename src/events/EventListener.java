@@ -1,17 +1,21 @@
 package events;
 
 import creature.Creature;
+import java.io.Serializable;
 
-public interface EventListener {
+@FunctionalInterface
+public interface EventListener<E extends Event> extends Serializable {
 
-    public default void addToCreature(Creature c) {
-        EventHandler.addListener(this);
-        c.elc.listenerList.add(this);
+    public default void addToCreature(Creature c, Class<E> e) {
+        EventHandler.addListener(this, e);
+        c.elc.listenerMap.put(this, e);
     }
 
-    public Class<? extends Event>[] callOn();
+    public static <E extends Event> void createListener(Creature c, Class<E> e, EventListener<E> el) {
+        el.addToCreature(c, e);
+    }
 
-    public void onEvent(Event e);
+    public void onEvent(E e);
 
     public default double priority() {
         return 0;

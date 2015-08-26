@@ -3,7 +3,6 @@ package maneuvers;
 import actions.Action;
 import static actions.Action.Type.BONUS_ACTION;
 import creature.Creature;
-import events.Event;
 import events.TurnEndEvent;
 import events.attack.AttackRollEvent;
 import grid.Square;
@@ -17,39 +16,27 @@ public class Feinting_Attack extends Maneuver {
 
     public Feinting_Attack(Player player, ManeuversComponent mc) {
         super(player, mc);
-    }
 
-    @Override
-    public Class<? extends Event>[] callOn() {
-        return new Class[]{TurnEndEvent.class, AttackRollEvent.class};
+        add(TurnEndEvent.class, e -> target = (e.creature == player ? null : target));
+        add(AttackRollEvent.class, e -> {
+            if (e.a.attacker == player && e.a.target == target) {
+                e.a.advantage = true;
+                mc.addDieTo(e.a.damage);
+                target = null;
+            }
+        });
     }
 
     @Override
     public void forget() {
         super.forget();
-        player.amc.actions.removeIf(a -> a instanceof Feinting_AttackAction);
+        player.amc.removeAction(Feinting_AttackAction.class);
     }
 
     @Override
     public void learn() {
         super.learn();
-        player.amc.actions.add(new Feinting_AttackAction(player));
-    }
-
-    @Override
-    public void onEvent(Event e) {
-        if (target != null) {
-            if (e instanceof TurnEndEvent) {
-                target = null;
-            } else if (e instanceof AttackRollEvent) {
-                AttackRollEvent are = (AttackRollEvent) e;
-                if (are.a.attacker == player && are.a.target == target) {
-                    are.a.advantage = true;
-                    mc.addDieTo(are.a.damage);
-                    target = null;
-                }
-            }
-        }
+        player.amc.addAction(new Feinting_AttackAction(player));
     }
 
     public class Feinting_AttackAction extends Action {

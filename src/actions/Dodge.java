@@ -2,28 +2,31 @@ package actions;
 
 import static actions.Action.Type.ACTION;
 import creature.Creature;
-import events.Event;
-import events.EventListener;
 import events.TurnStartEvent;
 import events.attack.AttackRollEvent;
 
-public class Dodge extends Action implements EventListener {
+public class Dodge extends Action {
 
     public boolean dodging;
 
     public Dodge(Creature creature) {
         super(creature);
-        addToCreature(creature);
+
+        add(AttackRollEvent.class, e -> {
+            if (e.a.target == creature && dodging) {
+                e.a.disadvantage = true;
+            }
+        });
+        add(TurnStartEvent.class, e -> {
+            if (e.creature == creature) {
+                dodging = false;
+            }
+        });
     }
 
     @Override
     public void act() {
         dodging = true;
-    }
-
-    @Override
-    public Class<? extends Event>[] callOn() {
-        return new Class[]{AttackRollEvent.class, TurnStartEvent.class};
     }
 
     @Override
@@ -39,24 +42,5 @@ public class Dodge extends Action implements EventListener {
     @Override
     public Type getType() {
         return ACTION;
-    }
-
-    @Override
-    public void onEvent(Event e) {
-        if (e instanceof AttackRollEvent) {
-            if (((AttackRollEvent) e).a.target == creature) {
-                ((AttackRollEvent) e).a.disadvantage = true;
-            }
-        }
-        if (e instanceof TurnStartEvent) {
-            if (((TurnStartEvent) e).creature == creature) {
-                dodging = false;
-            }
-        }
-    }
-
-    @Override
-    public double priority() {
-        return 1;
     }
 }

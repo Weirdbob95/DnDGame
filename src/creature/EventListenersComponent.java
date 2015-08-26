@@ -1,10 +1,11 @@
 package creature;
 
 import core.AbstractComponent;
+import events.Event;
 import events.EventListener;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EventListenersComponent extends AbstractComponent {
 
-    public ArrayList<EventListener> listenerList = new ArrayList();
+    public HashMap<EventListener, Class<? extends Event>> listenerMap = new HashMap();
 }

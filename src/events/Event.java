@@ -7,9 +7,7 @@ public class Event {
     public void call() {
         Log.print(this);
         if (EventHandler.listenerMap.containsKey(getClass())) {
-            for (EventListener el : EventHandler.listenerMap.get(getClass())) {
-                el.onEvent(this);
-            }
+            EventHandler.listenerMap.get(getClass()).stream().forEach(el -> el.onEvent(this));
         }
     }
 

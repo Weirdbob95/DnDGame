@@ -4,8 +4,7 @@ import amounts.*;
 import core.AbstractComponent;
 import static enums.AbilityScore.DEX;
 import static enums.AbilityScore.STR;
-import events.AbstractEventListener;
-import events.Event;
+import events.EventListener;
 import events.attack.AttackDamageRollEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,32 +30,23 @@ public class ManeuversComponent extends AbstractComponent {
         maneuvers = new ArrayList();
         this.DC = new AddedAmount(new Value(8), player.pc.prof, new MaxAmount(player.asc.mod(STR), player.asc.mod(DEX)));
 
-        new AbstractEventListener(player) {
-            @Override
-            public Class<? extends Event>[] callOn() {
-                return new Class[]{AttackDamageRollEvent.class};
-            }
-
-            @Override
-            public void onEvent(Event e) {
-                AttackDamageRollEvent adre = (AttackDamageRollEvent) e;
-                if (adre.a.attacker == player) {
-                    if (!moddingAttack) {
-                        if (diceUsed < diceCap) {
-                            if (hasAttackManeuvers()) {
-                                if (Query.ask(player, new BooleanQuery("Use a maneuver?")).response) {
-                                    AttackManeuver m = Query.ask(player, new SelectQuery<AttackManeuver>("Choose which maneuver to use", Arrays.asList(getAttackManeuvers()), "Choose", "Cancel")).response;
-                                    if (m != null) {
-                                        diceUsed++;
-                                        m.use(adre);
-                                    }
+        EventListener.createListener(player, AttackDamageRollEvent.class, e -> {
+            if (e.a.attacker == player) {
+                if (!moddingAttack) {
+                    if (diceUsed < diceCap) {
+                        if (hasAttackManeuvers()) {
+                            if (Query.ask(player, new BooleanQuery("Use a maneuver?")).response) {
+                                AttackManeuver m = Query.ask(player, new SelectQuery<AttackManeuver>("Choose which maneuver to use", Arrays.asList(getAttackManeuvers()), "Choose", "Cancel")).response;
+                                if (m != null) {
+                                    diceUsed++;
+                                    m.use(e);
                                 }
                             }
                         }
                     }
                 }
             }
-        };
+        });
     }
 
     public void addDieTo(Stat s) {
@@ -105,19 +95,7 @@ public class ManeuversComponent extends AbstractComponent {
 
     public ArrayList<Selectable> remainingManeuvers() {
         ArrayList<Selectable> options = Selectable.load("fighter/maneuvers.txt");
-        //options.removeAll(maneuvers);
         options.removeIf(s -> maneuvers.stream().anyMatch(m -> m.equiv(s)));
-        /*
-         for (int i = 0; i < options.size(); i++) {
-         for (Maneuver m : maneuvers) {
-         if (options.get(i).getName().equals(m.getName())) {
-         options.remove(i);
-         i--;
-         break;
-         }
-         }
-         }
-         */
         return options;
     }
 }

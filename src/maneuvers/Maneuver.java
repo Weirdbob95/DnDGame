@@ -1,10 +1,10 @@
 package maneuvers;
 
-import events.AbstractEventListener;
+import events.EventListenerContainer;
 import player.Player;
 import util.Selectable;
 
-public abstract class Maneuver extends AbstractEventListener implements Selectable {
+public abstract class Maneuver extends EventListenerContainer implements Selectable {
 
     public Player player;
     public ManeuversComponent mc;
@@ -17,7 +17,7 @@ public abstract class Maneuver extends AbstractEventListener implements Selectab
     }
 
     public void forget() {
-        remove();
+        setEnabled(false);
     }
 
     @Override
@@ -31,5 +31,6 @@ public abstract class Maneuver extends AbstractEventListener implements Selectab
     }
 
     public void learn() {
+        setEnabled(true);
     }
 }

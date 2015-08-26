@@ -17,6 +17,7 @@ import events.*;
 import player.Player;
 import queries.BooleanQuery;
 import queries.Query;
+import util.Mutable;
 
 public class Fighter extends PlayerClass {
 
@@ -39,10 +40,10 @@ public class Fighter extends PlayerClass {
         switch (newLevel) {
             case 1:
                 player.fsc.chooseFightingStyle(FightingStyle.values());
-                player.amc.actions.add(new Second_Wind(player));
+                player.amc.addAction(new Second_Wind(player));
                 break;
             case 2:
-                player.amc.actions.add(new Action_Surge(player));
+                player.amc.addAction(new Action_Surge(player));
                 break;
             case 4:
             case 6:
@@ -57,40 +58,27 @@ public class Fighter extends PlayerClass {
                 player.amc.getAction(AttackAction.class).setExtraAttacks(1);
                 break;
             case 9:
-                new AbstractEventListener(player) {
-                    public int timesUsed = 0;
-
-                    @Override
-                    public Class<? extends Event>[] callOn() {
-                        return new Class[]{SavingThrowResultEvent.class, LongRestEvent.class};
-                    }
-
-                    @Override
-                    public void onEvent(Event e) {
-                        if (e instanceof LongRestEvent) {
-                            timesUsed = 0;
-                        } else {
-                            SavingThrowResultEvent stre = (SavingThrowResultEvent) e;
-                            if (stre.ste.creature == player) {
-                                int cap = 1;
-                                if (level >= 13) {
-                                    cap++;
-                                    if (level >= 17) {
-                                        cap++;
-                                    }
-                                }
-                                if (timesUsed < cap) {
-                                    if (!stre.ste.success()) {
-                                        if (Query.ask(player, new BooleanQuery("Use the Indomitable ability?")).response) {
-                                            stre.ste.roll = new Die(20).roll;
-                                            timesUsed++;
-                                        }
-                                    }
+                Mutable<Integer> timesUsed = new Mutable(0);
+                add(SavingThrowResultEvent.class, stre -> {
+                    if (stre.ste.creature == player) {
+                        int cap = 1;
+                        if (level >= 13) {
+                            cap++;
+                            if (level >= 17) {
+                                cap++;
+                            }
+                        }
+                        if (timesUsed.o < cap) {
+                            if (!stre.ste.success()) {
+                                if (Query.ask(player, new BooleanQuery("Use the Indomitable ability?")).response) {
+                                    stre.ste.roll = new Die(20).roll;
+                                    timesUsed.o++;
                                 }
                             }
                         }
                     }
-                };
+                });
+                add(LongRestEvent.class, e -> timesUsed.o = 0);
                 break;
             case 11:
                 player.amc.getAction(AttackAction.class).setExtraAttacks(2);
@@ -111,23 +99,21 @@ public class Fighter extends PlayerClass {
         return new Skill[]{Acrobatics, Animal_Handling, Athletics, History, Insight, Intimidation, Perception, Survival};
     }
 
-    public class Second_Wind extends Action implements EventListener {
+    public class Second_Wind extends Action {
 
         public boolean available = true;
 
         public Second_Wind(Creature creature) {
             super(creature);
+
+            add(ShortRestEvent.class, e -> available = true);
+            add(LongRestEvent.class, e -> available = true);
         }
 
         @Override
         protected void act() {
             creature.hc.heal(new Die(10).roll + level);
             available = false;
-        }
-
-        @Override
-        public Class<? extends Event>[] callOn() {
-            return new Class[]{ShortRestEvent.class, LongRestEvent.class};
         }
 
         @Override
@@ -149,32 +135,26 @@ public class Fighter extends PlayerClass {
         public boolean isAvailable() {
             return available;
         }
-
-        @Override
-        public void onEvent(Event e) {
-            available = true;
-        }
     }
 
-    public class Action_Surge extends Action implements EventListener {
+    public class Action_Surge extends Action {
 
         public boolean available = true;
-        public int uses = 1;
+        public int timesUsed = 0;
 
         public Action_Surge(Creature creature) {
             super(creature);
+
+            add(TurnStartEvent.class, e -> available = (e.creature == creature ? true : available));
+            add(ShortRestEvent.class, e -> timesUsed = 0);
+            add(LongRestEvent.class, e -> timesUsed = 0);
         }
 
         @Override
         protected void act() {
             creature.amc.available.add(ACTION);
             available = false;
-            uses--;
-        }
-
-        @Override
-        public Class<? extends Event>[] callOn() {
-            return new Class[]{TurnStartEvent.class, ShortRestEvent.class, LongRestEvent.class};
+            timesUsed++;
         }
 
         @Override
@@ -199,20 +179,7 @@ public class Fighter extends PlayerClass {
 
         @Override
         public boolean isAvailable() {
-            return available && uses > 0;
-        }
-
-        @Override
-        public void onEvent(Event e) {
-            if (e instanceof TurnStartEvent) {
-                available = true;
-            } else {
-                if (level < 17) {
-                    uses = 1;
-                } else {
-                    uses = 2;
-                }
-            }
+            return available && timesUsed < (level < 17 ? 1 : 2);
         }
     }
 }

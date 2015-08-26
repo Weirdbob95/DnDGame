@@ -4,20 +4,19 @@ import actions.Action.Type;
 import static actions.Action.Type.*;
 import core.AbstractComponent;
 import creature.Creature;
-import events.Event;
 import events.EventListener;
 import events.TurnStartEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public class ActionManagerComponent extends AbstractComponent implements EventListener {
+public class ActionManagerComponent extends AbstractComponent {
 
     private Creature creature;
+    private ArrayList<Action> actions;
     public ArrayList<Type> available;
-    public ArrayList<Action> actions;
 
     public ActionManagerComponent(Creature creature) {
         this.creature = creature;
-        addToCreature(creature);
 
         available = new ArrayList();
         available.add(ACTION);
@@ -29,41 +28,35 @@ public class ActionManagerComponent extends AbstractComponent implements EventLi
         actions.add(new Dodge(creature));
         actions.add(new MoveAction(creature));
         actions.add(new Dash(creature));
+
+        EventListener.createListener(creature, TurnStartEvent.class, e -> {
+            if (e.creature == creature) {
+                available.clear();
+                available.add(ACTION);
+                available.add(BONUS_ACTION);
+                available.add(REACTION);
+            }
+        });
+    }
+
+    public void addAction(Action a) {
+        actions.add(a);
+        a.add();
     }
 
     public ArrayList<Action> allowedActions() {
-        ArrayList<Action> r = new ArrayList();
-        for (Action a : actions) {
-            if (a.isAvailable()) {
-                if (a.getType() == null || available.contains(a.getType())) {
-                    r.add(a);
-                }
-            }
-        }
-        return r;
-    }
-
-    @Override
-    public Class<? extends Event>[] callOn() {
-        return new Class[]{TurnStartEvent.class};
+        return new ArrayList(Arrays.asList(actions.stream().filter(Action::isAvailable).filter(a -> a.getType() == null || available.contains(a.getType())).toArray(l -> new Action[l])));
     }
 
     public <A extends Action> A getAction(Class<A> c) {
-        for (Action a : actions) {
-            if (c.isInstance(a)) {
-                return (A) a;
-            }
-        }
-        return null;
+        return actions.stream().filter(a -> c.isInstance(a)).map(a -> (A) a).findFirst().orElse(null);
     }
 
-    @Override
-    public void onEvent(Event e) {
-        if (((TurnStartEvent) e).creature == creature) {
-            available.clear();
-            available.add(ACTION);
-            available.add(BONUS_ACTION);
-            available.add(REACTION);
+    public void removeAction(Class<? extends Action> c) {
+        Action a = getAction(c);
+        if (a != null) {
+            actions.remove(a);
+            a.remove();
         }
     }
 }

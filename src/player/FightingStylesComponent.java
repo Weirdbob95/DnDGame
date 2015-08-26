@@ -6,8 +6,7 @@ import amounts.Die;
 import amounts.Value;
 import core.AbstractComponent;
 import enums.FightingStyle;
-import events.AbstractEventListener;
-import events.Event;
+import events.EventListener;
 import events.attack.AttackDamageResultEvent;
 import events.attack.AttackDamageRollEvent;
 import events.attack.AttackRollEvent;
@@ -36,88 +35,50 @@ public class FightingStylesComponent extends AbstractComponent {
         fightingStyles.add(style);
         switch (style) {
             case Archery:
-                new AbstractEventListener(player) {
-                    @Override
-                    public Class<? extends Event>[] callOn() {
-                        return new Class[]{AttackRollEvent.class};
+                EventListener.createListener(player, AttackRollEvent.class, e -> {
+                    if (e.a.attacker == player && e.a.isWeapon && e.a.weapon.isRanged) {
+                        e.a.toHit.set("Archery Fighting Style", 2);
                     }
-
-                    @Override
-                    public void onEvent(Event e) {
-                        AttackRollEvent are = (AttackRollEvent) e;
-                        if (are.a.attacker == player && are.a.isWeapon && are.a.weapon.isRanged) {
-                            are.a.toHit.set("Archery Fighting Style", 2);
-                        }
-                    }
-                };
+                });
                 break;
             case Defense:
-                player.ac.AC.set("Defense Fighting Stlyle", new ConditionalAmount(() -> {
-                    return player.ac.armor != null;
-                }, new Value(1)));
+                player.ac.AC.set("Defense Fighting Stlyle", new ConditionalAmount(() -> player.ac.armor != null, new Value(1)));
                 break;
             case Dueling:
-                new AbstractEventListener(player) {
-                    @Override
-                    public Class<? extends Event>[] callOn() {
-                        return new Class[]{AttackDamageRollEvent.class};
-                    }
-
-                    @Override
-                    public void onEvent(Event e) {
-                        AttackDamageRollEvent adre = (AttackDamageRollEvent) e;
-                        if (adre.a.attacker == player && adre.a.isWeapon && !adre.a.weapon.isRanged) {
-                            if (player.wc.getAll(Weapon.class).size() == 1 && player.wc.getAll(Weapon.class).get(0) == adre.a.weapon) {
-                                adre.a.damage.set("Dueling Fighting Style", 2);
-                            }
+                EventListener.createListener(player, AttackDamageRollEvent.class, e -> {
+                    if (e.a.attacker == player && e.a.isWeapon && !e.a.weapon.isRanged) {
+                        if (player.wc.getAll(Weapon.class).size() == 1 && player.wc.getAll(Weapon.class).get(0) == e.a.weapon) {
+                            e.a.damage.set("Dueling Fighting Style", 2);
                         }
                     }
-                };
+                });
                 break;
             case Great_Weapon_Fighting:
-                new AbstractEventListener(player) {
-                    @Override
-                    public Class<? extends Event>[] callOn() {
-                        return new Class[]{AttackDamageResultEvent.class};
-                    }
-
-                    @Override
-                    public void onEvent(Event e) {
-                        AttackDamageResultEvent adre = (AttackDamageResultEvent) e;
-                        if (adre.a.attacker == player && adre.a.isWeapon && !adre.a.weapon.isRanged) {
-                            if (player.wc.countHands(adre.a.weapon) == 2 && (adre.a.weapon.two_handed || adre.a.weapon.versatile != null)) {
-                                for (Die d : adre.a.damage.components.get("Base").asValue().dice) {
-                                    if (d.roll <= 2) {
-                                        d.roll();
-                                    }
+                EventListener.createListener(player, AttackDamageResultEvent.class, e -> {
+                    if (e.a.attacker == player && e.a.isWeapon && !e.a.weapon.isRanged) {
+                        if (player.wc.countHands(e.a.weapon) == 2 && (e.a.weapon.two_handed || e.a.weapon.versatile != null)) {
+                            for (Die d : e.a.damage.components.get("Base").asValue().dice) {
+                                if (d.roll <= 2) {
+                                    d.roll();
                                 }
                             }
                         }
                     }
-                };
+                });
                 break;
             case Protection:
-                new AbstractEventListener(player) {
-                    @Override
-                    public Class<? extends Event>[] callOn() {
-                        return new Class[]{AttackRollEvent.class};
-                    }
-
-                    @Override
-                    public void onEvent(Event e) {
-                        AttackRollEvent are = (AttackRollEvent) e;
-                        if (player.amc.available.contains(REACTION)) {
-                            if (are.a.attacker != player && are.a.target != player) {
-                                if (GridUtils.minDistance(player.glc.occupied, are.a.target.glc.occupied) <= 5) {
-                                    if (Query.ask(player, new BooleanQuery("Do you want to use the Protection fighting style?")).response) {
-                                        player.amc.available.remove(REACTION);
-                                        are.a.disadvantage = true;
-                                    }
+                EventListener.createListener(player, AttackRollEvent.class, e -> {
+                    if (player.amc.available.contains(REACTION)) {
+                        if (e.a.attacker != player && e.a.target != player) {
+                            if (GridUtils.minDistance(player.glc.occupied, e.a.target.glc.occupied) <= 5) {
+                                if (Query.ask(player, new BooleanQuery("Do you want to use the Protection fighting style?")).response) {
+                                    player.amc.available.remove(REACTION);
+                                    e.a.disadvantage = true;
                                 }
                             }
                         }
                     }
-                };
+                });
                 break;
         }
     }

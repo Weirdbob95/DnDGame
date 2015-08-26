@@ -1,13 +1,13 @@
 package actions;
 
 import creature.Creature;
+import events.EventListenerContainer;
 import events.UseActionEvent;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import util.Selectable;
 
-public abstract class Action implements Comparable, Selectable, Serializable {
+public abstract class Action extends EventListenerContainer implements Comparable, Selectable {
 
     public enum Type {
 
@@ -18,12 +18,17 @@ public abstract class Action implements Comparable, Selectable, Serializable {
     public ArrayList<String> tabs;
 
     public Action(Creature creature) {
+        super(creature);
         this.creature = creature;
         tabs = new ArrayList(Arrays.asList(defaultTabs()));
         tabs.add("All");
     }
 
     protected abstract void act();
+
+    public void add() {
+        setEnabled(true);
+    }
 
     @Override
     public int compareTo(Object t) {
@@ -41,6 +46,10 @@ public abstract class Action implements Comparable, Selectable, Serializable {
 
     public boolean isAvailable() {
         return true;
+    }
+
+    public void remove() {
+        setEnabled(false);
     }
 
     public void use() {

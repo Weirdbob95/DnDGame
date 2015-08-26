@@ -204,7 +204,7 @@ public class Creature extends AbstractEntity implements Serializable {
                                 }
                             }
 
-                            c.amc.actions.add(maa);
+                            c.amc.addAction(maa);
                             break;
                     }
                 }

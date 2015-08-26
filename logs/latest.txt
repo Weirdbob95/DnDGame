@@ -1,5 +1,4 @@
 TurnStartEvent
-Used action: Move
 TurnStartEvent
 Used action: Move
 Used action: Attack
@@ -7,21 +6,39 @@ AttackTargetEvent
 AttackEvent
 AttackRollEvent
 AttackResultEvent
-Rolled a 12 + 2 against an AC of 12
+Rolled a 14 + 2 against an AC of 12
 AttackDamageRollEvent
 AttackDamageResultEvent
-Dealt 11 damage
+Dealt 4 damage
 TakeDamageEvent
 AttackFinishEvent
 AttackTargetEvent
 AttackEvent
 AttackRollEvent
 AttackResultEvent
-Rolled a 17 + 2 against an AC of 12
+Rolled a 19 + 2 against an AC of 12
 AttackDamageRollEvent
 AttackDamageResultEvent
-Dealt 6 damage
+Dealt 4 damage
 TakeDamageEvent
 AttackFinishEvent
-Used action: Action Surge
 Used action: Feinting Attack
+Used action: Move
+Used action: Action Surge
+Used action: Attack
+AttackTargetEvent
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 9 + 2 against an AC of 12
+AttackFinishEvent
+Used action: Move
+AttackTargetEvent
+AttackEvent
+AttackRollEvent
+AttackResultEvent
+Rolled a 6 + 2 against an AC of 12
+AttackFinishEvent
+TurnStartEvent
+TurnStartEvent
+TurnStartEvent

@@ -1,7 +1,6 @@
 package maneuvers;
 
 import creature.Creature;
-import events.Event;
 import events.TurnStartEvent;
 import events.attack.AttackDamageRollEvent;
 import events.attack.AttackRollEvent;
@@ -13,26 +12,14 @@ public class Distracting_Strike extends AttackManeuver {
 
     public Distracting_Strike(Player player, ManeuversComponent mc) {
         super(player, mc);
-    }
 
-    @Override
-    public Class<? extends Event>[] callOn() {
-        return new Class[]{TurnStartEvent.class, AttackRollEvent.class};
-    }
-
-    @Override
-    public void onEvent(Event e) {
-        if (target != null) {
-            if (e instanceof TurnStartEvent) {
+        add(TurnStartEvent.class, e -> target = (e.creature == player ? null : target));
+        add(AttackRollEvent.class, e -> {
+            if (e.a.target == target && e.a.attacker != player) {
+                e.a.advantage = true;
                 target = null;
-            } else {
-                AttackRollEvent are = (AttackRollEvent) e;
-                if (are.a.target == target && are.a.attacker != player) {
-                    are.a.advantage = true;
-                    target = null;
-                }
             }
-        }
+        });
     }
 
     @Override

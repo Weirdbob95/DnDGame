@@ -4,7 +4,6 @@ import static actions.Action.Type.BONUS_ACTION;
 import static actions.Action.Type.REACTION;
 import actions.AttackAction;
 import creature.Creature;
-import events.Event;
 import events.UseActionEvent;
 import events.attack.AttackDamageRollEvent;
 import grid.Square;
@@ -19,17 +18,8 @@ public class Commander__s_Strike extends Maneuver {
 
     public Commander__s_Strike(Player player, ManeuversComponent mc) {
         super(player, mc);
-    }
 
-    @Override
-    public Class<? extends Event>[] callOn() {
-        return new Class[]{UseActionEvent.class, AttackDamageRollEvent.class};
-    }
-
-    @Override
-    public void onEvent(Event e) {
-        if (e instanceof UseActionEvent) {
-            UseActionEvent uae = (UseActionEvent) e;
+        add(UseActionEvent.class, (uae) -> {
             if (uae.action.creature == player) {
                 if (uae.action instanceof AttackAction) {
                     if (mc.diceUsed < mc.diceCap) {
@@ -44,6 +34,7 @@ public class Commander__s_Strike extends Maneuver {
                                     if (ally != null && ally != player) {
                                         if (ally.amc.available.contains(REACTION)) {
                                             if (Query.ask(ally, new BooleanQuery("Make a free attack?")).response) {
+                                                ally.amc.available.remove(REACTION);
                                                 ally.amc.getAction(AttackAction.class).singleAttack();
                                             }
                                         }
@@ -55,12 +46,12 @@ public class Commander__s_Strike extends Maneuver {
                     }
                 }
             }
-        } else {
-            AttackDamageRollEvent adre = (AttackDamageRollEvent) e;
+        });
+        add(AttackDamageRollEvent.class, (adre) -> {
             if (adre.a.attacker == ally) {
                 mc.addDieTo(adre.a.damage);
                 ally = null;
             }
-        }
+        });
     }
 }

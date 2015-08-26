@@ -1,13 +1,14 @@
 package classes;
 
-import java.io.Serializable;
+import events.EventListenerContainer;
 import player.Player;
 
-public abstract class Archetype<C extends PlayerClass> implements Serializable {
+public abstract class Archetype<C extends PlayerClass> extends EventListenerContainer {
 
     public C playerClass;
 
     public Archetype(C playerClass) {
+        super(playerClass.player);
         this.playerClass = playerClass;
     }
 

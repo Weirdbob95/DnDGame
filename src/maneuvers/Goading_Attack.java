@@ -2,7 +2,6 @@ package maneuvers;
 
 import creature.Creature;
 import static enums.AbilityScore.WIS;
-import events.Event;
 import events.SavingThrowEvent;
 import events.TurnEndEvent;
 import events.TurnStartEvent;
@@ -17,29 +16,14 @@ public class Goading_Attack extends AttackManeuver {
 
     public Goading_Attack(Player player, ManeuversComponent mc) {
         super(player, mc);
-    }
 
-    @Override
-    public Class<? extends Event>[] callOn() {
-        return new Class[]{TurnStartEvent.class, TurnEndEvent.class, AttackRollEvent.class};
-    }
-
-    @Override
-    public void onEvent(Event e) {
-        if (target != null) {
-            if (e instanceof TurnStartEvent) {
-                isNextTurn = true;
-            } else if (e instanceof TurnEndEvent) {
-                if (isNextTurn) {
-                    target = null;
-                }
-            } else {
-                AttackRollEvent are = (AttackRollEvent) e;
-                if (are.a.attacker == target && are.a.target != player) {
-                    are.a.disadvantage = true;
-                }
+        add(TurnStartEvent.class, e -> isNextTurn = (e.creature == player ? true : isNextTurn));
+        add(TurnEndEvent.class, e -> target = (e.creature == player && isNextTurn ? null : target));
+        add(AttackRollEvent.class, e -> {
+            if (e.a.attacker == target && e.a.target != player) {
+                e.a.disadvantage = true;
             }
-        }
+        });
     }
 
     @Override

@@ -5,3 +5,12 @@ Evasive Footwork / When you move, you can expend one superiority die, rolling th
 Feinting Attack / You use a bonus action to feint, giving you advantage on your next attack roll against a creature.
 Goading Attack / You attempt to goad your target into attacking you, giving them disadvantage on attack rolls against targets other than you.
 Lunging Attack / You increase one of your attacks' reach by 5 feet.
+Maneuvering Attack / One of your allies can move up to half their speed without provoking attacks from your target.
+Menacing Attack / You attempt to frighten your target, making them frightened of you until the end of your next turn.
+Parry / When you are damaged by a melee attack, you can use your reaction to reduce the damage.
+Precision Attack / You expend a superiority die and add it to your attack roll.
+Pushing Attack / You attempt to drive your target back. If your target is Large or smaller, they are pushed up to 15 feed away from you.
+Rally / You use a bonus action to bolster the resolve of your companions, giving a creature temporary hit points.
+Riposte / When a creature misses you with a melee attack, you attack them back as a reaction.
+Sweeping Attack / A creature adjacent to your target takes damage if your attack roll would have hit it as well as your main target.
+Trip Attack / You attempt to knock your target down. If your target is Large or smaller, they are knocked prone.
