@@ -1,1 +1,0 @@
-java.lang.ClassNotFoundException: classes.druid.Druid

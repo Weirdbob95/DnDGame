@@ -1,2 +1,0 @@
-java.nio.file.NoSuchFileException: Fighterarchetypes.txt
-java.lang.NullPointerException
