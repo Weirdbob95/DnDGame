@@ -7,7 +7,8 @@ import static enums.AbilityScore.STR;
 import events.EventListener;
 import events.attack.AttackDamageRollEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 import player.Player;
 import queries.BooleanQuery;
 import queries.Query;
@@ -36,7 +37,7 @@ public class ManeuversComponent extends AbstractComponent {
                     if (diceUsed < diceCap) {
                         if (hasAttackManeuvers()) {
                             if (Query.ask(player, new BooleanQuery("Use a maneuver?")).response) {
-                                AttackManeuver m = Query.ask(player, new SelectQuery<AttackManeuver>("Choose which maneuver to use", Arrays.asList(getAttackManeuvers()), "Choose", "Cancel")).response;
+                                AttackManeuver m = Query.ask(player, new SelectQuery<AttackManeuver>("Choose which maneuver to use", getAttackManeuvers(), "Choose", "Cancel")).response;
                                 if (m != null) {
                                     diceUsed++;
                                     m.use(e);
@@ -61,8 +62,8 @@ public class ManeuversComponent extends AbstractComponent {
         }
     }
 
-    private AttackManeuver[] getAttackManeuvers() {
-        return maneuvers.stream().filter(m -> m instanceof AttackManeuver).map(m -> (AttackManeuver) m).toArray(l -> new AttackManeuver[l]);
+    private List<AttackManeuver> getAttackManeuvers() {
+        return maneuvers.stream().filter(m -> m instanceof AttackManeuver).map(m -> (AttackManeuver) m).collect(Collectors.toList());
     }
 
     private boolean hasAttackManeuvers() {
@@ -95,7 +96,7 @@ public class ManeuversComponent extends AbstractComponent {
 
     public ArrayList<Selectable> remainingManeuvers() {
         ArrayList<Selectable> options = Selectable.load("fighter/maneuvers.txt");
-        options.removeIf(s -> maneuvers.stream().anyMatch(m -> m.equiv(s)));
+        options.removeIf(s -> maneuvers.stream().anyMatch(s::equiv));
         return options;
     }
 }

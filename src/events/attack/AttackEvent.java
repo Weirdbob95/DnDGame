@@ -20,6 +20,8 @@ public class AttackEvent extends Event {
     public Creature target;
     public boolean isWeapon;
     public Weapon weapon;
+    public boolean isRanged;
+    public int range;
     public AbilityScore abilityScore;
     public ArrayList<AbilityScore> allowedAbilityScores;
     public Stat toHit;
@@ -29,12 +31,14 @@ public class AttackEvent extends Event {
     public boolean isCritical;
     public int roll;
     public boolean isMonsterAttack;
+    public boolean isOpportunityAttack;
 
-    public AttackEvent(Creature attacker, Creature target, Weapon weapon) {
+    public AttackEvent(Creature attacker, Creature target, Weapon weapon, int range) {
         this.attacker = attacker;
         this.target = target;
         isWeapon = true;
         this.weapon = weapon;
+        this.range = range;
         allowedAbilityScores = new ArrayList();
         if (!weapon.isRanged || weapon.thrown || weapon.finesse) {
             allowedAbilityScores.add(AbilityScore.STR);
@@ -44,12 +48,15 @@ public class AttackEvent extends Event {
         }
         toHit = new Stat();
         damage = new Stat();
+        isRanged = weapon.isRanged;
     }
 
     public AttackEvent(MonsterAttackAction maa, Creature target) {
         this.attacker = maa.creature;
         this.target = target;
         isWeapon = maa.isWeapon;
+        isRanged = maa.isRanged;
+        range = maa.range;
         toHit = new Stat(maa.toHit);
         damage = new Stat("Base", maa.damage);
         isMonsterAttack = true;
@@ -68,11 +75,11 @@ public class AttackEvent extends Event {
         //Get the attack roll info
         new AttackRollEvent(this).call();
         //Roll the dice
-        roll = new Die(20).roll;
+        roll = new Die(20, advantage, disadvantage).roll;
         toHit.roll();
         //Check the attack roll results
         new AttackResultEvent(this).call();
-        Log.print("Rolled a " + roll + " + " + toHit.get() + " against an AC of " + target.ac.AC.get());
+        Log.print("Rolled a " + roll + " + " + toHit.get() + " (" + (roll + toHit.get()) + ") against an AC of " + target.ac.AC.get());
         //See if you hit
         if (!isCritical && (roll == 1 || roll + toHit.get() < target.ac.AC.get())) {
             new AttackFinishEvent(this, false).call();

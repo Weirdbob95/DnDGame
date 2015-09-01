@@ -2,6 +2,7 @@ package rounds;
 
 import creature.Creature;
 import creature.CreatureComponent;
+import events.TurnEndEvent;
 import events.TurnStartEvent;
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class InitiativeOrder {
     }
 
     public void endTurn() {
+        new TurnEndEvent(current().creature).call();
         current().canAct = false;
         if (current() == null) {
             newRound();

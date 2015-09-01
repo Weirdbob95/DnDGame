@@ -68,11 +68,11 @@ public class FightingStylesComponent extends AbstractComponent {
                 break;
             case Protection:
                 EventListener.createListener(player, AttackRollEvent.class, e -> {
-                    if (player.amc.available.contains(REACTION)) {
+                    if (player.amc.hasType(REACTION)) {
                         if (e.a.attacker != player && e.a.target != player) {
-                            if (GridUtils.minDistance(player.glc.occupied, e.a.target.glc.occupied) <= 5) {
+                            if (GridUtils.minDistance(player, e.a.target) <= 5) {
                                 if (Query.ask(player, new BooleanQuery("Do you want to use the Protection fighting style?")).response) {
-                                    player.amc.available.remove(REACTION);
+                                    player.amc.useType(REACTION, this);
                                     e.a.disadvantage = true;
                                 }
                             }

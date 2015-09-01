@@ -50,6 +50,7 @@ public class Feinting_Attack extends Maneuver {
             Square s = Query.ask(creature, new SquareQuery("Choose a creature", creature.glc.occupied, 5, true)).response;
             if (s != null && s.creature != player) {
                 target = s.creature;
+                mc.diceUsed++;
             }
         }
 
@@ -66,6 +67,11 @@ public class Feinting_Attack extends Maneuver {
         @Override
         public String getDescription() {
             return description;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return mc.diceUsed < mc.diceCap;
         }
     }
 }

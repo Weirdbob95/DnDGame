@@ -32,14 +32,8 @@ public class Elf extends Race {
 
     public Subrace subrace;
 
-    @Override
-    public void addTo(Player player) {
-        subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
-        super.addTo(player);
-        switch (subrace) {
-            case High_Elf:
-                player.lc.chooseLanguage();
-        }
+    public Elf(Player player) {
+        super(player);
     }
 
     @Override
@@ -61,6 +55,16 @@ public class Elf extends Race {
             return 35;
         }
         return 30;
+    }
+
+    @Override
+    public void init() {
+        subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
+        super.init();
+        switch (subrace) {
+            case High_Elf:
+                player.lc.chooseLanguage();
+        }
     }
 
     @Override

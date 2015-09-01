@@ -1,13 +1,10 @@
 package queries;
 
-import core.Core;
 import core.MouseInput;
-import creature.Creature;
-import grid.GridComponent;
 import grid.GridUtils;
 import grid.Square;
-import grid.World;
 import java.util.ArrayList;
+import java.util.function.BiPredicate;
 import overlay.OverlayCircle;
 import overlay.OverlayLine;
 import ui.UIChooseButton;
@@ -21,17 +18,15 @@ public class PathQuery extends Query {
     public Square start;
     public int range;
     public int width;
-    public boolean penetratesWalls;
-    public Creature creature;
+    public BiPredicate<Square, Square> allowFunc;
     public ArrayList<Square> path;
 
-    public PathQuery(String desc, Square start, int range, int width, boolean penetratesWalls, Creature creature) {
+    public PathQuery(String desc, Square start, int range, int width, BiPredicate<Square, Square> allowFunc) {
         this.desc = desc;
         this.start = start;
         this.range = range;
         this.width = width;
-        this.penetratesWalls = penetratesWalls;
-        this.creature = creature;
+        this.allowFunc = allowFunc;
     }
 
     @Override
@@ -44,85 +39,37 @@ public class PathQuery extends Query {
         return true;
     }
 
-    public int distance() {
-        int r = 0;
-        boolean extraDiag = false;
-        for (int i = 0; i < path.size(); i++) {
-            Square prev;
-            if (i == 0) {
-                prev = start;
-            } else {
-                prev = path.get(i - 1);
-            }
-            Square now = path.get(i);
-            r += 5;
-            if ((prev.x - now.x) * (prev.y - now.y) != 0) {
-                if (extraDiag) {
-                    r += 5;
-                }
-                extraDiag = !extraDiag;
-            }
-        }
-        return r;
-    }
-
-    private boolean isOpen(Square s) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < width; j++) {
-                Square test = Core.gameManager.elc.getEntity(World.class).getComponent(GridComponent.class).tileAt(s.x + i, s.y + j);
-                if (test == null) {
-                    return false;
-                }
-                if (test.isWall && !penetratesWalls) {
-                    return false;
-                }
-                if (test.creature != null && test.creature != creature && !penetratesWalls) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
     private ArrayList<Square> options() {
         ArrayList<Square> r = new ArrayList();
-        for (Square s : GridUtils.all()) {
+        GridUtils.all().forEach(s -> {
             Square end = start;
             if (!path.isEmpty()) {
                 end = path.get(path.size() - 1);
             }
             if (GridUtils.distance(s, end) == 5) {
-                if (isOpen(s)) {
+
+                if (allowFunc.test(end, s)) {
+
                     path.add(s);
-                    if (distance() <= range) {
+                    if (GridUtils.distance(start, path) <= range) {
                         r.add(s);
                     }
                     path.remove(path.size() - 1);
                 }
             }
-
-        }
+        });
         return r;
     }
 
     private void updateUI() {
         puic.root.children.clear();
         new UIText(puic.root, desc);
-        if (path.isEmpty()) {
-            new UIChooseButton(puic.root, "Cancel", this);
-        } else {
-            new UIChooseButton(puic.root, "Choose", this);
-        }
+        new UIChooseButton(puic.root, path.isEmpty() ? "Cancel" : "Choose", this);
         puic.overlayItems.clear();
         final PathQuery thus = this;
         final Vec2 offset = new Vec2(width * Square.SIZE / 2., width * Square.SIZE / 2.);
         for (int i = 0; i < path.size(); i++) {
-            Square prev;
-            if (i == 0) {
-                prev = start;
-            } else {
-                prev = path.get(i - 1);
-            }
+            Square prev = (i == 0 ? start : path.get(i - 1));
             Square now = path.get(i);
             new OverlayLine(prev.LL().add(offset), now.LL().add(offset), new Color4d(1, 1, 0), 2);
         }

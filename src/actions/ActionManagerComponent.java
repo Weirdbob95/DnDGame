@@ -5,15 +5,18 @@ import static actions.Action.Type.*;
 import core.AbstractComponent;
 import creature.Creature;
 import events.EventListener;
+import events.HasActionTypeEvent;
 import events.TurnStartEvent;
+import events.UseActionTypeEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ActionManagerComponent extends AbstractComponent {
 
     private Creature creature;
     private ArrayList<Action> actions;
-    public ArrayList<Type> available;
+    private ArrayList<Type> available;
 
     public ActionManagerComponent(Creature creature) {
         this.creature = creature;
@@ -44,12 +47,26 @@ public class ActionManagerComponent extends AbstractComponent {
         a.add();
     }
 
-    public ArrayList<Action> allowedActions() {
-        return new ArrayList(Arrays.asList(actions.stream().filter(Action::isAvailable).filter(a -> a.getType() == null || available.contains(a.getType())).toArray(l -> new Action[l])));
+    public void addType(Type type) {
+        available.add(type);
+    }
+
+    public List<Action> allowedActions() {
+        return actions.stream().filter(Action::isAvailable).filter(a -> a.getType() == null || available.contains(a.getType())).collect(Collectors.toList());
     }
 
     public <A extends Action> A getAction(Class<A> c) {
-        return actions.stream().filter(a -> c.isInstance(a)).map(a -> (A) a).findFirst().orElse(null);
+        return actions.stream().filter(c::isInstance).map(a -> (A) a).findFirst().orElse(null);
+    }
+
+    public <A extends Action> List<A> getActionList(Class<A> c) {
+        return actions.stream().filter(c::isInstance).map(a -> (A) a).collect(Collectors.toList());
+    }
+
+    public boolean hasType(Type type) {
+        HasActionTypeEvent e = new HasActionTypeEvent(creature, type, available.contains(type));
+        e.call();
+        return e.available;
     }
 
     public void removeAction(Class<? extends Action> c) {
@@ -58,5 +75,10 @@ public class ActionManagerComponent extends AbstractComponent {
             actions.remove(a);
             a.remove();
         }
+    }
+
+    public void useType(Type type, Object purpose) {
+        available.remove(type);
+        new UseActionTypeEvent(creature, type, purpose).call();
     }
 }

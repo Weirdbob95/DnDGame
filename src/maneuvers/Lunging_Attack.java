@@ -16,14 +16,16 @@ public class Lunging_Attack extends Maneuver {
         super(player, mc);
 
         add(AttackTargetEvent.class, e -> {
-            if (InitiativeOrder.io.current().creature == player) {
-                if (e.creature == player) {
-                    if (mc.diceUsed < mc.diceCap) {
-                        if (Query.ask(player, new BooleanQuery("Use the Lunging Atttack maneuver?")).response) {
-                            e.range += 5;
-                            mc.diceUsed--;
-                            active = true;
-                            mc.moddingAttack = true;
+            if (!mc.moddingAttack) {
+                if (InitiativeOrder.io.current().creature == player) {
+                    if (e.creature == player) {
+                        if (mc.diceUsed < mc.diceCap) {
+                            if (Query.ask(player, new BooleanQuery("Use the Lunging Atttack maneuver?")).response) {
+                                e.range += 5;
+                                mc.diceUsed++;
+                                active = true;
+                                mc.moddingAttack = true;
+                            }
                         }
                     }
                 }

@@ -152,7 +152,7 @@ public class Fighter extends PlayerClass {
 
         @Override
         protected void act() {
-            creature.amc.available.add(ACTION);
+            creature.amc.addType(ACTION);
             available = false;
             timesUsed++;
         }

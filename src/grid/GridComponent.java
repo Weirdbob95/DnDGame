@@ -25,6 +25,10 @@ public class GridComponent extends AbstractComponent {
     private static String path = "levels/";
     private static String type = ".png";
 
+    public GridComponent() {
+        GridUtils.grid = this;
+    }
+
     public void load(String fileName) {
         this.fileName = fileName;
         //Load image

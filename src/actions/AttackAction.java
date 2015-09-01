@@ -13,7 +13,7 @@ import util.SelectableImpl;
 public class AttackAction extends Action {
 
     public int extraAttacks = 0;
-    public int attacks;
+    public int attacks = 1;
 
     public AttackAction(Creature creature) {
         super(creature);

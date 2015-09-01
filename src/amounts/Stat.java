@@ -20,11 +20,7 @@ public class Stat implements Amount {
 
     @Override
     public Value asValue() {
-        Value r = new Value(0);
-        for (Amount a : components.values()) {
-            r = r.add(a.asValue());
-        }
-        return r;
+        return components.values().stream().map(Amount::asValue).reduce(new Value(), (a, b) -> a.add(b));
     }
 
     public Stat edit(int a) {
@@ -42,20 +38,12 @@ public class Stat implements Amount {
 
     @Override
     public int get() {
-        int r = 0;
-        for (Amount a : components.values()) {
-            r += a.get();
-        }
-        return r;
+        return components.values().stream().mapToInt(Amount::get).sum();
     }
 
     @Override
     public int roll() {
-        int r = 0;
-        for (Amount a : components.values()) {
-            r += a.roll();
-        }
-        return r;
+        return components.values().stream().mapToInt(Amount::roll).sum();
     }
 
     public Stat set(int a) {

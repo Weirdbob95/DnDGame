@@ -26,6 +26,8 @@ public class ManualController implements CreatureController {
             } catch (InterruptedException ex) {
                 Log.error(ex);
             }
+        } else {
+            query.removeFromUI();
         }
     }
 

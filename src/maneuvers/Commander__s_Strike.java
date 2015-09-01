@@ -23,18 +23,18 @@ public class Commander__s_Strike extends Maneuver {
             if (uae.action.creature == player) {
                 if (uae.action instanceof AttackAction) {
                     if (mc.diceUsed < mc.diceCap) {
-                        if (player.amc.available.contains(BONUS_ACTION)) {
+                        if (player.amc.hasType(BONUS_ACTION)) {
                             if (Query.ask(player, new BooleanQuery("Use the Commander's Strike maneuver?")).response) {
                                 mc.diceUsed++;
                                 ((AttackAction) uae.action).attacks--;
-                                player.amc.available.remove(BONUS_ACTION);
+                                player.amc.useType(BONUS_ACTION, this);
                                 Square toHelp = Query.ask(player, new SquareQuery("Choose a creature to give an attack to", (Square) null, -1, true)).response;
                                 if (toHelp != null) {
                                     ally = toHelp.creature;
                                     if (ally != null && ally != player) {
-                                        if (ally.amc.available.contains(REACTION)) {
+                                        if (ally.amc.hasType(REACTION)) {
                                             if (Query.ask(ally, new BooleanQuery("Make a free attack?")).response) {
-                                                ally.amc.available.remove(REACTION);
+                                                ally.amc.useType(REACTION, this);
                                                 ally.amc.getAction(AttackAction.class).singleAttack();
                                             }
                                         }

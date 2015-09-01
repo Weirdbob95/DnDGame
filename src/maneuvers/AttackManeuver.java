@@ -9,5 +9,5 @@ public abstract class AttackManeuver extends Maneuver {
         super(player, mc);
     }
 
-    public abstract void use(AttackDamageRollEvent adre);
+    public abstract void use(AttackDamageRollEvent e);
 }

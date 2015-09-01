@@ -17,7 +17,7 @@ public class LanguageComponent extends AbstractComponent {
 
     public void chooseLanguage() {
         ArrayList<Selectable> choices = Selectable.load("languages.txt");
-        choices.removeIf(s -> languages.stream().anyMatch(l -> l.equals(s.getName())));
+        choices.removeIf(s -> languages.stream().anyMatch(s.getName()::equals));
         languages.add(Query.ask(creature, new SelectQuery("Choose a language", choices)).response.getName());
     }
 }

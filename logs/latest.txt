@@ -1,44 +1,16 @@
-TurnStartEvent
-TurnStartEvent
+Used action: Move
+Rolled a 1 + 4 (5) against an AC of 12
+Used action: Bite
+Rolled a 13 + 5 (18) against an AC of 10
+Dealt 10 damage
 Used action: Move
 Used action: Attack
-AttackTargetEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 14 + 2 against an AC of 12
-AttackDamageRollEvent
-AttackDamageResultEvent
-Dealt 4 damage
-TakeDamageEvent
-AttackFinishEvent
-AttackTargetEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 19 + 2 against an AC of 12
-AttackDamageRollEvent
-AttackDamageResultEvent
-Dealt 4 damage
-TakeDamageEvent
-AttackFinishEvent
-Used action: Feinting Attack
-Used action: Move
+Rolled a 18 + 4 (22) against an AC of 12
+Dealt 11 damage
 Used action: Action Surge
 Used action: Attack
-AttackTargetEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 9 + 2 against an AC of 12
-AttackFinishEvent
+Rolled a 1 + 4 (5) against an AC of 12
 Used action: Move
-AttackTargetEvent
-AttackEvent
-AttackRollEvent
-AttackResultEvent
-Rolled a 6 + 2 against an AC of 12
-AttackFinishEvent
-TurnStartEvent
-TurnStartEvent
-TurnStartEvent
+Rolled a 1 + 5 (6) against an AC of 10
+Used action: Move
+Used action: Attack

@@ -35,6 +35,7 @@ public class Creature extends AbstractEntity implements Serializable {
     public AbilityScoreComponent asc;
     public ActionManagerComponent amc;
     public ArmorComponent ac;
+    public ConditionComponent cnc;
     public CreatureComponent cc;
     public CreatureDescriptionComponent cdc;
     public EventListenersComponent elc;
@@ -51,6 +52,7 @@ public class Creature extends AbstractEntity implements Serializable {
         asc = add(new AbilityScoreComponent());
         amc = add(new ActionManagerComponent(this));
         ac = add(new ArmorComponent(this));
+        cnc = add(new ConditionComponent(this));
         cdc = add(new CreatureDescriptionComponent());
         hc = add(new HealthComponent());
         lc = add(new LanguageComponent(this));
@@ -132,7 +134,8 @@ public class Creature extends AbstractEntity implements Serializable {
                         case "size":
                             c.cdc.size = Size.parse(text);
                             c.getComponent(SpriteComponent.class).scale = new Vec2(1, 1).multiply(c.cdc.size.squares);
-                            c.glc.moveToSquare(c.glc.lowerLeft.center(), false);
+                            c.glc.moveToSquare(c.glc.lowerLeft);
+                            c.glc.updateSpritePos();
                             break;
                         case "type":
                             c.cdc.type = CreatureType.valueOf(text.substring(0, text.indexOf(",")).toUpperCase());

@@ -4,15 +4,19 @@ import player.Player;
 
 public class Human extends Race {
 
-    @Override
-    public void addTo(Player player) {
-        super.addTo(player);
-        player.lc.chooseLanguage();
+    public Human(Player player) {
+        super(player);
     }
 
     @Override
     public int[] getAbilityScores() {
         return new int[]{1, 1, 1, 1, 1, 1};
+    }
+
+    @Override
+    public void init() {
+        super.init();
+        player.lc.chooseLanguage();
     }
 
     @Override

@@ -33,7 +33,7 @@ public class AttackTargetEvent extends Event {
         Square toAttack = Query.ask(creature, new SquareQuery("Choose a creature to attack", creature.glc.occupied, range, true)).response;
         if (toAttack != null && toAttack.creature != null) {
             if (maa == null) {
-                a = new AttackEvent(creature, toAttack.creature, w);
+                a = new AttackEvent(creature, toAttack.creature, w, range);
             } else {
                 a = new AttackEvent(maa, toAttack.creature);
             }

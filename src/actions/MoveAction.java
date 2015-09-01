@@ -1,8 +1,8 @@
 package actions;
 
 import creature.Creature;
-import queries.PathQuery;
-import queries.Query;
+import events.move.PathMoveEvent;
+import grid.GridUtils;
 
 public class MoveAction extends Action {
 
@@ -12,12 +12,9 @@ public class MoveAction extends Action {
 
     @Override
     protected void act() {
-        PathQuery path = Query.ask(creature, new PathQuery("Choose which square to move to",
-                creature.glc.lowerLeft, (int) Math.round(creature.spc.landSpeed.get() * creature.spc.speedPercRemaining), creature.cdc.size.squares, false, creature));
-        if (!path.path.isEmpty()) {
-            creature.spc.speedPercRemaining -= (double) path.distance() / creature.spc.landSpeed.get();
-            creature.glc.moveAlongPath(path.path);
-        }
+        PathMoveEvent pme = new PathMoveEvent(creature, (int) Math.round(creature.spc.landSpeed.get() * creature.spc.speedPercRemaining));
+        pme.call();
+        creature.spc.speedPercRemaining -= (double) GridUtils.distance(creature.glc.lowerLeft, pme.partialPath) / creature.spc.landSpeed.get();
     }
 
     @Override

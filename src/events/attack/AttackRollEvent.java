@@ -10,7 +10,9 @@ public class AttackRollEvent extends Event {
     public AttackRollEvent(AttackEvent a) {
         this.a = a;
         if (!a.isMonsterAttack) {
-            a.toHit.set("Proficiency", ((Player) a.attacker).pc.prof);
+            if (a.attacker instanceof Player) {
+                a.toHit.set("Proficiency", ((Player) a.attacker).pc.prof);
+            }
             a.toHit.set("Ability Score", a.attacker.asc.mod(a.abilityScore));
         }
     }

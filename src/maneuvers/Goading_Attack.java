@@ -27,10 +27,10 @@ public class Goading_Attack extends AttackManeuver {
     }
 
     @Override
-    public void use(AttackDamageRollEvent adre) {
-        mc.addDieTo(adre.a.damage);
-        if (!new SavingThrowEvent(adre.a.target, WIS, mc.DC.get()).success()) {
-            target = adre.a.target;
+    public void use(AttackDamageRollEvent e) {
+        mc.addDieTo(e.a.damage);
+        if (SavingThrowEvent.fail(e.a.target, WIS, mc.DC.get())) {
+            target = e.a.target;
             isNextTurn = false;
         }
     }

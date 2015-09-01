@@ -2,7 +2,6 @@ package animations;
 
 import creature.Creature;
 import movement.PositionComponent;
-import movement.RotationComponent;
 import util.Vec2;
 
 public class MoveAnimation extends Animation {
@@ -15,7 +14,7 @@ public class MoveAnimation extends Animation {
         pc = c.getComponent(PositionComponent.class);
         this.goal = goal;
         speed = goal.subtract(pc.pos).setLength(4);
-        c.getComponent(RotationComponent.class).rot = speed.direction();
+        //c.getComponent(RotationComponent.class).rot = speed.direction();
     }
 
     @Override

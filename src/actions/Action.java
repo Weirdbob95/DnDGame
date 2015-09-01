@@ -53,7 +53,7 @@ public abstract class Action extends EventListenerContainer implements Comparabl
     }
 
     public void use() {
-        creature.amc.available.remove(getType());
+        creature.amc.useType(getType(), this);
         new UseActionEvent(this).call();
         act();
     }

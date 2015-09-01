@@ -3,7 +3,6 @@ package races;
 import amounts.Die;
 import enums.Size;
 import events.AbilityCheckResultEvent;
-import events.EventListener;
 import events.SavingThrowResultEvent;
 import events.attack.AttackResultEvent;
 import player.Player;
@@ -37,25 +36,8 @@ public class Halfling extends Race {
 
     public Subrace subrace;
 
-    @Override
-    public void addTo(Player player) {
-        subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
-        super.addTo(player);
-        EventListener.createListener(player, AttackResultEvent.class, e -> {
-            if (e.a.attacker == player && e.a.roll == 1) {
-                e.a.roll = new Die(20).roll;
-            }
-        });
-        EventListener.createListener(player, AbilityCheckResultEvent.class, e -> {
-            if (e.ace.creature == player && e.ace.roll == 1) {
-                e.ace.roll = new Die(20).roll;
-            }
-        });
-        EventListener.createListener(player, SavingThrowResultEvent.class, e -> {
-            if (e.ste.creature == player && e.ste.roll == 1) {
-                e.ste.roll = new Die(20).roll;
-            }
-        });
+    public Halfling(Player player) {
+        super(player);
     }
 
     @Override
@@ -72,6 +54,27 @@ public class Halfling extends Race {
     @Override
     public int getSpeed() {
         return 25;
+    }
+
+    @Override
+    public void init() {
+        subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
+        super.init();
+        add(AttackResultEvent.class, -1, e -> {
+            if (e.a.attacker == player && e.a.roll == 1) {
+                e.a.roll = new Die(20).roll;
+            }
+        });
+        add(AbilityCheckResultEvent.class, -1, e -> {
+            if (e.ace.creature == player && e.ace.roll == 1) {
+                e.ace.roll = new Die(20).roll;
+            }
+        });
+        add(SavingThrowResultEvent.class, -1, e -> {
+            if (e.ste.creature == player && e.ste.roll == 1) {
+                e.ste.roll = new Die(20).roll;
+            }
+        });
     }
 
     @Override

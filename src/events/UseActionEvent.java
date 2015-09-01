@@ -1,6 +1,7 @@
 package events;
 
 import actions.Action;
+import util.Log;
 
 public class UseActionEvent extends Event {
 
@@ -11,7 +12,8 @@ public class UseActionEvent extends Event {
     }
 
     @Override
-    public String toString() {
-        return "Used action: " + action.getName();
+    public void call() {
+        Log.print("Used action: " + action.getName());
+        super.call();
     }
 }

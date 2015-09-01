@@ -23,8 +23,8 @@ public class Distracting_Strike extends AttackManeuver {
     }
 
     @Override
-    public void use(AttackDamageRollEvent adre) {
-        mc.addDieTo(adre.a.damage);
-        target = adre.a.target;
+    public void use(AttackDamageRollEvent e) {
+        mc.addDieTo(e.a.damage);
+        target = e.a.target;
     }
 }

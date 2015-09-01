@@ -13,16 +13,16 @@ public class MaxAmount implements Amount {
 
     @Override
     public Value asValue() {
-        return amounts.stream().reduce((a, b) -> a.get() > b.get() ? a : b).get().asValue();
+        return amounts.stream().max((a, b) -> a.get() - b.get()).get().asValue();
     }
 
     @Override
     public int get() {
-        return amounts.stream().mapToInt(Amount::get).reduce(Math::max).getAsInt();
+        return amounts.stream().mapToInt(Amount::get).max().getAsInt();
     }
 
     @Override
     public int roll() {
-        return amounts.stream().mapToInt(Amount::roll).reduce(Math::max).getAsInt();
+        return amounts.stream().mapToInt(Amount::roll).min().getAsInt();
     }
 }

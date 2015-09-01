@@ -15,8 +15,8 @@ public class RaceComponent extends AbstractComponent {
 
     public void setRace(String name) {
         try {
-            race = (Race) Class.forName("races." + name).newInstance();
-            race.addTo(player);
+            race = (Race) Class.forName("races." + name).getConstructor(Player.class).newInstance(player);
+            race.init();
         } catch (Exception ex) {
             Log.error(ex);
         }

@@ -15,13 +15,13 @@ public class Disarming_Attack extends AttackManeuver {
     }
 
     @Override
-    public void use(AttackDamageRollEvent adre) {
-        mc.addDieTo(adre.a.damage);
-        Selectable drop = Query.ask(adre.a.attacker, new SelectQuery("Choose which item to disarm", adre.a.target.wc.getAll(Selectable.class))).response;
-        if (!new SavingThrowEvent(adre.a.target, STR, mc.DC.get()).success()) {
-            for (int i = 0; i < adre.a.target.wc.hands; i++) {
-                if (adre.a.target.wc.held[i] == drop) {
-                    adre.a.target.wc.held[i] = null;
+    public void use(AttackDamageRollEvent e) {
+        mc.addDieTo(e.a.damage);
+        Selectable drop = Query.ask(e.a.attacker, new SelectQuery("Choose which item to disarm", e.a.target.wc.getAll(Selectable.class))).response;
+        if (SavingThrowEvent.fail(e.a.target, STR, mc.DC.get())) {
+            for (int i = 0; i < e.a.target.wc.hands; i++) {
+                if (e.a.target.wc.held[i] == drop) {
+                    e.a.target.wc.held[i] = null;
                 }
             }
         }

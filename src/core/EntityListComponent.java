@@ -2,6 +2,8 @@ package core;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class EntityListComponent extends AbstractComponent {
 
@@ -26,44 +28,25 @@ public class EntityListComponent extends AbstractComponent {
         }
     }
 
-    public <E extends AbstractComponent> ArrayList<E> getComponentList(Class<E> c) {
+    public <E extends AbstractComponent> List<E> getComponentList(Class<E> c) {
         if (map.keySet().contains(c)) {
             return (ArrayList<E>) map.get(c);
         }
-        ArrayList<E> r = new ArrayList();
-        for (AbstractEntity e : list) {
-            for (AbstractComponent ac : e.componentList) {
-                if (c.isInstance(ac)) {
-                    r.add((E) ac);
-                }
-            }
-        }
-        return r;
+        return list.stream().flatMap(e -> e.componentList.stream()).filter(c::isInstance).map(e -> (E) e).collect(Collectors.toList());
     }
 
     public <E extends AbstractEntity> E getEntity(Class<E> c) {
         if (map.keySet().contains(c)) {
             return (E) map.get(c).get(0);
         }
-        for (AbstractEntity e : list) {
-            if (c.isInstance(e)) {
-                return (E) e;
-            }
-        }
-        return null;
+        return list.stream().filter(c::isInstance).map(e -> (E) e).findFirst().orElse(null);
     }
 
-    public <E extends AbstractEntity> ArrayList<E> getEntityList(Class<E> c) {
+    public <E extends AbstractEntity> List<E> getEntityList(Class<E> c) {
         if (map.keySet().contains(c)) {
             return (ArrayList<E>) map.get(c);
         }
-        ArrayList<E> r = new ArrayList();
-        for (AbstractEntity e : list) {
-            if (c.isInstance(e)) {
-                r.add((E) e);
-            }
-        }
-        return r;
+        return list.stream().filter(c::isInstance).map(e -> (E) e).collect(Collectors.toList());
     }
 
     public AbstractEntity getId(long id) {
