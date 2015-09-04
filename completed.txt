@@ -1,0 +1,24 @@
+Races:
+Dwarf
+Elf
+Halfling
+Human
+
+Classes:
+Fighter (Champion and Battle Master archetypes)
+
+All backgrounds
+
+All weapons
+
+Combat Actions:
+Attack Action
+Dash Action
+Dodge Action
+Monster Attack Action
+Move Action
+
+Conditions:
+Blinded
+Frightened
+Grappled

@@ -12,13 +12,13 @@ public class Grappled extends Condition {
     }
 
     @Override
-    public void remove() {
-        creature.spc.landSpeed.multComponents.remove(this);
-        super.remove();
+    public void init() {
+        creature.spc.landSpeed.multComponents.put(this, 0.);
     }
 
     @Override
-    public void init() {
-        creature.spc.landSpeed.multComponents.put(this, 0.);
+    public void remove() {
+        creature.spc.landSpeed.multComponents.remove(this);
+        super.remove();
     }
 }

@@ -1,0 +1,10 @@
+Add all the items
+Add code for spells
+Add more classes
+Add the last Fighter archetype
+Add the ready action
+Add hiding
+Add networking
+Add DM controls
+Add a character sheet view
+Add a message history view
