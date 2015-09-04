@@ -21,13 +21,13 @@ import util.Mutable;
 
 public class Fighter extends PlayerClass {
 
+    public Fighter(Player player) {
+        super(player);
+    }
+
     @Override
     public int archetypeLevel() {
         return 3;
-    }
-
-    public Fighter(Player player) {
-        super(player);
     }
 
     @Override
