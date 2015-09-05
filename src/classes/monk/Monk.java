@@ -30,7 +30,8 @@ public class Monk extends PlayerClass {
     public void levelUp(int newLevel) {
         switch (newLevel) {
             case 1:
-                player.ac.AC.set("Base", new ConditionalAmount(() -> true, new AddedAmount(new Value(10), player.asc.mod(DEX), player.asc.mod(WIS)), player.ac.AC.components.get("Base")));
+                player.ac.AC.set("Base", new ConditionalAmount(() -> player.ac.armor == null,
+                        new AddedAmount(new Value(10), player.asc.mod(DEX), player.asc.mod(WIS)), player.ac.AC.components.get("Base")));
                 break;
         }
     }
