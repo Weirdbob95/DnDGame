@@ -2,6 +2,7 @@ package creature;
 
 import core.AbstractComponent;
 import java.util.ArrayList;
+import java.util.HashSet;
 import queries.Query;
 import queries.SelectQuery;
 import util.Selectable;
@@ -9,7 +10,7 @@ import util.Selectable;
 public class LanguageComponent extends AbstractComponent {
 
     public Creature creature;
-    public ArrayList<String> languages = new ArrayList();
+    public HashSet<String> languages = new HashSet();
 
     public LanguageComponent(Creature creature) {
         this.creature = creature;
