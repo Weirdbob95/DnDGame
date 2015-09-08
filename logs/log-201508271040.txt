@@ -1,0 +1,1 @@
+java.io.InvalidClassException: grid.GridLocationComponent; local class incompatible: stream classdesc serialVersionUID = 764692675665766778, local class serialVersionUID = 4605542528105274768

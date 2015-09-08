@@ -14,3 +14,5 @@ Infernal / Infernal is spoken by devils.
 Primordial / Primordial is spoken by elementals.
 Sylvan / Sylvan is spoken by fey creatures.
 Undercommon / Undercommon is spoken by traders in the underdark.
+Druidic / Druidic is the secret language of druids, often used to leave hidden messages.
+Thieves' Cant / Thieves' Cant is a secret mix of dialect, jargon and code that allows you to hide messages.
