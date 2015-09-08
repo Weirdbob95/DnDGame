@@ -31,7 +31,7 @@ public class Stat implements Amount {
         if (!components.containsKey(name)) {
             components.put(name, new Value(a));
         } else {
-            Stat.this.set(name, components.get(name).get() + a);
+            set(name, components.get(name).get() + a);
         }
         return this;
     }
