@@ -69,6 +69,15 @@ public abstract class PlayerClass extends EventListenerContainer implements Seri
                     player.pc.chooseSkill(skills());
                 }
             }
+            //Ability score improvement
+            switch (level) {
+                case 4:
+                case 8:
+                case 12:
+                case 16:
+                case 19:
+                    abilityScoreImprovement();
+            }
             //Features
             levelUp(level);
             if (archetype != null) {
