@@ -17,6 +17,7 @@ public class Player extends Creature {
 
     public BackgroundComponent bc;
     public ClassComponent clc;
+    public ExpertiseComponent ec;
     public FightingStylesComponent fsc;
     public ProficienciesComponent pc;
     public RaceComponent rac;
@@ -26,6 +27,7 @@ public class Player extends Creature {
 
         bc = add(new BackgroundComponent(this));
         clc = add(new ClassComponent(this));
+        ec = add(new ExpertiseComponent(this));
         fsc = add(new FightingStylesComponent(this));
         pc = add(new ProficienciesComponent(this));
         rac = add(new RaceComponent(this));
