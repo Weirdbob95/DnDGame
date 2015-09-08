@@ -57,4 +57,9 @@ public abstract class Action extends EventListenerContainer implements Comparabl
         new UseActionEvent(this).call();
         act();
     }
+
+    public void useNoType() {
+        new UseActionEvent(this).call();
+        act();
+    }
 }
