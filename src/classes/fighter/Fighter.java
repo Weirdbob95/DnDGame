@@ -45,17 +45,12 @@ public class Fighter extends PlayerClass {
             case 2:
                 player.amc.addAction(new Action_Surge(player));
                 break;
-            case 4:
-            case 6:
-            case 8:
-            case 12:
-            case 14:
-            case 16:
-            case 19:
-                abilityScoreImprovement();
-                break;
             case 5:
                 player.amc.getAction(AttackAction.class).setExtraAttacks(1);
+                break;
+            case 6:
+            case 14:
+                abilityScoreImprovement();
                 break;
             case 9:
                 Mutable<Integer> timesUsed = new Mutable(0);
