@@ -7,12 +7,13 @@
 package player;
 
 import amounts.Stat;
+import core.AbstractComponent;
 
 /**
  *
  * @author RLund16
  */
-public class KiComponent {
+public class KiComponent extends AbstractComponent {
     
     
     public Stat MaximumKi = new Stat();
