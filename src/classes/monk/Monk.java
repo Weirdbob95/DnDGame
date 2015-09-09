@@ -8,6 +8,7 @@ import enums.AbilityScore;
 import static enums.AbilityScore.*;
 import enums.Skill;
 import static enums.Skill.*;
+import player.KiComponent;
 import player.Player;
 
 public class Monk extends PlayerClass {
@@ -34,7 +35,7 @@ public class Monk extends PlayerClass {
                         new AddedAmount(new Value(10), player.asc.mod(DEX), player.asc.mod(WIS)), player.ac.AC.components.get("Base")));
                 break;
             case 2:
-                
+                player.add(new KiComponent());
                 break;
         }
     }
