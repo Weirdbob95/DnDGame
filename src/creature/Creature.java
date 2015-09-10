@@ -60,7 +60,7 @@ public class Creature extends AbstractEntity implements Serializable {
         spc = add(new SpeedComponent(this));
         wc = add(new WieldingComponent(0));
 
-        cc = add(new CreatureComponent(this, new ManualController(this), new AbilityCheckEvent(this, DEX, null).get(), true));
+        cc = add(new CreatureComponent(this, new ManualController(this), new AbilityCheckEvent(this, DEX, null, 0).get(), true));
         glc = add(new GridLocationComponent(square, this));
 
         RotationComponent rc = add(new RotationComponent());

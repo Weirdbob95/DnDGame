@@ -13,15 +13,17 @@ public class AbilityCheckEvent extends Event {
     public Creature creature;
     public AbilityScore abilityScore;
     public Skill skill;
+    public int DC;
     public Stat bonus;
     public boolean advantage;
     public boolean disadvantage;
     public int roll;
 
-    public AbilityCheckEvent(Creature creature, AbilityScore abilityScore, Skill skill) {
+    public AbilityCheckEvent(Creature creature, AbilityScore abilityScore, Skill skill, int DC) {
         this.creature = creature;
         this.abilityScore = abilityScore;
         this.skill = skill;
+        this.DC = DC;
         bonus = new Stat();
     }
 
@@ -42,5 +44,9 @@ public class AbilityCheckEvent extends Event {
 
     public int get() {
         return roll + bonus.get();
+    }
+
+    public boolean success() {
+        return get() >= DC;
     }
 }
