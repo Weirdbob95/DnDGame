@@ -90,6 +90,7 @@ public class Monk extends PlayerClass {
         }
 
         public boolean isAvailable() {
+            return true; //add code to check for KiComponent
 
         }
     }
