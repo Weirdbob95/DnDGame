@@ -14,10 +14,15 @@ import enums.AbilityScore;
 import static enums.AbilityScore.*;
 import enums.Skill;
 import static enums.Skill.*;
+import events.AbilityCheckResultEvent;
+import events.LongRestEvent;
+import events.ShortRestEvent;
 import events.TakeDamageEvent;
 import events.TurnStartEvent;
 import events.attack.AttackDamageRollEvent;
 import events.attack.AttackEvent;
+import events.attack.AttackResultEvent;
+import events.attack.AttackRollEvent;
 import grid.GridUtils;
 import java.util.ArrayList;
 import player.Player;
@@ -46,8 +51,8 @@ public class Rogue extends PlayerClass {
     public void levelUp(int newLevel) {
         switch (newLevel) {
             case 1:
-                player.ec.chooseExpertise(skills());
-                player.ec.chooseExpertise(skills());
+                player.ec.chooseExpertise();
+                player.ec.chooseExpertise();
 
                 Mutable<Boolean> hasSneakAttack = new Mutable(true);
                 add(TurnStartEvent.class, e -> hasSneakAttack.o = true);
@@ -88,8 +93,69 @@ public class Rogue extends PlayerClass {
                     }
                 });
                 break;
+            case 6:
+                player.ec.chooseExpertise();
+                player.ec.chooseExpertise();
+            case 7:
+                //Evasion
+                break;
             case 10:
                 abilityScoreImprovement();
+                break;
+            case 11:
+                add(AbilityCheckResultEvent.class, e -> {
+                    if (e.ace.bonus.components.containsKey("Proficiency")) {
+                        if (e.ace.roll < 10) {
+                            e.ace.roll = 10;
+                        }
+                    }
+                });
+                break;
+            case 14:
+                //Blindsense
+                break;
+            case 15:
+                player.pc.savingThrowProfs.add(WIS);
+                break;
+            case 18:
+                add(AttackRollEvent.class, 2, e -> {
+                    if (e.a.target == player) {
+                        if (e.a.advantage) {
+                            if (!player.cnc.conditionMap.containsKey(Incapacitated.class)) {
+                                e.a.advantage = false;
+                            }
+                        }
+                    }
+                });
+                break;
+            case 20:
+                Mutable<Boolean> available = new Mutable(true);
+                add(ShortRestEvent.class, e -> available.o = true);
+                add(LongRestEvent.class, e -> available.o = true);
+                add(AttackResultEvent.class, e -> {
+                    if (e.a.attacker == player) {
+                        if (available.o) {
+                            if (!e.a.hit()) {
+                                if (Query.ask(player, new BooleanQuery("Use Stroke of Luck?")).response) {
+                                    e.a.roll = 9999;
+                                    available.o = false;
+                                }
+                            }
+                        }
+                    }
+                });
+                add(AbilityCheckResultEvent.class, e -> {
+                    if (e.ace.creature == player) {
+                        if (available.o) {
+                            if (!e.ace.success()) {
+                                if (Query.ask(player, new BooleanQuery("Use Stroke of Luck?")).response) {
+                                    e.ace.roll = 20;
+                                    available.o = false;
+                                }
+                            }
+                        }
+                    }
+                });
                 break;
         }
     }

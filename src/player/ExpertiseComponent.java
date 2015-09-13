@@ -5,7 +5,6 @@ import enums.Skill;
 import events.AbilityCheckEvent;
 import events.EventListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import queries.Query;
 import queries.SelectQuery;
@@ -19,14 +18,14 @@ public class ExpertiseComponent extends AbstractComponent {
         this.player = player;
         expertises = new HashSet();
         EventListener.createListener(player, AbilityCheckEvent.class, e -> {
-            if (expertises.contains(e.skill)) { 
+            if (expertises.contains(e.skill)) {
                 e.bonus.set("Expertise", player.pc.prof);
             }
         });
     }
 
-    public void chooseExpertise(Skill[] skills) {
-        ArrayList<Skill> skillList = new ArrayList(Arrays.asList(skills));
+    public void chooseExpertise() {
+        ArrayList<Skill> skillList = new ArrayList(player.pc.skillProfs);
         skillList.removeAll(expertises);
         Skill skill = Query.ask(player, new SelectQuery<Skill>("Choose a skill", skillList)).response;
         expertises.add(skill);
