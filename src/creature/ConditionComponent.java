@@ -19,6 +19,15 @@ public class ConditionComponent extends AbstractComponent {
         return conditionMap.get(c);
     }
 
+    public boolean hasAny(Class<? extends Condition>... ca) {
+        for (Class c : ca) {
+            if (conditionMap.containsKey(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void remove(Class<? extends Condition> c, Object o) {
         conditionMap.get(c).get(o).remove();
     }

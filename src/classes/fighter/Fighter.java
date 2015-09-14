@@ -13,7 +13,10 @@ import static enums.AbilityScore.STR;
 import enums.FightingStyle;
 import enums.Skill;
 import static enums.Skill.*;
-import events.*;
+import events.LongRestEvent;
+import events.SavingThrowResultEvent;
+import events.ShortRestEvent;
+import events.TurnStartEvent;
 import player.Player;
 import queries.BooleanQuery;
 import queries.Query;
@@ -140,7 +143,7 @@ public class Fighter extends PlayerClass {
         public Action_Surge(Creature creature) {
             super(creature);
 
-            add(TurnStartEvent.class, e -> available = (e.creature == creature ? true : available));
+            add(TurnStartEvent.class, e -> available = available || e.creature == creature);
             add(ShortRestEvent.class, e -> timesUsed = 0);
             add(LongRestEvent.class, e -> timesUsed = 0);
         }
