@@ -6,6 +6,8 @@ import amounts.AddedAmount;
 import amounts.ConditionalAmount;
 import amounts.Value;
 import classes.PlayerClass;
+import conditions.Blinded;
+import conditions.Deafened;
 import conditions.Incapacitated;
 import creature.Creature;
 import enums.AbilityScore;
@@ -70,12 +72,15 @@ public class Barbarian extends PlayerClass {
                 add(SavingThrowEvent.class, e -> {
                     if (e.creature == player) {
                         if (e.abilityScore == DEX) {
-                            if (!player.cnc.hasAny(Incapacitated.class)) {
-                                //Unfinished
+                            if (!player.cnc.hasAny(Incapacitated.class, Blinded.class, Deafened.class)) {
+
                             }
                         }
                     }
                 });
+                break;
+            case 5:
+
                 break;
         }
     }
@@ -88,6 +93,7 @@ public class Barbarian extends PlayerClass {
     @Override
     public Skill[] skills() {
         return new Skill[]{Animal_Handling, Athletics, Intimidation, Nature, Perception, Survival};
+
     }
 
     public class Rage extends Action {
