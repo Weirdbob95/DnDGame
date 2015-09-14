@@ -2,26 +2,27 @@ package classes.monk;
 
 import actions.Action;
 import static actions.Action.Type.BONUS_ACTION;
+import actions.AttackAction;
 import actions.MoveAction;
 import amounts.AddedAmount;
 import amounts.ConditionalAmount;
+import amounts.Die;
 import amounts.Value;
 import classes.PlayerClass;
 import creature.Creature;
 import enums.AbilityScore;
-import static enums.AbilityScore.DEX;
-import static enums.AbilityScore.STR;
-import static enums.AbilityScore.WIS;
+import static enums.AbilityScore.*;
 import enums.Skill;
-import static enums.Skill.Acrobatics;
-import static enums.Skill.Athletics;
-import static enums.Skill.History;
-import static enums.Skill.Insight;
-import static enums.Skill.Religion;
-import static enums.Skill.Stealth;
+import static enums.Skill.*;
+import events.FinishActionEvent;
+import events.TurnStartEvent;
+import events.UseActionEvent;
+import events.attack.AttackDamageRollEvent;
+import events.attack.AttackEvent;
 import events.attack.AttackTargetEvent;
 import items.Weapon;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 import player.KiComponent;
 import player.Player;
 import queries.Query;
@@ -47,15 +48,40 @@ public class Monk extends PlayerClass {
         return 8;
     }
 
+    public static boolean isMonkWeapon(Weapon w) {
+        return w.name.equals("Shortsword") || (w.isSimple && !w.isRanged && !w.heavy && !w.two_handed);
+    }
+
     @Override
     public void levelUp(int newLevel) {
         switch (newLevel) {
             case 1:
                 player.ac.AC.set("Base", new ConditionalAmount(() -> player.ac.armor == null,
                         new AddedAmount(new Value(10), player.asc.mod(DEX), player.asc.mod(WIS)), player.ac.AC.components.get("Base")));
+
+                add(AttackEvent.class, e -> {
+                    if (e.attacker == player) {
+                        if (e.isWeapon && isMonkWeapon(e.weapon)) {
+                            e.allowedAbilityScores.add(DEX);
+                        }
+                    }
+                });
+                Supplier<Value> martialArts = () -> new Value(new Die(((level + 13) / 6) * 2));
+                add(AttackDamageRollEvent.class, e -> {
+                    if (e.a.attacker == player) {
+                        if (e.a.damage.components.get("Base").asValue().average() < martialArts.get().average()) {
+                            e.a.damage.set("Base", martialArts.get());
+                        }
+                    }
+                });
+                player.amc.addAction(new Martial_Arts(player));
                 break;
             case 2:
-                kc = player.add(new KiComponent());
+                kc = player.getComponent(KiComponent.class);
+                if (kc == null) {
+                    kc = player.add(new KiComponent());
+                }
+
                 break;
         }
     }
@@ -70,14 +96,31 @@ public class Monk extends PlayerClass {
         return new Skill[]{Acrobatics, Athletics, History, Insight, Religion, Stealth};
     }
 
-    public class FlurryOfBlows extends Action {
+    public class Flurry_of_Blows extends Action {
 
-        public FlurryOfBlows(Creature creature) {
+        public boolean available;
+
+        public Flurry_of_Blows(Creature creature) {
             super(creature);
+
+            add(UseActionEvent.class, e -> {
+                if (e.action.creature == creature) {
+                    if (e.action instanceof AttackAction) {
+                        available = true;
+                    }
+                }
+            });
+            add(TurnStartEvent.class, e -> {
+                if (e.creature == creature) {
+                    available = false;
+                }
+            });
         }
 
         @Override
         protected void act() {
+            available = false;
+
             Weapon w = creature.wc.unarmedStrike;
             int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
             new AttackTargetEvent(creature, w, range).call();
@@ -103,7 +146,12 @@ public class Monk extends PlayerClass {
 
         @Override
         public String[] defaultTabs() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "Spend 1 ki point to make two unarmed strikes as a bonus action.";
         }
 
         @Override
@@ -111,20 +159,82 @@ public class Monk extends PlayerClass {
             return BONUS_ACTION;
         }
 
-        public String getName() {
-            return "Flurry of Blows";
+        @Override
+        public boolean isAvailable() {
+            return available && kc.getKi() >= 1;
+        }
+    }
+
+    public class Martial_Arts extends Action {
+
+        public boolean available;
+        public boolean duringAttackAction;
+
+        public Martial_Arts(Creature creature) {
+            super(creature);
+
+            add(UseActionEvent.class, e -> {
+                if (e.action.creature == creature) {
+                    if (e.action instanceof AttackAction) {
+                        available = true;
+                    }
+                }
+            });
+            add(FinishActionEvent.class, e -> {
+                if (e.action.creature == creature) {
+                    if (e.action instanceof AttackAction) {
+                        available = false;
+                    }
+                }
+            });
+            add(AttackEvent.class, e -> {
+                if (e.attacker == creature) {
+                    if (duringAttackAction) {
+                        if (e.isWeapon) {
+
+                        }
+                    }
+                }
+            });
+            add(TurnStartEvent.class, e -> {
+                if (e.creature == creature) {
+                    available = false;
+                }
+            });
+
+            add(UseActionEvent.class, e -> duringAttackAction = duringAttackAction || e.action instanceof AttackAction);
+            add(FinishActionEvent.class, e -> duringAttackAction = duringAttackAction && !(e.action instanceof AttackAction));
+            add(AttackEvent.class, e -> available = available || duringAttackAction && isMonkWeapon(e.weapon));
+            add(TurnStartEvent.class, e -> available = false);
+        }
+
+        @Override
+        protected void act() {
+            available = false;
+
+            Weapon w = creature.wc.unarmedStrike;
+            int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
+            new AttackTargetEvent(creature, w, range).call();
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
         }
 
         @Override
         public String getDescription() {
-            return "Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes as a bonus action";
+            return "Make one unarmed strike as a bonus action.";
         }
 
+        @Override
+        public Action.Type getType() {
+            return BONUS_ACTION;
+        }
+
+        @Override
         public boolean isAvailable() {
-            if (kc.getKi() >= 1) {
-                return true;
-            }
-            return false;
+            return available;
         }
     }
 }
