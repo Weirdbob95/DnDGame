@@ -21,6 +21,7 @@ public class Berserker extends Archetype<Barbarian> {
     public void levelUp(int newLevel) {
         switch (newLevel) {
             case 3:
+
                 break;
             case 6:
                 break;

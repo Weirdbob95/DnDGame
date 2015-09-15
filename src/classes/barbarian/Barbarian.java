@@ -2,25 +2,17 @@ package classes.barbarian;
 
 import actions.Action;
 import static actions.Action.Type.BONUS_ACTION;
-import amounts.AddedAmount;
-import amounts.ConditionalAmount;
-import amounts.Value;
+import actions.AttackAction;
+import amounts.*;
 import classes.PlayerClass;
-import conditions.Blinded;
-import conditions.Deafened;
-import conditions.Incapacitated;
+import conditions.*;
 import creature.Creature;
 import enums.AbilityScore;
 import static enums.AbilityScore.*;
 import enums.Skill;
 import static enums.Skill.*;
-import events.AbilityCheckEvent;
-import events.SavingThrowEvent;
-import events.TakeDamageEvent;
-import events.TurnEndEvent;
-import events.attack.AttackDamageRollEvent;
-import events.attack.AttackEvent;
-import events.attack.AttackRollEvent;
+import events.*;
+import events.attack.*;
 import player.Player;
 import queries.BooleanQuery;
 import queries.Query;
@@ -80,7 +72,12 @@ public class Barbarian extends PlayerClass {
                 });
                 break;
             case 5:
-
+                player.amc.getAction(AttackAction.class).setExtraAttacks(1);
+                player.spc.landSpeed.flatComponents.put("Fast Movement", new Value(10));
+                //make 10 a conditional amount when heavy armor code is made
+                //"Speed increases by 10 feet while you aren't wearing heavy armor"
+                break;
+            case 7:
                 break;
         }
     }
@@ -225,6 +222,25 @@ public class Barbarian extends PlayerClass {
             @Override
             public boolean isAvailable() {
                 return raging;
+            }
+        }
+    }
+
+    public class RageCheckEvent extends Event {
+
+        public Creature creature;
+        public Rage rage;
+        public boolean end;
+
+        public RageCheckEvent(Creature creature, Rage rage) {
+            creature = this.creature;
+            rage = this.rage;
+        }
+
+        public void call() {
+            super.call();
+            if (rage.turnsElapsed == 0) {
+
             }
         }
     }
