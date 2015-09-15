@@ -1,9 +1,8 @@
 package classes.monk;
 
-import actions.Action;
+import actions.*;
 import static actions.Action.Type.BONUS_ACTION;
-import actions.AttackAction;
-import actions.MoveAction;
+import static actions.Action.Type.REACTION;
 import amounts.AddedAmount;
 import amounts.ConditionalAmount;
 import amounts.Die;
@@ -15,8 +14,10 @@ import static enums.AbilityScore.*;
 import enums.Skill;
 import static enums.Skill.*;
 import events.FinishActionEvent;
+import events.SavingThrowEvent;
 import events.TurnStartEvent;
 import events.UseActionEvent;
+import events.attack.AttackDamageResultEvent;
 import events.attack.AttackDamageRollEvent;
 import events.attack.AttackEvent;
 import events.attack.AttackTargetEvent;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 import player.KiComponent;
 import player.Player;
+import queries.BooleanQuery;
 import queries.Query;
 import queries.SelectQuery;
 import util.Selectable;
@@ -49,7 +51,8 @@ public class Monk extends PlayerClass {
     }
 
     public static boolean isMonkWeapon(Weapon w) {
-        return w.name.equals("Shortsword") || (w.isSimple && !w.isRanged && !w.heavy && !w.two_handed);
+        return w.name.equals("Monk Weapon") || w.name.equals("Shortsword")
+                || (w.isSimple && !w.isRanged && !w.heavy && !w.two_handed);
     }
 
     @Override
@@ -79,9 +82,61 @@ public class Monk extends PlayerClass {
             case 2:
                 kc = player.getComponent(KiComponent.class);
                 if (kc == null) {
-                    kc = player.add(new KiComponent());
+                    kc = player.add(new KiComponent(player));
                 }
+                kc.maximumKi.set("Monk", () -> level);
 
+                player.amc.addAction(new Flurry_of_Blows(player));
+                player.amc.addAction(new Patient_Defense(player));
+                player.amc.addAction(new Step_of_the_Wind(player));
+
+                player.spc.landSpeed.flatComponents.put("Unarmored Movement",
+                        new ConditionalAmount(() -> player.ac.armor == null, () -> ((level + 6) / 4) * 5));
+                break;
+            case 3:
+                add(AttackDamageResultEvent.class, 1, e -> {
+                    if (e.a.target == player) {
+                        if (e.a.isWeapon && e.a.isRanged) {
+                            if (player.amc.hasType(REACTION)) {
+                                if (Query.ask(player, new BooleanQuery("Attempt to deflect the missile?")).response) {
+                                    player.amc.useType(REACTION, "Deflect Missiles");
+                                    e.a.damage.set("Deflect Missiles", -(new Die(10).roll + player.asc.mod(DEX).get() + level));
+                                    if (e.a.damage.get() < 0) {
+                                        if (player.wc.countHands(null) >= 1) {
+                                            if (kc.getKi() >= 1) {
+                                                if (Query.ask(player, new BooleanQuery("Throw the missile at another creature?")).response) {
+                                                    kc.useKi(1);
+                                                    Weapon w = new Weapon();
+                                                    w.name = "Monk Weapon";
+                                                    w.isRanged = true;
+                                                    new AttackTargetEvent(player, w, 60).call();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+            case 5:
+                player.amc.getAction(AttackAction.class).setExtraAttacks(1);
+
+                add(AttackDamageRollEvent.class, e -> {
+                    if (e.a.attacker == player) {
+                        if (e.a.isWeapon && !e.a.isRanged) {
+                            if (kc.getKi() >= 1) {
+                                if (Query.ask(player, new BooleanQuery("Attempt to deflect the missile?")).response) {
+                                    kc.useKi(1);
+                                    if (SavingThrowEvent.fail(e.a.target, CON, 8 + player.pc.prof.get() + player.asc.mod(WIS).get())) {
+                                        //make them stunned
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
                 break;
         }
     }
@@ -176,14 +231,14 @@ public class Monk extends PlayerClass {
             add(UseActionEvent.class, e -> {
                 if (e.action.creature == creature) {
                     if (e.action instanceof AttackAction) {
-                        available = true;
+                        duringAttackAction = true;
                     }
                 }
             });
             add(FinishActionEvent.class, e -> {
                 if (e.action.creature == creature) {
                     if (e.action instanceof AttackAction) {
-                        available = false;
+                        duringAttackAction = false;
                     }
                 }
             });
@@ -191,7 +246,9 @@ public class Monk extends PlayerClass {
                 if (e.attacker == creature) {
                     if (duringAttackAction) {
                         if (e.isWeapon) {
-
+                            if (isMonkWeapon(e.weapon)) {
+                                available = true;
+                            }
                         }
                     }
                 }
@@ -201,16 +258,12 @@ public class Monk extends PlayerClass {
                     available = false;
                 }
             });
-
-            add(UseActionEvent.class, e -> duringAttackAction = duringAttackAction || e.action instanceof AttackAction);
-            add(FinishActionEvent.class, e -> duringAttackAction = duringAttackAction && !(e.action instanceof AttackAction));
-            add(AttackEvent.class, e -> available = available || duringAttackAction && isMonkWeapon(e.weapon));
-            add(TurnStartEvent.class, e -> available = false);
         }
 
         @Override
         protected void act() {
             available = false;
+            kc.useKi(1);
 
             Weapon w = creature.wc.unarmedStrike;
             int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
@@ -235,6 +288,72 @@ public class Monk extends PlayerClass {
         @Override
         public boolean isAvailable() {
             return available;
+        }
+    }
+
+    public class Patient_Defense extends Action {
+
+        public Patient_Defense(Creature creature) {
+            super(creature);
+        }
+
+        @Override
+        protected void act() {
+            kc.useKi(1);
+            creature.amc.getAction(Dodge.class).useNoType();
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "Spend 1 ki point to take the Dodge action as a bonus action.";
+        }
+
+        @Override
+        public Type getType() {
+            return BONUS_ACTION;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return kc.getKi() >= 1;
+        }
+    }
+
+    public class Step_of_the_Wind extends Action {
+
+        public Step_of_the_Wind(Creature creature) {
+            super(creature);
+        }
+
+        @Override
+        protected void act() {
+            kc.useKi(1);
+            Query.ask(creature, new SelectQuery<Action>("Choose which action to use+", creature.amc.getAction(Disengage.class), creature.amc.getAction(Dash.class))).response.useNoType();
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "Spend 1 ki point to take the Disengage or Dash action as a bonus action, and your jump distance is doubled for your turn.";
+        }
+
+        @Override
+        public Type getType() {
+            return BONUS_ACTION;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return kc.getKi() >= 1;
         }
     }
 }

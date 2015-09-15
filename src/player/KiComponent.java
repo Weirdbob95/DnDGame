@@ -1,33 +1,29 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package player;
 
 import amounts.Stat;
 import core.AbstractComponent;
+import creature.Creature;
+import events.EventListener;
+import events.ShortRestEvent;
 
-/**
- *
- * @author RLund16
- */
 public class KiComponent extends AbstractComponent {
-    
-    
-    public Stat MaximumKi = new Stat();
-    public Stat CurrentKi = new Stat("MaxKi", MaximumKi);
-    
-    public void useKi(int kiUsed){
-        CurrentKi.edit("kiUsed", -kiUsed);
+
+    public Stat maximumKi = new Stat();
+    public Stat currentKi = new Stat("Maximum", maximumKi);
+
+    public KiComponent(Creature creature) {
+        EventListener.createListener(creature, ShortRestEvent.class, e -> currentKi.components.remove("Used"));
     }
-    
-    public int getKi(){return CurrentKi.get();}
-            
-    public int getMaxKi(){ return MaximumKi.get();}
-    
-    public void addMax(int addMax){MaximumKi.edit("MaxKi",addMax);}
 
+    public int getKi() {
+        return currentKi.get();
+    }
 
+    public int getMaxKi() {
+        return maximumKi.get();
+    }
+
+    public void useKi(int kiUsed) {
+        currentKi.edit("Used", -kiUsed);
+    }
 }
