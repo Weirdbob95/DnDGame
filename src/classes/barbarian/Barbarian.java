@@ -228,20 +228,13 @@ public class Barbarian extends PlayerClass {
 
     public class RageCheckEvent extends Event {
 
-        public Creature creature;
         public Rage rage;
         public boolean end;
 
-        public RageCheckEvent(Creature creature, Rage rage) {
-            creature = this.creature;
-            rage = this.rage;
+        public RageCheckEvent(Rage rage, boolean end) {
+            this.rage = rage;
+            this.end = end;
         }
 
-        public void call() {
-            super.call();
-            if (rage.turnsElapsed == 0) {
-
-            }
-        }
     }
 }
