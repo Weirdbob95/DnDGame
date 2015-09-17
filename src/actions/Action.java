@@ -2,6 +2,7 @@ package actions;
 
 import creature.Creature;
 import events.EventListenerContainer;
+import events.FinishActionEvent;
 import events.UseActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,12 +55,12 @@ public abstract class Action extends EventListenerContainer implements Comparabl
 
     public void use() {
         creature.amc.useType(getType(), this);
-        new UseActionEvent(this).call();
-        act();
+        useNoType();
     }
 
     public void useNoType() {
         new UseActionEvent(this).call();
         act();
+        new FinishActionEvent(this).call();
     }
 }
