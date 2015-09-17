@@ -31,8 +31,13 @@ public class Berserker extends Archetype<Barbarian> {
                     if (rce.rage.creature == playerClass.player) {
                         if (rce.rage.turnsElapsed == 0) {
                             if (Query.ask(rce.rage.creature, new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
-
+                                //allow player to use attack as a bonus action
+                                //player cannot be charmed and such
                             }
+                        }
+                        if (rce.end) //give player exhaustion
+                        {
+
                         }
                     }
                 });
