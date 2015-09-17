@@ -21,7 +21,7 @@ public abstract class Condition extends EventListenerContainer {
     public boolean add() {
         return new AddConditionEvent(creature, this).add;
     }
-    
+
     public void addSubCondition(Condition c) {
         c.add();
         subConditions.add(c);
@@ -30,12 +30,8 @@ public abstract class Condition extends EventListenerContainer {
     public abstract void init();
 
     public void remove() {
+        creature.cnc.conditionMap.get(getClass()).remove(source);
         setEnabled(false);
         subConditions.forEach(Condition::remove);
-    }
-
-    public void removeSelf() {
-        creature.cnc.conditionMap.get(getClass()).remove(source);
-        remove();
     }
 }

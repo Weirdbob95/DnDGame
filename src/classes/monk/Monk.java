@@ -1,29 +1,33 @@
 package classes.monk;
 
 import actions.*;
-import static actions.Action.Type.BONUS_ACTION;
-import static actions.Action.Type.REACTION;
+import static actions.Action.Type.*;
 import amounts.AddedAmount;
 import amounts.ConditionalAmount;
 import amounts.Die;
 import amounts.Value;
 import classes.PlayerClass;
+import conditions.Charmed;
+import conditions.Frightened;
+import conditions.Invisible;
+import conditions.Stunned;
 import creature.Creature;
 import enums.AbilityScore;
 import static enums.AbilityScore.*;
 import enums.Skill;
 import static enums.Skill.*;
-import events.FinishActionEvent;
-import events.SavingThrowEvent;
-import events.TurnStartEvent;
-import events.UseActionEvent;
+import events.*;
 import events.attack.AttackDamageResultEvent;
 import events.attack.AttackDamageRollEvent;
 import events.attack.AttackEvent;
 import events.attack.AttackTargetEvent;
 import items.Weapon;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import player.KiComponent;
 import player.Player;
 import queries.BooleanQuery;
@@ -127,16 +131,40 @@ public class Monk extends PlayerClass {
                     if (e.a.attacker == player) {
                         if (e.a.isWeapon && !e.a.isRanged) {
                             if (kc.getKi() >= 1) {
-                                if (Query.ask(player, new BooleanQuery("Attempt to deflect the missile?")).response) {
+                                if (Query.ask(player, new BooleanQuery("Make a Stunning Strike?")).response) {
                                     kc.useKi(1);
                                     if (SavingThrowEvent.fail(e.a.target, CON, 8 + player.pc.prof.get() + player.asc.mod(WIS).get())) {
-                                        //make them stunned
+                                        new Stunned(e.a.target, this).add();
                                     }
                                 }
                             }
                         }
                     }
                 });
+                break;
+            case 6:
+                //ki strikes
+                break;
+            case 7:
+                player.amc.addAction(new Stillness_of_Mind(player));
+                break;
+            case 14:
+                player.pc.savingThrowProfs.addAll(Arrays.asList(AbilityScore.values()));
+                add(SavingThrowResultEvent.class, e -> {
+                    if (e.ste.creature == player) {
+                        if (kc.getKi() >= 1) {
+                            if (!e.ste.success()) {
+                                if (Query.ask(player, new BooleanQuery("Use the Diamond Soul ability?")).response) {
+                                    e.ste.roll = new Die(20).roll;
+                                    kc.useKi(1);
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+            case 18:
+
                 break;
         }
     }
@@ -149,6 +177,48 @@ public class Monk extends PlayerClass {
     @Override
     public Skill[] skills() {
         return new Skill[]{Acrobatics, Athletics, History, Insight, Religion, Stealth};
+    }
+
+    public class Empty_Body extends Action {
+
+        public int turnsRemaining;
+
+        public Empty_Body(Creature creature) {
+            super(creature);
+
+            add(TurnStartEvent.class, e -> {
+                if (turnsRemaining-- == 0) {
+                    creature.cnc.remove(Invisible.class, this);
+                }
+            });
+        }
+
+        @Override
+        protected void act() {
+            kc.useKi(4);
+            turnsRemaining = 10;
+            new Invisible(creature, this).add();
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "You become invisible and have resistance to all damage but force damage for 1 minute.";
+        }
+
+        @Override
+        public Type getType() {
+            return ACTION;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return kc.getKi() >= 4;
+        }
     }
 
     public class Flurry_of_Blows extends Action {
@@ -354,6 +424,47 @@ public class Monk extends PlayerClass {
         @Override
         public boolean isAvailable() {
             return kc.getKi() >= 1;
+        }
+    }
+
+    public class Stillness_of_Mind extends Action {
+
+        public Stillness_of_Mind(Creature creature) {
+            super(creature);
+        }
+
+        @Override
+        protected void act() {
+            Set effects = creature.cnc.getConditions(Charmed.class).keySet();
+            effects.addAll(creature.cnc.getConditions(Frightened.class).keySet());
+            Stream<Selectable> choices = effects.stream().map(o -> o instanceof Selectable ? (Selectable) o
+                    : (Selectable) new SelectableImpl(o.toString(), o.toString()));
+            Selectable chosen = Query.ask(creature, new SelectQuery("Choose a condition to end", choices.collect(Collectors.toList()))).response;
+            Object effect = chosen;
+            if (effect instanceof SelectableImpl) {
+                effect = effects.stream().filter(o -> chosen.getDescription().equals(o.toString())).findAny().orElse(chosen);
+            }
+            creature.cnc.remove(effect);
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "End one effect on yourself that is causing you to be charmed or frightened.";
+        }
+
+        @Override
+        public Type getType() {
+            return ACTION;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return !creature.cnc.getConditions(Charmed.class).isEmpty() || !creature.cnc.getConditions(Frightened.class).isEmpty();
         }
     }
 }

@@ -57,8 +57,8 @@ public class Fighter extends PlayerClass {
                 break;
             case 9:
                 Mutable<Integer> timesUsed = new Mutable(0);
-                add(SavingThrowResultEvent.class, stre -> {
-                    if (stre.ste.creature == player) {
+                add(SavingThrowResultEvent.class, e -> {
+                    if (e.ste.creature == player) {
                         int cap = 1;
                         if (level >= 13) {
                             cap++;
@@ -67,9 +67,9 @@ public class Fighter extends PlayerClass {
                             }
                         }
                         if (timesUsed.o < cap) {
-                            if (!stre.ste.success()) {
+                            if (!e.ste.success()) {
                                 if (Query.ask(player, new BooleanQuery("Use the Indomitable ability?")).response) {
-                                    stre.ste.roll = new Die(20).roll;
+                                    e.ste.roll = new Die(20).roll;
                                     timesUsed.o++;
                                 }
                             }
