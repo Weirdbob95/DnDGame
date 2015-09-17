@@ -164,7 +164,7 @@ public class Monk extends PlayerClass {
                 });
                 break;
             case 18:
-
+                player.amc.addAction(new Empty_Body(player));
                 break;
         }
     }
