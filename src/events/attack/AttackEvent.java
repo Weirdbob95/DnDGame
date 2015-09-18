@@ -18,6 +18,7 @@ public class AttackEvent extends Event {
 
     public Creature attacker;
     public Creature target;
+    public Object source;
     public boolean isWeapon;
     public Weapon weapon;
     public boolean isRanged;
@@ -33,12 +34,13 @@ public class AttackEvent extends Event {
     public boolean isMonsterAttack;
     public boolean isOpportunityAttack;
 
-    public AttackEvent(Creature attacker, Creature target, Weapon weapon, int range) {
+    public AttackEvent(Creature attacker, Creature target, Weapon weapon, int range, Object source) {
         this.attacker = attacker;
         this.target = target;
         isWeapon = true;
         this.weapon = weapon;
         this.range = range;
+        this.source = source;
         allowedAbilityScores = new ArrayList();
         if (!weapon.isRanged || weapon.thrown || weapon.finesse) {
             allowedAbilityScores.add(AbilityScore.STR);
@@ -54,6 +56,7 @@ public class AttackEvent extends Event {
     public AttackEvent(MonsterAttackAction maa, Creature target) {
         this.attacker = maa.creature;
         this.target = target;
+        source = maa;
         isWeapon = maa.isWeapon;
         isRanged = maa.isRanged;
         range = maa.range;

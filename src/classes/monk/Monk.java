@@ -2,10 +2,7 @@ package classes.monk;
 
 import actions.*;
 import static actions.Action.Type.*;
-import amounts.AddedAmount;
-import amounts.ConditionalAmount;
-import amounts.Die;
-import amounts.Value;
+import amounts.*;
 import classes.PlayerClass;
 import conditions.Charmed;
 import conditions.Frightened;
@@ -39,6 +36,7 @@ import util.SelectableImpl;
 public class Monk extends PlayerClass {
 
     public KiComponent kc;
+    public Amount kiSaveDC = new AddedAmount(new Value(8), player.pc.prof, player.asc.mod(WIS));
 
     public Monk(Player player) {
         super(player);
@@ -113,7 +111,7 @@ public class Monk extends PlayerClass {
                                                     Weapon w = new Weapon();
                                                     w.name = "Monk Weapon";
                                                     w.isRanged = true;
-                                                    new AttackTargetEvent(player, w, 60).call();
+                                                    new AttackTargetEvent(player, w, 60, "Deflect Missiles").call();
                                                 }
                                             }
                                         }
@@ -133,7 +131,7 @@ public class Monk extends PlayerClass {
                             if (kc.getKi() >= 1) {
                                 if (Query.ask(player, new BooleanQuery("Make a Stunning Strike?")).response) {
                                     kc.useKi(1);
-                                    if (SavingThrowEvent.fail(e.a.target, CON, 8 + player.pc.prof.get() + player.asc.mod(WIS).get())) {
+                                    if (SavingThrowEvent.fail(e.a.target, CON, kiSaveDC.get())) {
                                         new Stunned(e.a.target, this).add();
                                     }
                                 }
@@ -248,7 +246,7 @@ public class Monk extends PlayerClass {
 
             Weapon w = creature.wc.unarmedStrike;
             int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
-            new AttackTargetEvent(creature, w, range).call();
+            new AttackTargetEvent(creature, w, range, this).call();
 
             for (int i = 1; i < 2;) {
                 ArrayList<Selectable> choices = new ArrayList();
@@ -261,7 +259,7 @@ public class Monk extends PlayerClass {
                     break;
                 }
                 if (next.getName().equals("Extra Attack")) {
-                    new AttackTargetEvent(creature, w, range).call();
+                    new AttackTargetEvent(creature, w, range, this).call();
                     i++;
                 } else if (next instanceof MoveAction) {
                     ((MoveAction) next).use();
@@ -293,28 +291,13 @@ public class Monk extends PlayerClass {
     public class Martial_Arts extends Action {
 
         public boolean available;
-        public boolean duringAttackAction;
 
         public Martial_Arts(Creature creature) {
             super(creature);
 
-            add(UseActionEvent.class, e -> {
-                if (e.action.creature == creature) {
-                    if (e.action instanceof AttackAction) {
-                        duringAttackAction = true;
-                    }
-                }
-            });
-            add(FinishActionEvent.class, e -> {
-                if (e.action.creature == creature) {
-                    if (e.action instanceof AttackAction) {
-                        duringAttackAction = false;
-                    }
-                }
-            });
             add(AttackEvent.class, e -> {
                 if (e.attacker == creature) {
-                    if (duringAttackAction) {
+                    if (e.source instanceof AttackAction) {
                         if (e.isWeapon) {
                             if (isMonkWeapon(e.weapon)) {
                                 available = true;
@@ -337,7 +320,7 @@ public class Monk extends PlayerClass {
 
             Weapon w = creature.wc.unarmedStrike;
             int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
-            new AttackTargetEvent(creature, w, range).call();
+            new AttackTargetEvent(creature, w, range, this).call();
         }
 
         @Override

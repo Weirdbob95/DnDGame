@@ -74,6 +74,6 @@ public class AttackAction extends Action {
             w = Query.ask(creature, new SelectQuery<Weapon>("Choose a weapon to attack with", weaponList)).response;
         }
         int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
-        new AttackTargetEvent(creature, w, range).call();
+        new AttackTargetEvent(creature, w, range, this).call();
     }
 }
