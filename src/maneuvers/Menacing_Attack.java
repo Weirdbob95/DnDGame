@@ -28,7 +28,7 @@ public class Menacing_Attack extends AttackManeuver {
                 f.add(TurnStartEvent.class, ev -> isNextTurn.o = (ev.creature == player ? true : isNextTurn.o));
                 f.add(TurnEndEvent.class, ev -> {
                     if (ev.creature == player && isNextTurn.o) {
-                        f.removeSelf();
+                        f.remove();
                     }
                 });
             }

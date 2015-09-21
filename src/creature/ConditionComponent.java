@@ -31,4 +31,8 @@ public class ConditionComponent extends AbstractComponent {
     public void remove(Class<? extends Condition> c, Object o) {
         conditionMap.get(c).get(o).remove();
     }
+
+    public void remove(Object o) {
+        conditionMap.values().stream().map(m -> m.get(o)).filter(c -> c != null).forEach(c -> c.remove());
+    }
 }

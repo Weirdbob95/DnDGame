@@ -1,5 +1,6 @@
 package maneuvers;
 
+import conditions.Prone;
 import creature.Creature;
 import static enums.AbilityScore.STR;
 import static enums.Size.LARGE;
@@ -20,7 +21,7 @@ public class Trip_Attack extends AttackManeuver {
         mc.addDieTo(e.a.damage);
         if (e.a.target.cdc.size.squares <= LARGE.squares) {
             if (SavingThrowEvent.fail(e.a.target, STR, mc.DC.get())) {
-                //Make adre.a.creature prone
+                new Prone(e.a.target).add();
             }
         }
     }

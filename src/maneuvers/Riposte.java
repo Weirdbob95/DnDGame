@@ -58,7 +58,7 @@ public class Riposte extends Maneuver {
                                         mc.diceUsed++;
                                         active = mc.moddingAttack = true;
                                         (s instanceof Weapon ? new AttackEvent(player, e.a.attacker, (Weapon) s, player.cdc.reach.get()
-                                                + (((Weapon) s).reach ? 5 : 0)) : new AttackEvent((MonsterAttackAction) s, e.a.attacker)).call();
+                                                + (((Weapon) s).reach ? 5 : 0), this) : new AttackEvent((MonsterAttackAction) s, e.a.attacker)).call();
                                         active = mc.moddingAttack = false;
                                     }
                                 }

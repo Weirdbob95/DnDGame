@@ -58,7 +58,7 @@ public class PreSegmentMoveEvent extends Event {
                     if (Query.ask(creature, new BooleanQuery("Make an opportunity attack?")).response) {
                         Selectable s = Query.ask(creature, new SelectQuery("Choose how to attack", choices)).response;
                         OpportunityAttackEvent e = new OpportunityAttackEvent(s instanceof Weapon ? new AttackEvent(creature, pme.creature, (Weapon) s, creature.cdc.reach.get()
-                                + (((Weapon) s).reach ? 5 : 0)) : new AttackEvent((MonsterAttackAction) s, pme.creature), OpportunityAttackEvent.LEAVING_REACH);
+                                + (((Weapon) s).reach ? 5 : 0), "Opportunity Attack") : new AttackEvent((MonsterAttackAction) s, pme.creature), OpportunityAttackEvent.LEAVING_REACH);
                         creature.amc.useType(REACTION, e);
                         e.call();
                     }
