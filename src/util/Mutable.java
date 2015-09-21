@@ -1,6 +1,8 @@
 package util;
 
-public class Mutable<O> {
+import java.io.Serializable;
+
+public class Mutable<O extends Serializable> implements Serializable {
 
     public O o;
 
