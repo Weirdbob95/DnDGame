@@ -3,6 +3,7 @@ package events;
 import creature.Creature;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 
 public class EventListenerContainer implements Serializable {
 
@@ -16,14 +17,15 @@ public class EventListenerContainer implements Serializable {
         enabled = true;
     }
 
-    public <E extends Event> void add(Class<E> e, EventListener<E> el) {
+    public <E extends Event> EventListener<E> add(Class<E> e, EventListener<E> el) {
         map.put(el, e);
         EventHandler.addListener(el, e);
         creature.elc.listenerMap.put(el, e);
+        return el;
     }
 
-    public <E extends Event> void add(Class<E> e, double priority, EventListener<E> el) {
-        add(e, new EventListener<E>() {
+    public <E extends Event> EventListener<E> add(Class<E> e, double priority, EventListener<E> el) {
+        return add(e, new EventListener<E>() {
             @Override
             public void onEvent(E e) {
                 el.onEvent(e);
@@ -36,19 +38,29 @@ public class EventListenerContainer implements Serializable {
         });
     }
 
+    public void remove(EventListener el) {
+        map.remove(el);
+        EventHandler.removeListener(el, map.get(el));
+        creature.elc.listenerMap.remove(el);
+    }
+
+    public void remove(List<EventListener> list) {
+        list.forEach(this::remove);
+    }
+
     public void setEnabled(boolean enabled) {
         if (this.enabled != enabled) {
             this.enabled = enabled;
             if (enabled) {
-                for (EventListener el : map.keySet()) {
+                map.keySet().forEach(el -> {
                     EventHandler.addListener(el, map.get(el));
                     creature.elc.listenerMap.put(el, map.get(el));
-                }
+                });
             } else {
-                for (EventListener el : map.keySet()) {
+                map.keySet().forEach(el -> {
                     EventHandler.removeListener(el, map.get(el));
                     creature.elc.listenerMap.remove(el);
-                }
+                });
             }
         }
     }

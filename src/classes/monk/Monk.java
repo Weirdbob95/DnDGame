@@ -19,6 +19,7 @@ import events.attack.AttackDamageRollEvent;
 import events.attack.AttackEvent;
 import events.attack.AttackTargetEvent;
 import items.Weapon;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
@@ -71,10 +72,10 @@ public class Monk extends PlayerClass {
                         }
                     }
                 });
-                Supplier<Value> martialArts = () -> new Value(new Die(((level + 13) / 6) * 2));
+                Supplier<Value> martialArts = (Supplier<Value> & Serializable) () -> new Value(new Die(((level + 13) / 6) * 2));
                 add(AttackDamageRollEvent.class, e -> {
                     if (e.a.attacker == player) {
-                        if (e.a.damage.components.get("Base").asValue().average() < martialArts.get().average()) {
+                        if (e.a.damage.components.get("Weapon").asValue().average() < martialArts.get().average()) {
                             e.a.damage.set("Base", martialArts.get());
                         }
                     }
@@ -243,12 +244,13 @@ public class Monk extends PlayerClass {
         @Override
         protected void act() {
             available = false;
+            kc.useKi(1);
 
             Weapon w = creature.wc.unarmedStrike;
             int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
             new AttackTargetEvent(creature, w, range, this).call();
 
-            for (int i = 1; i < 2;) {
+            while (true) {
                 ArrayList<Selectable> choices = new ArrayList();
                 choices.add(new SelectableImpl("Extra Attack", "Make another attack (as part of the Attack Action)"));
                 if (creature.amc.getAction(MoveAction.class).isAvailable()) {
@@ -260,7 +262,7 @@ public class Monk extends PlayerClass {
                 }
                 if (next.getName().equals("Extra Attack")) {
                     new AttackTargetEvent(creature, w, range, this).call();
-                    i++;
+                    break;
                 } else if (next instanceof MoveAction) {
                     ((MoveAction) next).use();
                 }
