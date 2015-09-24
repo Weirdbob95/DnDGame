@@ -9,7 +9,6 @@ import static actions.Action.Type.BONUS_ACTION;
 import actions.AttackAction;
 import classes.Archetype;
 import classes.barbarian.Barbarian.RageCheckEvent;
-import conditions.Exhaustion;
 import creature.Creature;
 import queries.BooleanQuery;
 import queries.Query;
@@ -38,7 +37,7 @@ public class Berserker extends Archetype<Barbarian> {
                         }
                         if (rce.end) //give player exhaustion
                         {
-                            rce.rage.creature.cnc.conditionMap.put("Frenzy exhaustion", new Exhaustion(1));
+                            rce.rage.creature.
                         }
                     }
                 });

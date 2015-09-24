@@ -39,6 +39,7 @@ public class Creature extends AbstractEntity implements Serializable {
     public CreatureComponent cc;
     public CreatureDescriptionComponent cdc;
     public EventListenersComponent elc;
+    public ExhaustionComponent exc;
     public GridLocationComponent glc;
     public HealthComponent hc;
     public LanguageComponent lc;
@@ -54,6 +55,7 @@ public class Creature extends AbstractEntity implements Serializable {
         ac = add(new ArmorComponent(this));
         cnc = add(new ConditionComponent(this));
         cdc = add(new CreatureDescriptionComponent());
+        exc = add(new ExhaustionComponent(this));
         hc = add(new HealthComponent());
         lc = add(new LanguageComponent(this));
         rc = add(new ResistancesComponent());
