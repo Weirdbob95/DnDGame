@@ -186,8 +186,10 @@ public class Monk extends PlayerClass {
             super(creature);
 
             add(TurnStartEvent.class, e -> {
-                if (turnsRemaining-- == 0) {
-                    creature.cnc.remove(Invisible.class, this);
+                if (e.creature == creature) {
+                    if (--turnsRemaining == 0) {
+                        creature.cnc.remove(Invisible.class, this);
+                    }
                 }
             });
         }
