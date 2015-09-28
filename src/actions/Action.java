@@ -7,6 +7,7 @@ import events.UseActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import util.Selectable;
+import util.Util;
 
 public abstract class Action extends EventListenerContainer implements Comparable, Selectable {
 
@@ -40,7 +41,7 @@ public abstract class Action extends EventListenerContainer implements Comparabl
 
     @Override
     public String getName() {
-        return getClass().getSimpleName().replaceAll("_", " ").replaceAll("Action", "");
+        return Util.classToName(this).replaceAll("Action", "");
     }
 
     public abstract Type getType();

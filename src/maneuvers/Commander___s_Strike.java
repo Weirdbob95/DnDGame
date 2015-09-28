@@ -12,11 +12,11 @@ import queries.BooleanQuery;
 import queries.Query;
 import queries.SquareQuery;
 
-public class Commander__s_Strike extends Maneuver {
+public class Commander___s_Strike extends Maneuver {
 
     public Creature ally;
 
-    public Commander__s_Strike(Player player, ManeuversComponent mc) {
+    public Commander___s_Strike(Player player, ManeuversComponent mc) {
         super(player, mc);
 
         add(UseActionEvent.class, (uae) -> {

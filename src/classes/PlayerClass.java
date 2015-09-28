@@ -13,6 +13,7 @@ import queries.Query;
 import queries.SelectQuery;
 import util.Log;
 import util.Selectable;
+import util.Util;
 
 public abstract class PlayerClass extends EventListenerContainer implements Serializable {
 
@@ -35,7 +36,7 @@ public abstract class PlayerClass extends EventListenerContainer implements Seri
         try {
             String chosen = Query.ask(player, new SelectQuery("Choose your character's archetype",
                     Selectable.load(getClass().getSimpleName().toLowerCase() + "/archetypes.txt"))).response.getName();
-            archetype = (Archetype) Class.forName("classes." + getClass().getSimpleName().toLowerCase() + "." + chosen.replace(" ", "_")).getConstructor(getClass()).newInstance(this);
+            archetype = (Archetype) Util.nameToClass("classes." + getClass().getSimpleName().toLowerCase(), chosen).getConstructor(getClass()).newInstance(this);
         } catch (Exception ex) {
             Log.print(ex);
         }

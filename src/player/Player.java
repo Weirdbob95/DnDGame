@@ -1,5 +1,6 @@
 package player;
 
+import classes.PlayerClass;
 import core.Core;
 import creature.Creature;
 import creature.HealthbarSystem;
@@ -12,6 +13,7 @@ import movement.PositionComponent;
 import movement.RotationComponent;
 import rounds.InitiativeOrder;
 import util.SerializationUtils;
+import util.Util;
 
 public class Player extends Creature {
 
@@ -36,6 +38,60 @@ public class Player extends Creature {
 
         getComponent(SpriteComponent.class).name = "blue";
         wc.held[0] = Weapon.loadWeapon("Longsword"); //Fix pls
+    }
+
+    public String characterSheet() {
+        String r = "";
+        r += "Character Name: " + cdc.name + "\n";
+        r += "Class & Level: ";
+        for (int i = 0; i < clc.classes.size(); i++) {
+            PlayerClass pc = clc.classes.get(i);
+            if (pc.archetype != null) {
+                r += Util.classToName(pc.archetype) + " ";
+            }
+            r += Util.classToName(pc) + " " + pc.level;
+            r += (i == clc.classes.size() - 1) ? "\n" : " / ";
+        }
+        r += "Race: " + Util.classToName(rac.race);
+
+        /*
+         Character Name: __
+         Class & Level: __
+         Race: __
+         Alignment: __
+         Background: __
+
+         Proficiency Bonus: __
+         Has Inspiration: __
+
+         Hit Points: __/__
+         Armor Class: __
+         Initiative: __
+         Land Speed: __
+         Swim Speed: __
+
+         Strength: __ (+__)
+         Dexterity: __ (+__)
+         etc.
+
+         Saving Throw Proficiencies:
+         Strength
+         Constitution
+
+         Skill Proficiencies:
+         Athletics
+         History
+         Perception
+         Deception
+
+         Class Features:
+         Fighting Style: __
+
+         Feats:
+         Actor
+         Sentinel
+         */
+        return r;
     }
 
     public static Player loadPlayer(String name, Square square) {

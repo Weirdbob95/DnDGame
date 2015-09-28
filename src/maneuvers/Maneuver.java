@@ -3,6 +3,7 @@ package maneuvers;
 import events.EventListenerContainer;
 import player.Player;
 import util.Selectable;
+import util.Util;
 
 public abstract class Maneuver extends EventListenerContainer implements Selectable {
 
@@ -27,7 +28,7 @@ public abstract class Maneuver extends EventListenerContainer implements Selecta
 
     @Override
     public String getName() {
-        return getClass().getSimpleName().replace("__", "'").replace("_", " ");
+        return Util.classToName(this);
     }
 
     public void learn() {
