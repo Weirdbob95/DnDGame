@@ -3,6 +3,7 @@ package ui;
 import graphics.Graphics2D;
 import org.newdawn.slick.Color;
 import util.Color4d;
+import util.Log;
 
 public class UIText extends UIItem {
 
@@ -23,7 +24,11 @@ public class UIText extends UIItem {
     @Override
     public void draw() {
         Graphics2D.fillRect(pos, size, new Color4d(.1, .5, 1));
-        Graphics2D.drawText(text, font, pos.setY(pos.y - 3), Color.black, (int) size.x);
+        if (text == null) {
+            Log.error("UIText text is null");
+        } else {
+            Graphics2D.drawText(text, font, pos.setY(pos.y - 3), Color.black, (int) size.x);
+        }
     }
 
     @Override

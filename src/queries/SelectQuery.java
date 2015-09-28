@@ -41,7 +41,7 @@ public class SelectQuery<E extends Selectable> extends Query {
             return false;
         }
         new UIText(puic.root, desc);
-        for (final E option : options) {
+        options.forEach(option -> {
             UIButton optionButton = new UIButton(puic.root, option.getName());
             new UIText(optionButton, option.getName(), "Medium");
             new UIText(optionButton, option.getDescription(), "Small");
@@ -51,7 +51,7 @@ public class SelectQuery<E extends Selectable> extends Query {
                     response = option;
                 }
             };
-        }
+        });
         if (cancelString != null) {
             new UIChooseButton(puic.root, cancelString, this);
         }

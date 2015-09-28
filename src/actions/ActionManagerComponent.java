@@ -42,9 +42,10 @@ public class ActionManagerComponent extends AbstractComponent {
         });
     }
 
-    public void addAction(Action a) {
+    public <A extends Action> A addAction(A a) {
         actions.add(a);
         a.add();
+        return a;
     }
 
     public void addType(Type type) {

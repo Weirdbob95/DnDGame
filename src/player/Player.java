@@ -39,7 +39,7 @@ public class Player extends Creature {
     }
 
     public static Player loadPlayer(String name, Square square) {
-        Player p = (Player) SerializationUtils.load(name);
+        Player p = (Player) SerializationUtils.load("chars/" + name);
         Core.gameManager.elc.add(p);
         p.glc.moveToSquare(square);
         p.glc.updateSpritePos();

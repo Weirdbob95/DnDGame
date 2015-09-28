@@ -1,17 +1,24 @@
 package classes.monk;
 
+import actions.Action;
+import static actions.Action.Type.ACTION;
+import static actions.Action.Type.REACTION;
+import amounts.Value;
 import classes.Archetype;
 import classes.monk.Monk.Flurry_of_Blows;
 import conditions.Prone;
-import static enums.AbilityScore.DEX;
-import static enums.AbilityScore.STR;
-import events.SavingThrowEvent;
+import creature.Creature;
+import static enums.AbilityScore.*;
+import events.*;
 import events.attack.AttackDamageRollEvent;
 import events.move.TeleportEvent;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import queries.BooleanQuery;
 import queries.Query;
 import queries.SelectQuery;
+import util.Mutable;
 import util.Selectable;
 import util.SelectableImpl;
 
@@ -45,13 +52,117 @@ public class Way_of_the_Open_Hand extends Archetype<Monk> {
                                     }
                                     break;
                                 case "Disable":
-
+                                    Mutable<Boolean> isNextTurn = new Mutable(false);
+                                    ArrayList<EventListener> list = new ArrayList();
+                                    list.add(add(HasActionTypeEvent.class, e2 -> {
+                                        if (e2.creature == e.a.target) {
+                                            if (e2.type == REACTION) {
+                                                e2.available = false;
+                                            }
+                                        }
+                                    }));
+                                    list.add(add(TurnEndEvent.class, e2 -> {
+                                        if (isNextTurn.o) {
+                                            remove(list);
+                                        }
+                                        isNextTurn.o = true;
+                                    }));
                                     break;
                             }
                         }
                     }
                 });
                 break;
+            case 17:
+                End_Quivering_Palm_Vibrations eqpv = player().amc.addAction(new End_Quivering_Palm_Vibrations(player()));
+                add(AttackDamageRollEvent.class, e -> {
+                    if (e.a.attacker == player()) {
+                        if (e.a.isWeapon) {
+                            if (e.a.weapon == player().wc.unarmedStrike) {
+                                if (playerClass.kc.getKi() >= 3) {
+                                    if (Query.ask(player(), new BooleanQuery("Use the Quivering Palm ability?")).response) {
+                                        playerClass.kc.useKi(3);
+                                        eqpv.target = e.a.target;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                break;
+        }
+    }
+
+    public class End_Quivering_Palm_Vibrations extends Action {
+
+        public Creature target;
+
+        public End_Quivering_Palm_Vibrations(Creature creature) {
+            super(creature);
+        }
+
+        @Override
+        protected void act() {
+            if (SavingThrowEvent.fail(target, CON, playerClass.kiSaveDC.get())) {
+                target.hc.damage(target.hc.currentHealth.get());
+            } else {
+                new TakeDamageEvent(target, Value.parseValue("10d10").get(), this).call();
+            }
+            target = null;
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "You end the vibrations from your Quivering Palm ability, dealing massive damage.";
+        }
+
+        @Override
+        public Type getType() {
+            return ACTION;
+        }
+
+        @Override
+        public boolean isAvailable() {
+            return target != null;
+        }
+    }
+
+    public class Wholeness_of_Body extends Action {
+
+        public boolean available = true;
+
+        public Wholeness_of_Body(Creature creature) {
+            super(creature);
+
+            add(LongRestEvent.class, e -> {
+                available = true;
+            });
+        }
+
+        @Override
+        protected void act() {
+            available = false;
+            creature.hc.heal(level() * 3);
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{};
+        }
+
+        @Override
+        public String getDescription() {
+            return "You regain hit points equal to three times your monk level.";
+        }
+
+        @Override
+        public Type getType() {
+            return ACTION;
         }
     }
 }
