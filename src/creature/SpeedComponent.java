@@ -25,9 +25,9 @@ public class SpeedComponent extends AbstractComponent {
         burrowSpeed = new MultiplierStat();
 
         climbSpeed.flatComponents.put(BASE, landSpeed);
-        climbSpeed.multComponents.put(EXTRA_COST, .5);
+        climbSpeed.multComponents.put(EXTRA_COST, () -> .5);
         swimSpeed.flatComponents.put(BASE, landSpeed);
-        swimSpeed.multComponents.put(EXTRA_COST, .5);
+        swimSpeed.multComponents.put(EXTRA_COST, () -> .5);
 
         EventListener.createListener(c, TurnStartEvent.class, e -> {
             if (e.creature == c) {

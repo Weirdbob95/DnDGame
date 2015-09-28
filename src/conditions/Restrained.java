@@ -13,7 +13,7 @@ public class Restrained extends Condition {
 
     @Override
     public void init() {
-        creature.spc.landSpeed.multComponents.put(this, 0.);
+        creature.spc.landSpeed.multComponents.put(this, () -> 0.);
         add(AttackRollEvent.class, e -> {
             if (e.a.attacker == creature) {
                 e.a.disadvantage = true;

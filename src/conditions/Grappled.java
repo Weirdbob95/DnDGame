@@ -13,7 +13,7 @@ public class Grappled extends Condition {
 
     @Override
     public void init() {
-        creature.spc.landSpeed.multComponents.put(this, 0.);
+        creature.spc.landSpeed.multComponents.put(this, () -> 0.);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class Berserker extends Archetype<Barbarian> {
                         }
                         if (rce.end) //give player exhaustion
                         {
-                            rce.rage.creature.
+                            rce.rage.creature.exc.addExhaustion();
                         }
                     }
                 });
@@ -71,7 +71,7 @@ public class Berserker extends Archetype<Barbarian> {
 
         @Override
         public boolean isAvailable() {
-            if (creature.) {
+            if (creature) {
 
             }
         }

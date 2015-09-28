@@ -24,7 +24,7 @@ public class Prone extends Condition {
                 }
             }
         });
-        creature.spc.landSpeed.multComponents.put(this, .5);
+        creature.spc.landSpeed.multComponents.put(this, () -> .5);
     }
 
     @Override

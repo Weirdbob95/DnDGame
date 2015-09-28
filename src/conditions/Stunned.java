@@ -15,7 +15,7 @@ public class Stunned extends Condition {
     @Override
     public void init() {
         addSubCondition(new Incapacitated(creature, source));
-        creature.spc.landSpeed.multComponents.put(this, 0.);
+        creature.spc.landSpeed.multComponents.put(this, () -> 0.);
         add(AttackRollEvent.class, e -> {
             if (creature == e.a.target) {
                 e.a.advantage = true;
