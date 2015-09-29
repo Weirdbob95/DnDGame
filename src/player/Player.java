@@ -4,6 +4,7 @@ import classes.PlayerClass;
 import core.Core;
 import creature.Creature;
 import creature.HealthbarSystem;
+import enums.AbilityScore;
 import events.EventHandler;
 import graphics.SpriteComponent;
 import graphics.SpriteSystem;
@@ -41,7 +42,7 @@ public class Player extends Creature {
     }
 
     public String characterSheet() {
-        String r = "";
+        String r = "\n";
         r += "Character Name: " + cdc.name + "\n";
         r += "Class & Level: ";
         for (int i = 0; i < clc.classes.size(); i++) {
@@ -52,7 +53,29 @@ public class Player extends Creature {
             r += Util.classToName(pc) + " " + pc.level;
             r += (i == clc.classes.size() - 1) ? "\n" : " / ";
         }
-        r += "Race: " + Util.classToName(rac.race);
+        r += "Race: " + Util.classToName(rac.race) + "\n";
+        r += "Alignment: " + cdc.alignment + "\n";
+        r += "Background: " + Util.classToName(bc.background) + "\n";
+        r += "\n";
+        r += "Proficiency Bonus: +" + pc.prof.get() + "\n";
+        //Has inspiration
+        r += "\n";
+        r += "Hit Points: " + hc.currentHealth.get() + "/" + hc.maxHealth.get() + "\n";
+        r += "Armor Class: " + ac.AC.get() + "\n";
+        //Initiative
+        r += "Speed: " + spc.landSpeed.get() + "\n";
+        r += "\n";
+        for (AbilityScore as : AbilityScore.values()) {
+            r += as.longName() + ": " + asc.get(as).get() + " (+" + asc.mod(as).get() + ")\n";
+        }
+        r += "\n";
+        r += "Saving Throw Proficiencies:\n";
+        r = pc.savingThrowProfs.stream().map(as -> as.longName() + "\n").reduce(r, String::concat);
+        r += "\n";
+        r += "Skill Proficiencies:\n";
+        r = pc.skillProfs.stream().map(s -> s.getName() + "\n").reduce(r, String::concat);
+        r += "\n";
+        r += "Miscellaneous:\n";
 
         /*
          Character Name: __

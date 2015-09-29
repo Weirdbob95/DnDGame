@@ -2,6 +2,7 @@ package player;
 
 import core.Core;
 import java.io.IOException;
+import queries.IntegerQuery;
 import queries.PointBuyQuery;
 import queries.Query;
 import queries.SelectQuery;
@@ -21,6 +22,9 @@ public abstract class CharacterCreator {
                     try {
                         Player p = new Player(null);
 
+                        //Choose level
+                        int level = Query.ask(p, new IntegerQuery("Choose your character's level", "Level", 1, 20)).response;
+
                         //Choose race
                         String chosenRace = Query.ask(p, new SelectQuery("Choose your character's race", Selectable.load("races.txt"))).response.getName();
                         p.rac.setRace(chosenRace);
@@ -39,7 +43,9 @@ public abstract class CharacterCreator {
                         //Point buy
                         p.asc.setAll(Query.ask(p, new PointBuyQuery(27, p.asc.getAll(), new int[]{20, 20, 20, 20, 20, 20})).response);
 
-                        p.clc.classes.get(0).levelTo(20);
+                        p.clc.classes.get(0).levelTo(level);
+
+                        Log.print(p.characterSheet());
 
                         SerializationUtils.save("chars/bob.ser", p);
 

@@ -3,10 +3,10 @@ package queries;
 import enums.AbilityScore;
 import java.util.Arrays;
 import ui.UIChooseButton;
-import ui.UIPointBuy;
 import ui.UIText;
+import ui.UIValue;
 
-public class PointBuyQuery extends Query {
+public class PointBuyQuery extends UpdatingQuery {
 
     public static final int ABILITY_SCORE_COUNT = AbilityScore.values().length;
 
@@ -14,7 +14,7 @@ public class PointBuyQuery extends Query {
     public int[] abilityScores;
     public int[] maximums;
     public UIText uiPoints;
-    public UIPointBuy[] uiList;
+    public UIValue[] uiList;
     public int[] response;
 
     public PointBuyQuery(int points, int[] abilityScores, int[] maximums) {
@@ -58,23 +58,24 @@ public class PointBuyQuery extends Query {
         }
         new UIText(puic.root, "Spend points to improve your ability scores");
         uiPoints = new UIText(puic.root, "");
-        uiList = new UIPointBuy[ABILITY_SCORE_COUNT];
+        uiList = new UIValue[ABILITY_SCORE_COUNT];
         for (int i = 0; i < ABILITY_SCORE_COUNT; i++) {
-            uiList[i] = new UIPointBuy(puic.root, this);
+            uiList[i] = new UIValue(puic.root, this);
         }
         new UIChooseButton(puic.root, "Finish", this);
         updateUI();
         return true;
     }
 
+    @Override
     public void updateUI() {
         int remainingPoints = points;
-        for (UIPointBuy i : uiList) {
+        for (UIValue i : uiList) {
             remainingPoints -= cost(i.value);
         }
         uiPoints.text = "Points remaining: " + remainingPoints;
         for (int pos = 0; pos < ABILITY_SCORE_COUNT; pos++) {
-            UIPointBuy i = uiList[pos];
+            UIValue i = uiList[pos];
             response[pos] = abilityScores[pos] + i.value;
             i.text = AbilityScore.values()[pos].longName() + ": " + response[pos];
             i.minus.disabled = costToChange(i.value, -1) > remainingPoints;
