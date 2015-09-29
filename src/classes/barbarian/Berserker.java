@@ -5,19 +5,28 @@
  */
 package classes.barbarian;
 
+import actions.Action;
+import actions.Action.Type;
 import static actions.Action.Type.BONUS_ACTION;
-import actions.AttackAction;
+import actions.MoveAction;
 import classes.Archetype;
 import classes.barbarian.Barbarian.RageCheckEvent;
 import creature.Creature;
+import events.attack.AttackTargetEvent;
+import items.Weapon;
+import java.util.ArrayList;
 import queries.BooleanQuery;
 import queries.Query;
+import queries.SelectQuery;
+import util.Selectable;
 
 /**
  *
  * @author RLund16
  */
 public class Berserker extends Archetype<Barbarian> {
+
+    public boolean isFrenzying;
 
     public Berserker(Barbarian playerClass) {
         super(playerClass);
@@ -29,15 +38,14 @@ public class Berserker extends Archetype<Barbarian> {
             case 3:
                 add(RageCheckEvent.class, rce -> {
                     if (rce.rage.creature == playerClass.player) {
-                        if (rce.rage.turnsElapsed == 0) {
+                        if (!rce.end) {
                             if (Query.ask(rce.rage.creature, new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
-                                //allow player to use attack as a bonus action
-                                //player cannot be charmed and such
+                                rce.
                             }
                         }
-                        if (rce.end) //give player exhaustion
-                        {
+                        if (rce.end) {
                             rce.rage.creature.exc.addExhaustion();
+
                         }
                     }
                 });
@@ -53,7 +61,7 @@ public class Berserker extends Archetype<Barbarian> {
         }
     }
 
-    public class BonusAttack extends AttackAction {
+    public class BonusAttack extends Action {
 
         public BonusAttack(Creature creature) {
             super(creature);
@@ -71,11 +79,40 @@ public class Berserker extends Archetype<Barbarian> {
 
         @Override
         public boolean isAvailable() {
-            if (creature) {
-
-            }
+            return isFrenzying;
         }
 
+        @Override
+        protected void act() {
+            singleAttack();
+            ArrayList<Selectable> choices = new ArrayList();
+            if (creature.amc.getAction(MoveAction.class).isAvailable()) {
+                choices.add(creature.amc.getAction(MoveAction.class));
+
+            }
+
+        }
+
+        public void singleAttack() {
+            Weapon w = creature.wc.unarmedStrike;
+            ArrayList<Weapon> weaponList = creature.wc.getAll(Weapon.class);
+            if (!weaponList.isEmpty()) {
+                weaponList.add(w);
+                w = Query.ask(creature, new SelectQuery<Weapon>("Choose a weapon to attack with", weaponList)).response;
+            }
+            int range = Math.max(w.range, creature.cdc.reach.get() + (w.reach ? 5 : 0));
+            new AttackTargetEvent(creature, w, range, this).call();
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{"BonusAttack"};
+        }
+
+        @Override
+        public String getDescription() {
+            return "Use your Bonus Action to attack";
+        }
     }
 
 }
