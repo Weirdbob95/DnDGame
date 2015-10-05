@@ -8,17 +8,19 @@ package classes.barbarian;
 import actions.Action;
 import actions.Action.Type;
 import static actions.Action.Type.BONUS_ACTION;
-import actions.MoveAction;
 import classes.Archetype;
 import classes.barbarian.Barbarian.RageCheckEvent;
+import conditions.Charmed;
+import conditions.Condition;
+import conditions.Frightened;
 import creature.Creature;
+import events.AddConditionEvent;
 import events.attack.AttackTargetEvent;
 import items.Weapon;
 import java.util.ArrayList;
 import queries.BooleanQuery;
 import queries.Query;
 import queries.SelectQuery;
-import util.Selectable;
 
 /**
  *
@@ -37,23 +39,49 @@ public class Berserker extends Archetype<Barbarian> {
         switch (newLevel) {
             case 3:
                 add(RageCheckEvent.class, rce -> {
-                    if (rce.rage.creature == playerClass.player) {
+                    if (rce.rage.creature == player()) {
                         if (!rce.end) {
                             if (Query.ask(rce.rage.creature, new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
-                                rce.
+                                isFrenzying = true;
                             }
                         }
                         if (rce.end) {
-                            rce.rage.creature.exc.addExhaustion();
-
+                            if (isFrenzying) {
+                                rce.rage.creature.exc.addExhaustion();
+                                isFrenzying = false;
+                            }
+                        }
+                    }
+                });
+                player().amc.addAction(new BonusAttack(player())); //player() == playerClass.player
+                break;
+            case 6:
+                ArrayList<Condition> temp = new ArrayList<>();
+                add(RageCheckEvent.class, rce -> {
+                    if (rce.rage.creature == player()) {
+                        if (!rce.end) {
+                           //set add condition to false
+                            //make a list that removes conditions and puts them
+                            //in a different list and then adds them back in at the end of the rage
+                            add(AddConditionEvent.class, ace -> {
+                                if (ace.condition == Charmed || ace.condition == Frightened) {
+                                    ace.add = false;
+                                }
+                            });
+                            if (rce.rage.creature.cnc.hasAny(Frightened.class)) {
+                                temp.addAll(player().cnc.getConditions(Frightened.class).values());
+                                player().cnc.conditionMap.remove(Frightened.class);
+                            }
+                            if (rce.rage.creature.cnc.hasAny(Charmed.class)) {
+                                temp.addAll(player().cnc.getConditions(Charmed.class).values());
+                                player().cnc.remove(Charmed.class);
+                            }
                         }
                     }
                 });
                 break;
-            case 6:
-                break;
             case 10:
-
+                //Intmidating Presence
                 break;
             case 14:
                 //Retaliation
@@ -85,17 +113,12 @@ public class Berserker extends Archetype<Barbarian> {
         @Override
         protected void act() {
             singleAttack();
-            ArrayList<Selectable> choices = new ArrayList();
-            if (creature.amc.getAction(MoveAction.class).isAvailable()) {
-                choices.add(creature.amc.getAction(MoveAction.class));
-
-            }
-
         }
 
         public void singleAttack() {
             Weapon w = creature.wc.unarmedStrike;
             ArrayList<Weapon> weaponList = creature.wc.getAll(Weapon.class);
+            weaponList.removeIf(w2 -> w2.isRanged);
             if (!weaponList.isEmpty()) {
                 weaponList.add(w);
                 w = Query.ask(creature, new SelectQuery<Weapon>("Choose a weapon to attack with", weaponList)).response;
