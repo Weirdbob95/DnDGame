@@ -9,6 +9,7 @@ import actions.Action;
 import actions.Action.Type;
 import static actions.Action.Type.BONUS_ACTION;
 import classes.Archetype;
+import classes.barbarian.Barbarian.Rage;
 import classes.barbarian.Barbarian.RageCheckEvent;
 import conditions.Charmed;
 import conditions.Condition;
@@ -40,14 +41,13 @@ public class Berserker extends Archetype<Barbarian> {
             case 3:
                 add(RageCheckEvent.class, rce -> {
                     if (rce.rage.creature == player()) {
-                        if (!rce.end) {
-                            if (Query.ask(rce.rage.creature, new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
+                        if (rce.start) {
+                            if (Query.ask(player(), new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
                                 isFrenzying = true;
                             }
-                        }
-                        if (rce.end) {
+                        } else {
                             if (isFrenzying) {
-                                rce.rage.creature.exc.addExhaustion();
+                                player().exc.addExhaustion();
                                 isFrenzying = false;
                             }
                         }
@@ -57,25 +57,30 @@ public class Berserker extends Archetype<Barbarian> {
                 break;
             case 6:
                 ArrayList<Condition> temp = new ArrayList<>();
+                add(AddConditionEvent.class, ace -> {
+                    if (ace.condition == Charmed || ace.condition == Frightened) {
+                        if (player().amc.getAction(Rage.class).raging) {
+                            ace.add = false;
+                        }
+                    }
+                });
                 add(RageCheckEvent.class, rce -> {
                     if (rce.rage.creature == player()) {
-                        if (!rce.end) {
-                           //set add condition to false
+                        if (rce.start) {
+                            //set add condition to false
                             //make a list that removes conditions and puts them
                             //in a different list and then adds them back in at the end of the rage
-                            add(AddConditionEvent.class, ace -> {
-                                if (ace.condition == Charmed || ace.condition == Frightened) {
-                                    ace.add = false;
-                                }
-                            });
-                            if (rce.rage.creature.cnc.hasAny(Frightened.class)) {
+
+                            if (player().cnc.hasAny(Frightened.class)) {
                                 temp.addAll(player().cnc.getConditions(Frightened.class).values());
                                 player().cnc.conditionMap.remove(Frightened.class);
                             }
-                            if (rce.rage.creature.cnc.hasAny(Charmed.class)) {
+                            if (player().cnc.hasAny(Charmed.class)) {
                                 temp.addAll(player().cnc.getConditions(Charmed.class).values());
                                 player().cnc.remove(Charmed.class);
                             }
+                        } else {
+                            temp.forEach(c -> c.init());
                         }
                     }
                 });

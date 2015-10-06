@@ -140,9 +140,14 @@ public class Barbarian extends PlayerClass {
             add(TurnEndEvent.class, e -> {
                 if (e.creature == creature) {
                     turnsElapsed++;
-                    raging = raging && continueRage && turnsElapsed < 10;
+
+                    if (raging != raging && continueRage && turnsElapsed < 10) {
+                        raging = raging && continueRage && turnsElapsed < 10;
+                        new RageCheckEvent(this).call();
+                    }
                     continueRage = false;
                 }
+
             });
             add(AttackEvent.class, e -> continueRage = continueRage || e.attacker == creature);
             add(TakeDamageEvent.class, e -> continueRage = continueRage || e.creature == creature);
@@ -152,6 +157,7 @@ public class Barbarian extends PlayerClass {
         protected void act() {
             raging = true;
             turnsElapsed = 0;
+            new RageCheckEvent(this).call();
         }
 
         @Override
@@ -202,7 +208,7 @@ public class Barbarian extends PlayerClass {
             @Override
             protected void act() {
                 raging = false;
-
+                new RageCheckEvent(creature.amc.getAction(Rage.class)).call();
             }
 
             @Override
@@ -230,11 +236,11 @@ public class Barbarian extends PlayerClass {
     public class RageCheckEvent extends Event {
 
         public Rage rage;
-        public boolean end;
+        public boolean start;
 
-        public RageCheckEvent(Rage rage, boolean end) {
+        public RageCheckEvent(Rage rage) {
             this.rage = rage;
-            this.end = end;
+            start = rage.raging;
         }
 
     }
