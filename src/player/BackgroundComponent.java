@@ -4,6 +4,7 @@ import backgrounds.Background;
 import core.AbstractComponent;
 import enums.Skill;
 import util.Log;
+import util.Util;
 
 public class BackgroundComponent extends AbstractComponent {
 
@@ -16,7 +17,7 @@ public class BackgroundComponent extends AbstractComponent {
 
     public void setBackground(String name) {
         try {
-            background = (Background) Class.forName("backgrounds." + name.replaceAll(" ", "_")).newInstance();
+            background = (Background) Util.nameToClass("backgrounds", name).newInstance();
             for (Skill s : background.skills()) {
                 if (!player.pc.skillProfs.add(s)) {
                     player.pc.chooseSkill(Skill.values());

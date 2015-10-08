@@ -1,18 +1,18 @@
 package ui;
 
 import graphics.Graphics2D;
-import queries.PointBuyQuery;
+import queries.UpdatingQuery;
 import util.Color4d;
 import util.Vec2;
 
-public class UIPointBuy extends UIText {
+public class UIValue extends UIText {
 
     public UIButton minus;
     public UIButton plus;
     public int value;
-    public PointBuyQuery query;
+    public UpdatingQuery query;
 
-    public UIPointBuy(UIItem parent, PointBuyQuery query) {
+    public UIValue(UIItem parent, UpdatingQuery query) {
         super(parent, "", "Medium");
         this.query = query;
         minus = new UIButton(null, "") {

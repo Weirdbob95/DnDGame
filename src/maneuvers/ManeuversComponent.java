@@ -15,6 +15,7 @@ import queries.Query;
 import queries.SelectQuery;
 import util.Log;
 import util.Selectable;
+import util.Util;
 
 public class ManeuversComponent extends AbstractComponent {
 
@@ -74,7 +75,7 @@ public class ManeuversComponent extends AbstractComponent {
         for (int i = 0; i < num; i++) {
             Selectable s = Query.ask(player, new SelectQuery("Choose a maneuver to learn", remainingManeuvers())).response;
             try {
-                Maneuver m = (Maneuver) Class.forName("maneuvers." + s.getName().replaceAll("'", "__").replaceAll(" ", "_"))
+                Maneuver m = (Maneuver) Util.nameToClass("maneuvers", s.getName())
                         .getConstructor(Player.class, ManeuversComponent.class).newInstance(player, this);
                 maneuvers.add(m);
                 m.description = s.getDescription();

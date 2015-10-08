@@ -6,5 +6,5 @@ Add the ready action
 Add hiding
 Add networking
 Add DM controls
-Add a character sheet view
+Add a character sheet view - Rory
 Add a message history view
