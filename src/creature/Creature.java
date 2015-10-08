@@ -55,12 +55,12 @@ public class Creature extends AbstractEntity implements Serializable {
         ac = add(new ArmorComponent(this));
         cnc = add(new ConditionComponent(this));
         cdc = add(new CreatureDescriptionComponent());
-        exc = add(new ExhaustionComponent(this));
         hc = add(new HealthComponent());
         lc = add(new LanguageComponent(this));
         rc = add(new ResistancesComponent());
         spc = add(new SpeedComponent(this));
         wc = add(new WieldingComponent(0));
+        exc = add(new ExhaustionComponent(this));
 
         cc = add(new CreatureComponent(this, new ManualController(this), new AbilityCheckEvent(this, DEX, null, 0).get(), true));
         glc = add(new GridLocationComponent(square, this));

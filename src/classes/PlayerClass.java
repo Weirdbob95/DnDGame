@@ -49,7 +49,7 @@ public abstract class PlayerClass extends EventListenerContainer implements Seri
 
     public void levelTo(int newLevel) {
         for (int i = level + 1; i <= newLevel; i++) {
-            Query.ask(player, new NotificationQuery("You leveled up!"));
+            Query.ask(player, new NotificationQuery("You leveled up!\n" + "You are now level " + i));
             level = i;
             //Choose archetype (if needed)
             if (level == archetypeLevel()) {
