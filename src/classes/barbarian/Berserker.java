@@ -43,6 +43,7 @@ public class Berserker extends Archetype<Barbarian> {
                     if (rce.rage.creature == player()) {
                         if (rce.start) {
                             if (Query.ask(player(), new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
+                                //this query is not being asked; why?
                                 isFrenzying = true;
                             }
                         } else {
@@ -58,18 +59,19 @@ public class Berserker extends Archetype<Barbarian> {
             case 6:
                 ArrayList<Condition> temp = new ArrayList<>();
                 add(AddConditionEvent.class, ace -> {
-                    if (ace.condition == Charmed || ace.condition == Frightened) {
+                    if (ace.condition instanceof Charmed || ace.condition instanceof Frightened) {
                         if (player().amc.getAction(Rage.class).raging) {
                             ace.add = false;
                         }
                     }
                 });
+
+                //make a list that removes conditions and puts them
+                //in a different list and then adds them back in at the end of the rage
                 add(RageCheckEvent.class, rce -> {
                     if (rce.rage.creature == player()) {
                         if (rce.start) {
                             //set add condition to false
-                            //make a list that removes conditions and puts them
-                            //in a different list and then adds them back in at the end of the rage
 
                             if (player().cnc.hasAny(Frightened.class)) {
                                 temp.addAll(player().cnc.getConditions(Frightened.class).values());
