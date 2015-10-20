@@ -4,6 +4,7 @@ import enums.Size;
 import events.EventListenerContainer;
 import java.util.Arrays;
 import player.Player;
+import util.Selectable;
 
 public abstract class Race extends EventListenerContainer {
 
@@ -19,6 +20,8 @@ public abstract class Race extends EventListenerContainer {
     public int getSpeed() {
         return 30;
     }
+
+    public abstract Selectable getSubrace();
 
     public void init() {
         player.asc.editAll(getAbilityScores());

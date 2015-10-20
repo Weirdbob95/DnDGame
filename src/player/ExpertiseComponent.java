@@ -8,8 +8,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import queries.Query;
 import queries.SelectQuery;
+import util.Printable;
 
-public class ExpertiseComponent extends AbstractComponent {
+public class ExpertiseComponent extends AbstractComponent implements Printable {
 
     public HashSet<Skill> expertises;
     public Player player;
@@ -29,5 +30,10 @@ public class ExpertiseComponent extends AbstractComponent {
         skillList.removeAll(expertises);
         Skill skill = Query.ask(player, new SelectQuery<Skill>("Choose a skill", skillList)).response;
         expertises.add(skill);
+    }
+
+    @Override
+    public String print() {
+        return "Skill Expertises: " + expertises.stream().map(f -> f.getName()).reduce((a, b) -> a + ", " + b).get();
     }
 }

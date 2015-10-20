@@ -1,24 +1,19 @@
 package player;
 
 import static actions.Action.Type.REACTION;
-import amounts.ConditionalAmount;
-import amounts.Die;
-import amounts.Value;
+import amounts.*;
 import core.AbstractComponent;
 import enums.FightingStyle;
 import events.EventListener;
-import events.attack.AttackDamageResultEvent;
-import events.attack.AttackDamageRollEvent;
-import events.attack.AttackRollEvent;
+import events.attack.*;
 import grid.GridUtils;
 import items.Weapon;
 import java.util.ArrayList;
 import java.util.Arrays;
-import queries.BooleanQuery;
-import queries.Query;
-import queries.SelectQuery;
+import queries.*;
+import util.Printable;
 
-public class FightingStylesComponent extends AbstractComponent {
+public class FightingStylesComponent extends AbstractComponent implements Printable {
 
     public ArrayList<FightingStyle> fightingStyles;
     public Player player;
@@ -88,5 +83,10 @@ public class FightingStylesComponent extends AbstractComponent {
         styleList.removeAll(fightingStyles);
         FightingStyle fightingStyle = Query.ask(player, new SelectQuery<FightingStyle>("Choose a fighting style", styleList)).response;
         addFightingStyle(fightingStyle);
+    }
+
+    @Override
+    public String print() {
+        return "Fighting Style" + (fightingStyles.size() == 1 ? "" : "s") + ": " + fightingStyles.stream().map(f -> f.getName()).reduce("", String::concat);
     }
 }

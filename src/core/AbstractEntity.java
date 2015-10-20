@@ -6,8 +6,8 @@ import java.util.Arrays;
 
 public abstract class AbstractEntity implements Serializable {
 
-    ArrayList<AbstractComponent> componentList;
-    ArrayList<AbstractSystem> systemList;
+    public ArrayList<AbstractComponent> componentList;
+    public ArrayList<AbstractSystem> systemList;
     public long id;
 
     public AbstractEntity() {
@@ -41,12 +41,8 @@ public abstract class AbstractEntity implements Serializable {
     }
 
     public void destroySelf() {
-        for (AbstractComponent c : componentList) {
-            c.destroy();
-        }
-        for (AbstractSystem s : systemList) {
-            s.destroy();
-        }
+        componentList.forEach(c -> c.destroy());
+        systemList.forEach(s -> s.destroy());
         Core.gameManager.elc.remove(this);
     }
 
@@ -57,6 +53,14 @@ public abstract class AbstractEntity implements Serializable {
             }
         }
         return null;
+    }
+
+    public <C extends AbstractComponent> C getOrAdd(C c) {
+        C r = (C) getComponent(c.getClass());
+        if (r == null) {
+            r = add(c);
+        }
+        return r;
     }
 
     public <E extends AbstractSystem> E getSystem(Class<E> e) {

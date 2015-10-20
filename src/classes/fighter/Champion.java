@@ -7,6 +7,7 @@ import enums.FightingStyle;
 import events.AbilityCheckEvent;
 import events.TurnStartEvent;
 import events.attack.AttackResultEvent;
+import player.FightingStylesComponent;
 
 public class Champion extends Archetype<Fighter> {
 
@@ -43,7 +44,7 @@ public class Champion extends Archetype<Fighter> {
                 });
                 break;
             case 10:
-                player().fsc.chooseFightingStyle(FightingStyle.values());
+                player().getComponent(FightingStylesComponent.class).chooseFightingStyle(FightingStyle.values());
                 break;
             case 18:
                 add(TurnStartEvent.class, e -> {

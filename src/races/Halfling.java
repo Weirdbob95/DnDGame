@@ -57,6 +57,11 @@ public class Halfling extends Race {
     }
 
     @Override
+    public Selectable getSubrace() {
+        return subrace;
+    }
+
+    @Override
     public void init() {
         subrace = Query.ask(player, new SelectQuery<Subrace>("Choose your character's subrace", Subrace.values())).response;
         super.init();

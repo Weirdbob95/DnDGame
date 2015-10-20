@@ -1,6 +1,7 @@
 package races;
 
 import player.Player;
+import util.Selectable;
 
 public class Human extends Race {
 
@@ -11,6 +12,11 @@ public class Human extends Race {
     @Override
     public int[] getAbilityScores() {
         return new int[]{1, 1, 1, 1, 1, 1};
+    }
+
+    @Override
+    public Selectable getSubrace() {
+        return null;
     }
 
     @Override
