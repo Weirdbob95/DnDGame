@@ -7,21 +7,18 @@ package classes.barbarian;
 
 import actions.Action;
 import actions.Action.Type;
-import static actions.Action.Type.BONUS_ACTION;
+import static actions.Action.Type.*;
 import classes.Archetype;
 import classes.barbarian.Barbarian.Rage;
 import classes.barbarian.Barbarian.RageCheckEvent;
-import conditions.Charmed;
-import conditions.Condition;
-import conditions.Frightened;
+import conditions.*;
 import creature.Creature;
 import events.AddConditionEvent;
 import events.attack.AttackTargetEvent;
+import grid.Square;
 import items.Weapon;
 import java.util.ArrayList;
-import queries.BooleanQuery;
-import queries.Query;
-import queries.SelectQuery;
+import queries.*;
 
 /**
  *
@@ -43,7 +40,6 @@ public class Berserker extends Archetype<Barbarian> {
                     if (rce.rage.creature == player()) {
                         if (rce.start) {
                             if (Query.ask(player(), new BooleanQuery("Do you want to use your Frenzy ability?")).response) {
-                                //this query is not being asked; why?
                                 isFrenzying = true;
                             }
                         } else {
@@ -89,6 +85,7 @@ public class Berserker extends Archetype<Barbarian> {
                 break;
             case 10:
                 //Intmidating Presence
+
                 break;
             case 14:
                 //Retaliation
@@ -145,4 +142,41 @@ public class Berserker extends Archetype<Barbarian> {
         }
     }
 
+    public class IntimidatingPresence extends Action {
+
+        public IntimidatingPresence(Creature creature) {
+            super(creature);
+        }
+
+        @Override
+        protected void act() {
+
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{"IntimidatingPresence"};
+        }
+
+        @Override
+        public Type getType() {
+            return ACTION;
+        }
+
+        @Override
+        public String getDescription() {
+            return "Frighten a Character within that can see and hear you within 30 feet";
+        }
+
+        public void Intimidate() {
+
+            int range = 30;
+            Square toIntimidate = Query.ask(creature, new SquareQuery("Choose a creature to Intimidate", creature.glc.occupied, range, true)).response;
+            if (toIntimidate != null && toIntimidate.creature != null) {
+                //AddConditionEvent(toIntimidate.creature, ).call();
+                toIntimidate.creature.cnc.conditionMap.put("IntimidatingPresence", Frightened.class);
+            }
+        }
+
+    }
 }
