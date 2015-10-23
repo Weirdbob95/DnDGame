@@ -13,12 +13,18 @@ import classes.barbarian.Barbarian.Rage;
 import classes.barbarian.Barbarian.RageCheckEvent;
 import conditions.*;
 import creature.Creature;
+import enums.AbilityScore;
 import events.AddConditionEvent;
+import events.SavingThrowEvent;
+import events.TurnEndEvent;
+import events.TurnStartEvent;
 import events.attack.AttackTargetEvent;
+import grid.GridUtils;
 import grid.Square;
 import items.Weapon;
 import java.util.ArrayList;
 import queries.*;
+import util.Mutable;
 
 /**
  *
@@ -85,10 +91,11 @@ public class Berserker extends Archetype<Barbarian> {
                 break;
             case 10:
                 //Intmidating Presence
-
+                player().amc.addAction(new IntimidatingPresence(player()));
                 break;
             case 14:
                 //Retaliation
+
                 break;
         }
     }
@@ -144,13 +151,15 @@ public class Berserker extends Archetype<Barbarian> {
 
     public class IntimidatingPresence extends Action {
 
+        public boolean use;
+
         public IntimidatingPresence(Creature creature) {
             super(creature);
         }
 
         @Override
         protected void act() {
-
+            intimidate();
         }
 
         @Override
@@ -168,15 +177,33 @@ public class Berserker extends Archetype<Barbarian> {
             return "Frighten a Character within that can see and hear you within 30 feet";
         }
 
-        public void Intimidate() {
-
+        public void intimidate() {
+            boolean already = false;
             int range = 30;
             Square toIntimidate = Query.ask(creature, new SquareQuery("Choose a creature to Intimidate", creature.glc.occupied, range, true)).response;
+            Creature enemy = toIntimidate.creature;
             if (toIntimidate != null && toIntimidate.creature != null) {
-                //AddConditionEvent(toIntimidate.creature, ).call();
-                toIntimidate.creature.cnc.conditionMap.put("IntimidatingPresence", Frightened.class);
-            }
-        }
+                if (enemy.cnc.hasAny(Frightened.class)) {
+                    already = true;
+                }
+                if (SavingThrowEvent.fail(enemy, AbilityScore.WIS, 8 + player().pc.prof.get() + player().asc.mod(AbilityScore.CHA).get()));
+                Frightened f = new Frightened(enemy, player());
+                if (f.add() || already) {
+                    Mutable<Boolean> isNextTurn = new Mutable(false);
+                    f.add(TurnStartEvent.class, ev -> isNextTurn.o = (ev.creature == player() ? true : isNextTurn.o));
+                    f.add(TurnEndEvent.class, ev -> {
+                        if (ev.creature == player() && isNextTurn.o) {
+                            f.remove();
+                        } else if (GridUtils.minDistance(player(), enemy) >= 60) {
+                            f.remove();
+                        }
 
+                    });
+                    //else
+                    //disable IntimatingPresence for 24 hours
+                }
+            }
+
+        }
     }
 }
