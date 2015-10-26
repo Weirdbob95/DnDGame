@@ -78,7 +78,7 @@ public class Rogue extends PlayerClass {
                 break;
             case 5:
                 add(TakeDamageEvent.class, e -> {
-                    if (e.creature == player) {
+                    if (e.target == player) {
                         if (e.source instanceof AttackEvent) {
                             if (player.amc.hasType(REACTION)) {
                                 if (Query.ask(player, new BooleanQuery("Use Uncanny Dodge?")).response) {

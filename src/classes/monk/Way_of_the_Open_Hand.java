@@ -96,6 +96,7 @@ public class Way_of_the_Open_Hand extends Archetype<Monk> {
     public class End_Quivering_Palm_Vibrations extends Action {
 
         public Creature target;
+        public Creature attacker;
 
         public End_Quivering_Palm_Vibrations(Creature creature) {
             super(creature);
@@ -106,7 +107,7 @@ public class Way_of_the_Open_Hand extends Archetype<Monk> {
             if (SavingThrowEvent.fail(target, CON, playerClass.kiSaveDC.get())) {
                 target.hc.damage(target.hc.currentHealth.get());
             } else {
-                new TakeDamageEvent(target, Value.parseValue("10d10").get(), this).call();
+                new TakeDamageEvent(target, attacker, Value.parseValue("10d10").get(), this).call();
             }
             target = null;
         }

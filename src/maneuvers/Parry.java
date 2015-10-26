@@ -15,7 +15,7 @@ public class Parry extends Maneuver {
         super(player, mc);
 
         add(TakeDamageEvent.class, e -> {
-            if (e.creature == player) {
+            if (e.target == player) {
                 if (e.source instanceof AttackEvent) {
                     if (!((AttackEvent) e.source).isRanged) {
                         if (mc.diceUsed < mc.diceCap) {

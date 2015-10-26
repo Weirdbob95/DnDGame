@@ -14,10 +14,7 @@ import classes.barbarian.Barbarian.RageCheckEvent;
 import conditions.*;
 import creature.Creature;
 import enums.AbilityScore;
-import events.AddConditionEvent;
-import events.SavingThrowEvent;
-import events.TurnEndEvent;
-import events.TurnStartEvent;
+import events.*;
 import events.attack.AttackTargetEvent;
 import grid.GridUtils;
 import grid.Square;
@@ -95,7 +92,15 @@ public class Berserker extends Archetype<Barbarian> {
                 break;
             case 14:
                 //Retaliation
+                add(TakeDamageEvent.class, tde -> {
+                    if (tde.target == player()) {
+                        if (GridUtils.minDistance(player(), tde.attacker) < 5) {
+                            if (Query.ask(player(), new BooleanQuery("Would you like to use your Retalitation ability")).response) {
 
+                            }
+                        }
+                    }
+                });
                 break;
         }
     }
@@ -205,5 +210,33 @@ public class Berserker extends Archetype<Barbarian> {
             }
 
         }
+    }
+
+    public class Retaliation extends Action {
+
+        public Retaliation(Creature creature) {
+            super(creature);
+        }
+
+        @Override
+        protected void act() {
+
+        }
+
+        @Override
+        public String[] defaultTabs() {
+            return new String[]{"Retaliation"};
+        }
+
+        @Override
+        public Type getType() {
+            return REACTION;
+        }
+
+        @Override
+        public String getDescription() {
+            return "When you take damage from a creature that is within 5 feet of you, use this reaction to make a melee weapon attack against that creature";
+        }
+
     }
 }

@@ -4,12 +4,14 @@ import creature.Creature;
 
 public class TakeDamageEvent extends Event {
 
-    public Creature creature;
+    public Creature target;
+    public Creature attacker;
     public int damage;
     public Object source;
 
-    public TakeDamageEvent(Creature creature, int damage, Object source) {
-        this.creature = creature;
+    public TakeDamageEvent(Creature target, Creature attacker, int damage, Object source) {
+        this.target = target;
+        this.attacker = attacker;
         this.damage = damage;
         this.source = source;
     }
@@ -17,6 +19,6 @@ public class TakeDamageEvent extends Event {
     @Override
     public void call() {
         super.call();
-        creature.hc.damage(damage);
+        target.hc.damage(damage);
     }
 }

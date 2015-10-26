@@ -150,7 +150,7 @@ public class Barbarian extends PlayerClass {
 
             });
             add(AttackEvent.class, e -> continueRage = continueRage || e.attacker == creature);
-            add(TakeDamageEvent.class, e -> continueRage = continueRage || e.creature == creature);
+            add(TakeDamageEvent.class, e -> continueRage = continueRage || e.target == creature);
         }
 
         @Override

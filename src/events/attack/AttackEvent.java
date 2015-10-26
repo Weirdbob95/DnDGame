@@ -95,7 +95,7 @@ public class AttackEvent extends Event {
         new AttackDamageResultEvent(this).call();
         Log.print("Dealt " + damage.get() + " damage");
         //Deal damage
-        new TakeDamageEvent(target, damage.get(), this).call();
+        new TakeDamageEvent(target, attacker, damage.get(), this).call();
         new AttackFinishEvent(this, true).call();
     }
 
