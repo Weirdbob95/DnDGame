@@ -5,8 +5,9 @@ import core.AbstractComponent;
 import creature.Creature;
 import events.EventListener;
 import events.ShortRestEvent;
+import util.Printable;
 
-public class KiComponent extends AbstractComponent {
+public class KiComponent extends AbstractComponent implements Printable {
 
     public Stat maximumKi = new Stat();
     public Stat currentKi = new Stat("Maximum", maximumKi);
@@ -21,6 +22,11 @@ public class KiComponent extends AbstractComponent {
 
     public int getMaxKi() {
         return maximumKi.get();
+    }
+
+    @Override
+    public String print() {
+        return "Ki Points: " + getKi() + "/" + getMaxKi();
     }
 
     public void useKi(int kiUsed) {

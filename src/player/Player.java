@@ -1,6 +1,5 @@
 package player;
 
-import classes.PlayerClass;
 import core.Core;
 import creature.Creature;
 import creature.HealthbarSystem;
@@ -13,6 +12,7 @@ import items.Weapon;
 import movement.PositionComponent;
 import movement.RotationComponent;
 import rounds.InitiativeOrder;
+import util.Printable;
 import util.SerializationUtils;
 import util.Util;
 
@@ -20,8 +20,6 @@ public class Player extends Creature {
 
     public BackgroundComponent bc;
     public ClassComponent clc;
-    public ExpertiseComponent ec;
-    public FightingStylesComponent fsc;
     public ProficienciesComponent pc;
     public RaceComponent rac;
 
@@ -30,8 +28,6 @@ public class Player extends Creature {
 
         bc = add(new BackgroundComponent(this));
         clc = add(new ClassComponent(this));
-        ec = add(new ExpertiseComponent(this));
-        fsc = add(new FightingStylesComponent(this));
         pc = add(new ProficienciesComponent(this));
         rac = add(new RaceComponent(this));
 
@@ -44,16 +40,9 @@ public class Player extends Creature {
     public String characterSheet() {
         String r = "\n";
         r += "Character Name: " + cdc.name + "\n";
-        r += "Class & Level: ";
-        for (int i = 0; i < clc.classes.size(); i++) {
-            PlayerClass pc = clc.classes.get(i);
-            if (pc.archetype != null) {
-                r += Util.classToName(pc.archetype) + " ";
-            }
-            r += Util.classToName(pc) + " " + pc.level;
-            r += (i == clc.classes.size() - 1) ? "\n" : " / ";
-        }
-        r += "Race: " + Util.classToName(rac.race) + "\n";
+        r += "Class & Level: " + clc.classes.stream().map(c -> (c.archetype != null ? Util.classToName(c.archetype) + " " : "")
+                + Util.classToName(c) + " " + c.level).reduce((a, b) -> a + " / " + b).get() + "\n";
+        r += "Race: " + (rac.race.getSubrace() == null ? Util.classToName(rac.race) : rac.race.getSubrace().getName()) + "\n";
         r += "Alignment: " + cdc.alignment + "\n";
         r += "Background: " + Util.classToName(bc.background) + "\n";
         r += "\n";
@@ -66,16 +55,18 @@ public class Player extends Creature {
         r += "Speed: " + spc.landSpeed.get() + "\n";
         r += "\n";
         for (AbilityScore as : AbilityScore.values()) {
-            r += as.longName() + ": " + asc.get(as).get() + " (+" + asc.mod(as).get() + ")\n";
+            r += as.longName() + ": " + asc.get(as).get() + " (" + (asc.mod(as).get() >= 0 ? "+" : "") + asc.mod(as).get() + ")\n";
         }
         r += "\n";
         r += "Saving Throw Proficiencies:\n";
-        r = pc.savingThrowProfs.stream().map(as -> as.longName() + "\n").reduce(r, String::concat);
+        r += pc.savingThrowProfs.stream().map(as -> as.longName() + "\n").reduce("", String::concat);
         r += "\n";
         r += "Skill Proficiencies:\n";
-        r = pc.skillProfs.stream().map(s -> s.getName() + "\n").reduce(r, String::concat);
+        r += pc.skillProfs.stream().map(s -> s.getName() + "\n").reduce("", String::concat);
         r += "\n";
         r += "Miscellaneous:\n";
+        r += componentList.stream().filter(c -> c instanceof Printable).map(c -> ((Printable) c).print() + "\n").reduce("", String::concat);
+        r += clc.classes.stream().map(c -> c.print()).reduce("", String::concat);
 
         /*
          Character Name: __

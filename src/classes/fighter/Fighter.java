@@ -17,6 +17,7 @@ import events.LongRestEvent;
 import events.SavingThrowResultEvent;
 import events.ShortRestEvent;
 import events.TurnStartEvent;
+import player.FightingStylesComponent;
 import player.Player;
 import queries.BooleanQuery;
 import queries.Query;
@@ -42,7 +43,8 @@ public class Fighter extends PlayerClass {
     public void levelUp(int newLevel) {
         switch (newLevel) {
             case 1:
-                player.fsc.chooseFightingStyle(FightingStyle.values());
+                FightingStylesComponent fsc = player.getOrAdd(new FightingStylesComponent(player));
+                fsc.chooseFightingStyle(FightingStyle.values());
                 player.amc.addAction(new Second_Wind(player));
                 break;
             case 2:

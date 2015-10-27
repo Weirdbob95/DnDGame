@@ -21,6 +21,7 @@ import events.attack.AttackResultEvent;
 import events.attack.AttackRollEvent;
 import grid.GridUtils;
 import java.util.ArrayList;
+import player.ExpertiseComponent;
 import player.Player;
 import queries.BooleanQuery;
 import queries.Query;
@@ -47,8 +48,9 @@ public class Rogue extends PlayerClass {
     public void levelUp(int newLevel) {
         switch (newLevel) {
             case 1:
-                player.ec.chooseExpertise();
-                player.ec.chooseExpertise();
+                ExpertiseComponent ec = player.getOrAdd(new ExpertiseComponent(player));
+                ec.chooseExpertise();
+                ec.chooseExpertise();
 
                 Mutable<Boolean> hasSneakAttack = new Mutable(true);
                 add(TurnStartEvent.class, e -> hasSneakAttack.o = true);
@@ -90,8 +92,9 @@ public class Rogue extends PlayerClass {
                 });
                 break;
             case 6:
-                player.ec.chooseExpertise();
-                player.ec.chooseExpertise();
+                ec = player.getComponent(ExpertiseComponent.class);
+                ec.chooseExpertise();
+                ec.chooseExpertise();
             case 7:
                 //Evasion
                 break;

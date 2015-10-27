@@ -1,21 +1,14 @@
 package classes;
 
-import enums.AbilityScore;
-import enums.CastingType;
-import enums.Skill;
+import enums.*;
 import events.EventListenerContainer;
 import java.io.Serializable;
 import java.util.Arrays;
 import player.Player;
-import queries.NotificationQuery;
-import queries.PointBuyQuery;
-import queries.Query;
-import queries.SelectQuery;
-import util.Log;
-import util.Selectable;
-import util.Util;
+import queries.*;
+import util.*;
 
-public abstract class PlayerClass extends EventListenerContainer implements Serializable {
+public abstract class PlayerClass extends EventListenerContainer implements Printable, Serializable {
 
     public Player player;
     public int level;
@@ -88,6 +81,11 @@ public abstract class PlayerClass extends EventListenerContainer implements Seri
     }
 
     public abstract void levelUp(int newLevel);
+
+    @Override
+    public String print() {
+        return "";
+    }
 
     public abstract AbilityScore[] savingThrows();
 
