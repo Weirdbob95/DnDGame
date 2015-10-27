@@ -78,6 +78,8 @@ public class Barbarian extends PlayerClass {
                 //"Speed increases by 10 feet while you aren't wearing heavy armor"
                 break;
             case 7:
+                //Feral Instinct
+                add()
                 break;
         }
     }

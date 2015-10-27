@@ -8,6 +8,7 @@ package classes.barbarian;
 import actions.Action;
 import actions.Action.Type;
 import static actions.Action.Type.*;
+import actions.AttackAction;
 import classes.Archetype;
 import classes.barbarian.Barbarian.Rage;
 import classes.barbarian.Barbarian.RageCheckEvent;
@@ -96,7 +97,7 @@ public class Berserker extends Archetype<Barbarian> {
                     if (tde.target == player()) {
                         if (GridUtils.minDistance(player(), tde.attacker) < 5) {
                             if (Query.ask(player(), new BooleanQuery("Would you like to use your Retalitation ability")).response) {
-
+                                player().amc.getAction(AttackAction.class);
                             }
                         }
                     }
@@ -168,6 +169,11 @@ public class Berserker extends Archetype<Barbarian> {
         }
 
         @Override
+        public String getName() {
+            return "Intimidating Presence";
+        }
+
+        @Override
         public String[] defaultTabs() {
             return new String[]{"IntimidatingPresence"};
         }
@@ -208,35 +214,6 @@ public class Berserker extends Archetype<Barbarian> {
                     //disable IntimatingPresence for 24 hours
                 }
             }
-
         }
-    }
-
-    public class Retaliation extends Action {
-
-        public Retaliation(Creature creature) {
-            super(creature);
-        }
-
-        @Override
-        protected void act() {
-
-        }
-
-        @Override
-        public String[] defaultTabs() {
-            return new String[]{"Retaliation"};
-        }
-
-        @Override
-        public Type getType() {
-            return REACTION;
-        }
-
-        @Override
-        public String getDescription() {
-            return "When you take damage from a creature that is within 5 feet of you, use this reaction to make a melee weapon attack against that creature";
-        }
-
     }
 }
