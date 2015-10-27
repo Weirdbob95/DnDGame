@@ -79,7 +79,6 @@ public class Barbarian extends PlayerClass {
                 break;
             case 7:
                 //Feral Instinct
-                add()
                 break;
         }
     }
